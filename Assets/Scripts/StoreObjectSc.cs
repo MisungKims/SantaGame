@@ -13,9 +13,7 @@ public class StoreObjectSc : MonoBehaviour
     Text descText;
     GameObject unlockImage;
 
-    public GameManager gameManager;
-
-    [Header("변수")]
+    [Header("---------- 변수")]
     public bool isBuy = false;             // 건물을 산 것인지 아닌지
     public string buildingName;            // 건물 이름
     public float multiplyCost;             // 업그레이드 후 건물 가격 증가 배율
@@ -36,12 +34,12 @@ public class StoreObjectSc : MonoBehaviour
     /// </summary>
     public void Upgrade()
     {
-        if (gameManager.myMoney >= cost)        // 플레이어가 가진 돈이 건물의 가격보다 높을 때
+        if (GameManager.Instance.myMoney >= cost)        // 플레이어가 가진 돈이 건물의 가격보다 높을 때
         {
             if (!isBuy) Unlock();               // 사지 않은 건물이면 잠금 해제
             else                                // 산 건물이면 업그레이드
             {
-                gameManager.DecreaseMoney(cost);
+                GameManager.Instance.DecreaseMoney(cost);
 
                 cost = (int)(cost * multiplyCost);    // 비용을 배율만큼 증가
                 buildingCostText.text = GetCommaText(cost);
@@ -67,7 +65,7 @@ public class StoreObjectSc : MonoBehaviour
     /// </summary>
     void SetButtonInteractable()
     {
-        if (gameManager.level >= unlockLevel && gameManager.myMoney >= cost)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
+        if (GameManager.Instance.level >= unlockLevel && GameManager.Instance.myMoney >= cost)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
             button.interactable = true;                                             //  Interactable을 True로 설정
         else button.interactable = false;
     }
@@ -80,9 +78,9 @@ public class StoreObjectSc : MonoBehaviour
     {
         isBuy = true;
 
-        gameManager.DecreaseMoney(cost);
+        GameManager.Instance.DecreaseMoney(cost);
 
-        gameManager.DoIncreaseMoney(second, incrementMoney);        // 정해진 시간마다 돈 증가하기 시작
+        GameManager.Instance.DoIncreaseMoney(second, incrementMoney);        // 정해진 시간마다 돈 증가하기 시작
 
         unlockImage.SetActive(false);           // 잠금 이미지를 숨김
 
