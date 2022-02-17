@@ -37,13 +37,10 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region 변수
-    [Header("---------- Parse CSV")]
-    public ParseCSV storeParseCSV;
-
     [Header("---------- 메인 오브젝트")]
     public Slider gaugeSlider;        // 게이지를 나타내는 슬라이더
     public Text lvText;               // 레벨을 나타내는 텍스트
-    public Text moneyText;            // 돈을 나타내는 텍스트
+    public Text goldText;            // 돈을 나타내는 텍스트
     public Text dateText;             // 날짜를 나타내는 텍스트
     public Text timeText;             // 시간을 나타내는 텍스트
 
@@ -53,7 +50,8 @@ public class GameManager : MonoBehaviour
     [Header("---------- 변수")]
     public float gauge;
     public int level = 1;
-    public int myMoney = 0;
+    public int myGold = 0;
+    public float second = 0;
 
     #endregion
 
@@ -79,35 +77,35 @@ public class GameManager : MonoBehaviour
         gaugeSlider.value = gauge;
     }
 
-    public void IncreaseMoney(int amount)
+    public void IncreaseGold(int amount)
     {
-        myMoney += amount;
-        moneyText.text = GetCommaText(myMoney);
+        myGold += amount;
+        goldText.text = GetCommaText(myGold);
     }
 
-    public void DecreaseMoney(int amount)
+    public void DecreaseGold(int amount)
     {
-        myMoney -= amount;
-        moneyText.text = GetCommaText(myMoney);
+        myGold -= amount;
+        goldText.text = GetCommaText(myGold);
     }
 
 
-    public void DoIncreaseMoney(int second, int incrementMoney)
+    public void DoIncreaseGold(int second, int incrementGold)
     {
-        StartCoroutine(IncreaseMoney(second, incrementMoney));
+        StartCoroutine(IncreaseGold(second, incrementGold));
     }
 
     /// <summary>
     /// 정해진 시간(second)마다 돈 증가
     /// </summary>
     /// <returns></returns>
-    IEnumerator IncreaseMoney(int second, int incrementMoney)
+    IEnumerator IncreaseGold(int second, int incrementGold)
     {
         while (true)
         {
             yield return new WaitForSeconds(second);
 
-            IncreaseMoney(incrementMoney);
+            IncreaseGold(incrementGold);
         }
     }
 
@@ -121,9 +119,17 @@ public class GameManager : MonoBehaviour
 
         gaugeSlider.value = gauge;
 
-        moneyText.text = GetCommaText(myMoney);
+        goldText.text = GetCommaText(myGold);
 
         storePanel.SetActive(false);
+    }
+
+    private void Update()
+    {
+        second += Time.deltaTime;
+
+        //timeText.text = (int)second / 60 + " : " + (int)second % 60;
+        timeText.text = string.Format("{0:D2} : {1:D2}", (int)second / 60, (int)second % 60);
     }
 
 }
