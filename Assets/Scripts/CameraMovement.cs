@@ -5,13 +5,21 @@ using UnityEngine;
 public class CameraMovement : MonoBehaviour
 {
     [Header("Move")]
-    public float speed = 1;
+    public float speed = 0.06f;
     public Vector2 currentPos, previousPos;
     public Vector3 movePos;
+    public bool canMove = true;
 
     [Header("Zoom")]
-    public Camera camera;
-    public float perspectiveZoomSpeed = 0.5f;  //줌인,줌아웃할때 속도(perspective모드 용)      
+    public Camera cam;
+    public float perspectiveZoomSpeed = 0.09f;  //줌인,줌아웃할때 속도   
+    public float zoomMinValue = 10f;
+    public float zoomMaxValue = 130f;
+
+    public void SetCanMove(bool move)
+    {
+        canMove = move;
+    }
 
     void CamMove()
     {
@@ -25,10 +33,6 @@ public class CameraMovement : MonoBehaviour
             currentPos = touch.position - touch.deltaPosition;      // 터치에 대한 현재 값 위치 저장
 
             movePos = (Vector3)(previousPos - currentPos) * speed;  // 이전 값과 현재 값의 벡터 거리를 구하여
-
-            //movePos.y = 8;
-            //movePos.z = 0;
-            //transform.position = Vector3.Lerp(transform.position, mousePos, 0.2f);
 
             this.transform.Translate(movePos);                      // 카메라를 이동 시킴
 
@@ -56,21 +60,24 @@ public class CameraMovement : MonoBehaviour
         // 거리 차이 구함(거리가 이전보다 크면(마이너스가 나오면)손가락을 벌린 상태_줌인 상태)
         float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
 
-        camera.fieldOfView += deltaMagnitudeDiff * perspectiveZoomSpeed;
-        camera.fieldOfView = Mathf.Clamp(camera.fieldOfView, 0.1f, 179.9f);
+        cam.fieldOfView += deltaMagnitudeDiff * perspectiveZoomSpeed;
+        cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, zoomMinValue, zoomMaxValue);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.touchCount == 1)  // 한 손가락으로 터치 시 
-        {       
-            CamMove();              // 카메라 이동
-        }
-
-        if (Input.touchCount == 2) // 두 손가락으로 터치 시
+        if(canMove)
         {
-            Zoom();                 // 줌 인/아웃
+            if (Input.touchCount == 1)  // 한 손가락으로 터치 시 
+            {
+                CamMove();              // 카메라 이동
+            }
+
+            if (Input.touchCount == 2) // 두 손가락으로 터치 시
+            {
+                Zoom();                 // 줌 인/아웃
+            }
         }
     }
 }
