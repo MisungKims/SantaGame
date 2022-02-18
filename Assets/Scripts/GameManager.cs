@@ -44,9 +44,11 @@ public class GameManager : MonoBehaviour
     public Text dateText;             // 날짜를 나타내는 텍스트
     public Text timeText;             // 시간을 나타내는 텍스트
 
-    [Header("---------- 상점 오브젝트")]
+    [Header("---------- 패널")]
+    public GameObject mainPanel;     // 상점 패널
     public GameObject storePanel;     // 상점 패널
-    
+    public GameObject santaPanel;     // 상점 패널
+
     [Header("---------- 변수")]
     public static float gauge;
     public static int level = 1;
@@ -56,6 +58,8 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region 함수
+
+    
 
     /// <summary>
     /// 1000 단위 마다 콤마를 붙여주는 함수
@@ -109,8 +113,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void ShowSantaPanel()
+    {
+        mainPanel.SetActive(false);
+        santaPanel.SetActive(true);
+    }
+
+    public void HideSantaPanel()
+    {
+        mainPanel.SetActive(true);
+        santaPanel.SetActive(false);
+    }
+
     #endregion
-   
+
 
     // Start is called before the first frame update
     void Start()
@@ -122,6 +138,7 @@ public class GameManager : MonoBehaviour
         goldText.text = GetCommaText(myGold);
 
         storePanel.SetActive(false);
+        santaPanel.SetActive(false);
     }
 
     private void Update()
