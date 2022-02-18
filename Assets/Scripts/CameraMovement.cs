@@ -9,7 +9,10 @@ public class CameraMovement : MonoBehaviour
 
     public float basicFieldOfView = 60f;            // 기본 카메라의 field of view
     public float chasingFieldOfView = 25f;          // 추적 시 카메라의 field of view
-    
+
+    enum ChaseState{ chaseStart, chasing, chaseEnd, noChase };
+    ChaseState chaseState;
+
     [Header("---------- Move")]
     public float moveSpeed = 0.06f;
     public Vector2 currentPos, previousPos;
@@ -110,6 +113,8 @@ public class CameraMovement : MonoBehaviour
 
     void Zoom()
     {
+        if (chaseState == ChaseState.chaseStart) chaseState = ChaseState.chasing;
+
         Touch touchZero = Input.GetTouch(0); //첫번째 손가락 터치를 저장
         Touch touchOne = Input.GetTouch(1); //두번째 손가락 터치를 저장
 
@@ -129,26 +134,53 @@ public class CameraMovement : MonoBehaviour
         cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, zoomMinValue, zoomMaxValue);
     }
 
-    public void StartChaseTarget()                                // 타겟 추적 시작
+    public void StartChaseTarget(Transform targetTransform)                                // 타겟 추적 시작
     {
-        cam.fieldOfView = chasingFieldOfView;              // 타겟을 향해 확대
-        cam.transform.rotation = Quaternion.Euler(new Vector3(chasingCamRotateX, cam.transform.rotation.y, cam.transform.rotation.z));     // 카메라의 x축을 조정
+        chasingTarget = targetTransform;
+
+        chaseState = ChaseState.chaseStart;
+
+        StartCoroutine(changeChaseState(ChaseState.chasing));       // 3초 후 chasing 상태로 변경
+    }
+
+    void SetChasingCamera()     // 타겟 추적 시작 시 카메라 세팅
+    {
+        if (chaseState == ChaseState.chaseStart && chasingTarget != null)
+        {
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, chasingFieldOfView, Time.deltaTime);          // 타겟을 향해 줌인
+
+            Quaternion chasingCamRot = Quaternion.Euler(new Vector3(chasingCamRotateX, cam.transform.rotation.y, cam.transform.rotation.z));    // 카메라의 x축을 조정
+            cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, chasingCamRot, Time.deltaTime);
+        }
+    }
+
+    IEnumerator changeChaseState(ChaseState cs)
+    {
+        yield return new WaitForSeconds(3f);
+
+        chaseState = cs;
     }
 
     void EndChaseTarget()                   // 타겟 추적 종료
     {
         // 모두 기본 값으로 되돌림
-
+        chaseState = ChaseState.chaseEnd;
         cam.fieldOfView = basicFieldOfView;
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
         cam.transform.rotation = Quaternion.Euler(new Vector3(basicCamRotateX, cam.transform.rotation.y, cam.transform.rotation.z));
+
+        chasingTarget = null;
     }
+
 
 
     // Update is called once per frame
     void Update()
     {
         CamRotate();
+
+        SetChasingCamera();             // 타겟 추적 시작 시 카메라 세팅
+
         if (canMove)
         {
             if (Input.touchCount == 1)  // 한 손가락으로 터치 시 
@@ -164,6 +196,9 @@ public class CameraMovement : MonoBehaviour
                 Zoom();                 // 줌 인/아웃
             }
         }
+
+
+        
     }
 
     private void FixedUpdate()
