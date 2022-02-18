@@ -48,10 +48,10 @@ public class GameManager : MonoBehaviour
     public GameObject storePanel;     // 상점 패널
     
     [Header("---------- 변수")]
-    public float gauge;
-    public int level = 1;
-    public int myGold = 0;
-    public float second = 0;
+    public static float gauge;
+    public static int level = 1;
+    public static int myGold = 100;
+    public static float second = 0;
 
     #endregion
 

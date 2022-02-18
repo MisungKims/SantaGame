@@ -4,24 +4,75 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    [Header("Move")]
-    public float speed = 0.06f;
+    [Header("---------- Chase")]
+    public Transform chasingTarget = null;
+
+    public float basicFieldOfView = 60f;            // 기본 카메라의 field of view
+    public float chasingFieldOfView = 25f;          // 추적 시 카메라의 field of view
+    
+    [Header("---------- Move")]
+    public float moveSpeed = 0.06f;
     public Vector2 currentPos, previousPos;
     public Vector3 movePos;
     public bool canMove = true;
 
-    [Header("Zoom")]
+    [Header("---------- Rotate")]
+    public float rotateSpeed = 1;
+
+    public float basicCamRotateX = 30f;           // 기본 카메라의 x축
+    public float chasingCamRotateX = 20f;         // 추적 시 카메라의 x축
+
+    public float minRotateX = -10f;                // 회전 시 x축의 Min 값
+    public float maxRotateX = 20f;                 // 회전 시 x축의 Max 값
+    
+    public float minRotateY = -40f;                // 회전 시 y축의 Min 값
+    public float maxRotateY = 70f;                 // 회전 시 y축의 Max 값
+
+    float mouseX;
+    float mouseY;
+
+    [Header("---------- Zoom")]
     public Camera cam;
     public float perspectiveZoomSpeed = 0.09f;  //줌인,줌아웃할때 속도   
     public float zoomMinValue = 10f;
     public float zoomMaxValue = 130f;
 
+    #region 싱글톤
+    private static CameraMovement cameraInstance = null;
+
+    private void Awake()
+    {
+        if (cameraInstance == null)
+        {
+            cameraInstance = this;
+            DontDestroyOnLoad(gameObject);      // 씬 전환 시에도 파괴되지 않음
+        }
+        else
+        {
+            if (cameraInstance != this)
+                Destroy(this.gameObject);
+        }
+    }
+
+    public static CameraMovement Instance
+    {
+        get
+        {
+            if (cameraInstance == null)
+            {
+                return null;
+            }
+            return cameraInstance;
+        }
+    }
+
+    #endregion
     public void SetCanMove(bool move)
     {
         canMove = move;
     }
 
-    void CamMove()
+    void CamMove()                  // 카메라 움직임
     {
         Touch touch = Input.GetTouch(0);        // 손가락 터치
         if (touch.phase == TouchPhase.Began)    // 눌렸을 때
@@ -32,7 +83,7 @@ public class CameraMovement : MonoBehaviour
         {
             currentPos = touch.position - touch.deltaPosition;      // 터치에 대한 현재 값 위치 저장
 
-            movePos = (Vector3)(previousPos - currentPos) * speed;  // 이전 값과 현재 값의 벡터 거리를 구하여
+            movePos = (Vector3)(previousPos - currentPos) * moveSpeed;  // 이전 값과 현재 값의 벡터 거리를 구하여
 
             this.transform.Translate(movePos);                      // 카메라를 이동 시킴
 
@@ -40,6 +91,20 @@ public class CameraMovement : MonoBehaviour
         }
         else if (touch.phase == TouchPhase.Ended)
         {
+        }
+    }
+
+    void CamRotate()            // 카메라 회전
+    {
+        if (Input.GetMouseButton(0))
+        {
+            mouseX += Input.GetAxis("Mouse X");
+            mouseY += Input.GetAxis("Mouse Y") * -1;
+
+            float xRot = Mathf.Clamp(transform.rotation.x + mouseY, minRotateX, maxRotateX);
+            float yRot = Mathf.Clamp(transform.rotation.y + mouseX, minRotateY, maxRotateY);
+
+            transform.rotation = Quaternion.Euler(new Vector3(xRot, yRot, 0) * rotateSpeed);
         }
     }
 
@@ -64,20 +129,50 @@ public class CameraMovement : MonoBehaviour
         cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, zoomMinValue, zoomMaxValue);
     }
 
+    public void StartChaseTarget()                                // 타겟 추적 시작
+    {
+        cam.fieldOfView = chasingFieldOfView;              // 타겟을 향해 확대
+        cam.transform.rotation = Quaternion.Euler(new Vector3(chasingCamRotateX, cam.transform.rotation.y, cam.transform.rotation.z));     // 카메라의 x축을 조정
+    }
+
+    void EndChaseTarget()                   // 타겟 추적 종료
+    {
+        // 모두 기본 값으로 되돌림
+
+        cam.fieldOfView = basicFieldOfView;
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+        cam.transform.rotation = Quaternion.Euler(new Vector3(basicCamRotateX, cam.transform.rotation.y, cam.transform.rotation.z));
+    }
+
+
     // Update is called once per frame
     void Update()
     {
-        if(canMove)
+        CamRotate();
+        if (canMove)
         {
             if (Input.touchCount == 1)  // 한 손가락으로 터치 시 
             {
-                CamMove();              // 카메라 이동
+                if (chasingTarget == null)          // 추적할 타겟이 없으면
+                    CamMove();                      // 카메라 이동
+                else                                // 추적할 타겟이 있으면 
+                    CamRotate();                    // 오브젝트를 중심으로 카메라 회전
             }
 
             if (Input.touchCount == 2) // 두 손가락으로 터치 시
             {
                 Zoom();                 // 줌 인/아웃
             }
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        // 추적할 타겟이 있으면 오브젝트를 따라다님
+        if (chasingTarget != null)
+        {
+            Vector3 targetPos = new Vector3(chasingTarget.position.x, chasingTarget.position.y, chasingTarget.position.z);
+            transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime);
         }
     }
 }
