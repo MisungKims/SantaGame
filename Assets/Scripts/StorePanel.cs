@@ -76,11 +76,11 @@ public class StorePanel : MonoBehaviour
 
     void SetButtonInteractable()
     {
-        if (GameManager.Instance.myGold >= selectedObject.buildingPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
+        if (GameManager.myGold >= selectedObject.buildingPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
             buyBuildingButton.interactable = true;                                             //  Interactable을 True로 설정
         else buyBuildingButton.interactable = false;
 
-        if (GameManager.Instance.myGold >= selectedObject.santaPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
+        if (GameManager.myGold >= selectedObject.santaPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
             buySantaButton.interactable = true;                                             //  Interactable을 True로 설정
         else buySantaButton.interactable = false;
 
@@ -94,7 +94,7 @@ public class StorePanel : MonoBehaviour
 
     void Update()
     {
-        goldTextStore.text = GameManager.Instance.myGold.ToString();
+        goldTextStore.text = GameManager.myGold.ToString();
 
         selectedBuildingName.text = selectedObject.buildingName;
         selectedBuildingPrice.text = selectedObject.buildingPrice.ToString();
