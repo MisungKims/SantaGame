@@ -58,7 +58,7 @@ public class StoreObjectSc : MonoBehaviour
     /// </summary>
     public void BuildingButtonClick()
     {
-        if (GameManager.Instance.myGold >= buildingPrice)            // 플레이어가 가진 돈이 건물의 가격보다 높을 때
+        if (GameManager.myGold >= buildingPrice)            // 플레이어가 가진 돈이 건물의 가격보다 높을 때
         {
             if (!isBuyBuilding) UnlockBuilding();                           // 사지 않은 건물이면 잠금 해제
             else UpgradeBuilding();                                 // 산 건물이면 업그레이드
@@ -101,7 +101,7 @@ public class StoreObjectSc : MonoBehaviour
 
     public void SantaButtonClick()
     {
-        if (GameManager.Instance.myGold >= santaPrice)            // 플레이어가 가진 돈이 건물의 가격보다 높을 때
+        if (GameManager.myGold >= santaPrice)            // 플레이어가 가진 돈이 건물의 가격보다 높을 때
         {
             if (!isBuySanta) UnlockSanta();                           // 사지 않은 건물이면 잠금 해제
             else UpgradeSanta();                                 // 산 건물이면 업그레이드
@@ -147,15 +147,15 @@ public class StoreObjectSc : MonoBehaviour
     /// </summary>
     void SetButtonInteractable()
     {
-        if (GameManager.Instance.level >= unlockLevel && GameManager.Instance.myGold >= buildingPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
+        if (GameManager.level >= unlockLevel && GameManager.myGold >= buildingPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
             buildingButton.interactable = true;                                             //  Interactable을 True로 설정
         else buildingButton.interactable = false;
 
-        if (GameManager.Instance.level >= unlockLevel && GameManager.Instance.myGold >= santaPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
+        if (GameManager.level >= unlockLevel && GameManager.myGold >= santaPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
             santaButton.interactable = true;                                             //  Interactable을 True로 설정
         else santaButton.interactable = false;
 
-        if (GameManager.Instance.level >= unlockLevel)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
+        if (GameManager.level >= unlockLevel)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
             backgroundButton.interactable = true;                                             //  Interactable을 True로 설정
         else backgroundButton.interactable = false;
     }
