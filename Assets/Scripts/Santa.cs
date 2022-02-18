@@ -14,12 +14,10 @@ public class Santa : MonoBehaviour
 
             if (true == (Physics.Raycast(ray.origin, ray.direction * 10, out hit)))
             {
-                if(hit.collider.name == this.name)
+                if(hit.collider.CompareTag("Santa"))
                 {
-                    CameraMovement.Instance.chasingTarget = this.transform;
-                    CameraMovement.Instance.StartChaseTarget();
+                    CameraMovement.Instance.StartChaseTarget(this.transform);
                 }
-                Debug.Log(hit.collider.name);
             }
         }
     }
