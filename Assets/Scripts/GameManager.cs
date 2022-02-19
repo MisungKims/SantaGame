@@ -115,8 +115,11 @@ public class GameManager : MonoBehaviour
 
     public void ShowSantaPanel()
     {
-        mainPanel.SetActive(false);
-        santaPanel.SetActive(true);
+        if(!santaPanel.activeSelf)
+        {
+            mainPanel.SetActive(false);
+            santaPanel.SetActive(true);
+        }
     }
 
     public void HideSantaPanel()
@@ -139,14 +142,20 @@ public class GameManager : MonoBehaviour
 
         storePanel.SetActive(false);
         santaPanel.SetActive(false);
+
+       
     }
 
     private void Update()
     {
+        
+
         second += Time.deltaTime;
 
         //timeText.text = (int)second / 60 + " : " + (int)second % 60;
         timeText.text = string.Format("{0:D2} : {1:D2}", (int)second / 60, (int)second % 60);
     }
+
+    
 
 }
