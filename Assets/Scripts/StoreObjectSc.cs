@@ -45,12 +45,16 @@ public class StoreObjectSc : MonoBehaviour
 
     public string desc;                    // 건물의 설명
 
-  
+    [Header("---------- 오브젝트")]
+    public GameObject santaObject;
+    Santa santaInstant;
+
     #endregion
 
     public void ButtonClick()
     {
         storePanel.selectedObject = this;
+        storePanel.SetButtonListner();
     }
 
     /// <summary>
@@ -119,6 +123,18 @@ public class StoreObjectSc : MonoBehaviour
 
         unlockSantaImage.SetActive(false);           // 잠금 이미지를 숨김
 
+        GetNewSanta();      // 산타 오브젝트 생성
+    }
+
+    void GetNewSanta()
+    {
+        GameManager.Instance.HideStorePanel();
+
+        GameObject instant = GameObject.Instantiate(santaObject, santaObject.transform.position, santaObject.transform.rotation, santaObject.transform.parent);
+
+        santaInstant = instant.transform.GetComponent<Santa>();
+
+        santaInstant.InitSanta(santaName);
     }
 
     /// <summary>
@@ -131,7 +147,10 @@ public class StoreObjectSc : MonoBehaviour
         santaPrice = (int)(santaPrice * multiplySantaPrice);    // 비용을 배율만큼 증가
         santaPriceText.text = GetCommaText(santaPrice);
 
-        santaLevel++;                       // 건물의 레벨 업
+        santaLevel++;                       // 산타의 레벨 업
+
+        if (santaInstant)
+            santaInstant.level++;
     }
 
     /// <summary>
