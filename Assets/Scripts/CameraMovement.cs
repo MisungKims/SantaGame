@@ -52,9 +52,10 @@ public class CameraMovement : MonoBehaviour
 
     [Header("---------- Zoom")]
     public Camera cam;
-    public float perspectiveZoomSpeed = 0.09f;  //줌인,줌아웃할때 속도   
+    public float perspectiveZoomSpeed = 5f;  //줌인,줌아웃할때 속도   
     public float zoomMinValue = 6f;
     public float zoomMaxValue = 70f;
+    public float sensitive = 1f;
     #endregion
 
     #region 사용자 정의 함수
@@ -110,12 +111,14 @@ public class CameraMovement : MonoBehaviour
 
             movePos = (Vector3)(previousPos - currentPos) * moveSpeed;  // 이전 값과 현재 값의 벡터 거리를 구하여
 
-            this.transform.Translate(movePos);                      // 카메라를 이동 시킴
+            cam.transform.Translate(movePos);                      // 카메라를 이동 시킴
+            //cam.transform.position = Vector3.Lerp(cam.transform.position, movePos, Time.deltaTime);
 
             previousPos = touch.position - touch.deltaPosition;
         }
         else if (touch.phase == TouchPhase.Ended)
         {
+           
         }
     }
 
@@ -177,7 +180,7 @@ public class CameraMovement : MonoBehaviour
         // 거리 차이 구함(거리가 이전보다 크면(마이너스가 나오면)손가락을 벌린 상태_줌인 상태)
         float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
 
-        cam.fieldOfView += deltaMagnitudeDiff * perspectiveZoomSpeed;
+        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, cam.fieldOfView + deltaMagnitudeDiff * perspectiveZoomSpeed, sensitive * Time.deltaTime);
         cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, zoomMinValue, zoomMaxValue);
     }
 
@@ -287,18 +290,18 @@ public class CameraMovement : MonoBehaviour
         cam.transform.position = new Vector3(0, camPosY, camPosZ);
     }
 
-    void Update()
-    {
-        //CamRotate();        // 나중에 지워야 함
+    //void Update()
+    //{
+    //    //CamRotate();        // 나중에 지워야 함
 
+       
+    //}
+
+    private void LateUpdate()
+    {
         CameraMove();       // 카메라의 움직임
 
         SetChaseCam();      // 타켓 추적 시작/종료 시 카메라 세팅
-    }
-
-    private void FixedUpdate()
-    {
-       
         // 추적 시작 후 오브젝트를 따라다님
         if (chasingTarget != null)
         {
