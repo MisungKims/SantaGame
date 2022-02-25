@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
     public void LevelUp()
     {
         level++;
-        lvText.text = level.ToString();
+        lvText.text = "LV." + string.Format("{0:D3}", level.ToString());
     }
 
     public void IncreaseGauge(float amount)
@@ -144,8 +144,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        lvText.text = level.ToString();
-
+        lvText.text = "LV." + string.Format("{0:D3}", level); ;
+        
         gaugeSlider.value = gauge;
 
         ShowMyGold();
@@ -154,7 +154,6 @@ public class GameManager : MonoBehaviour
         santaPanel.SetActive(false);
 
         StartCoroutine(CalcSecond());
-
     }
 
     IEnumerator CalcSecond()
@@ -168,8 +167,4 @@ public class GameManager : MonoBehaviour
             timeText.text = string.Format("{0:D2} : {1:D2}", (int)second / 60, (int)second % 60);
         }
     }
-
-   
-    
-
 }
