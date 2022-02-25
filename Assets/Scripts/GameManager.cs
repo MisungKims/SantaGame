@@ -153,7 +153,7 @@ public class GameManager : MonoBehaviour
         storePanel.SetActive(false);
         santaPanel.SetActive(false);
 
-        StartCoroutine(CalcSecond());
+        //StartCoroutine(CalcSecond());
     }
 
     IEnumerator CalcSecond()
@@ -164,7 +164,7 @@ public class GameManager : MonoBehaviour
 
             second++;
 
-            timeText.text = string.Format("{0:D2} : {1:D2}", (int)second / 60, (int)second % 60);
+            //timeText.text = string.Format("{0:D2} : {1:D2}", (int)second / 60, (int)second % 60);
         }
     }
 }
