@@ -88,6 +88,11 @@ public class StorePanel : MonoBehaviour
 
     private void Start()
     {
+        SetButtonListner();
+    }
+
+    public void SetButtonListner()
+    {
         buyBuildingButton.onClick.AddListener(selectedObject.BuildingButtonClick);
         buySantaButton.onClick.AddListener(selectedObject.SantaButtonClick);
     }
@@ -97,11 +102,12 @@ public class StorePanel : MonoBehaviour
         goldTextStore.text = GameManager.myGold.ToString();
 
         selectedBuildingName.text = selectedObject.buildingName;
-        selectedBuildingPrice.text = selectedObject.buildingPrice.ToString();
+        selectedBuildingPrice.text = GoldManager.ExpressUnitOfGold(selectedObject.buildingPrice);
         
+
         selectedSantaName.text = selectedObject.santaName;
-        selectedSantaPrice.text = selectedObject.santaPrice.ToString();
-        
+        selectedSantaPrice.text = GoldManager.ExpressUnitOfGold(selectedObject.santaPrice);
+       
         SetButtonInteractable();
     }
 }
