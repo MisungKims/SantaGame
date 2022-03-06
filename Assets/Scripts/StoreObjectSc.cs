@@ -166,17 +166,24 @@ public class StoreObjectSc : MonoBehaviour
     /// </summary>
     void SetButtonInteractable()
     {
-        if (GameManager.level >= unlockLevel && GameManager.myGold >= buildingPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
-            buildingButton.interactable = true;                                             //  Interactable을 True로 설정
-        else buildingButton.interactable = false;
+        //if (GameManager.level >= unlockLevel && GameManager.myGold >= buildingPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
+        //    buildingButton.interactable = true;                                             //  Interactable을 True로 설정
+        //else buildingButton.interactable = false;
 
-        if (GameManager.level >= unlockLevel && GameManager.myGold >= santaPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
-            santaButton.interactable = true;                                             //  Interactable을 True로 설정
-        else santaButton.interactable = false;
+        //if (GameManager.level >= unlockLevel && GameManager.myGold >= santaPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
+        //    santaButton.interactable = true;                                             //  Interactable을 True로 설정
+        //else santaButton.interactable = false;
 
         if (GameManager.level >= unlockLevel)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
-            backgroundButton.interactable = true;                                             //  Interactable을 True로 설정
-        else backgroundButton.interactable = false;
+        {
+            backgroundButton.interactable = true;   //  Interactable을 True로 설정
+            unlockBuildingImage.SetActive(false);
+        }
+        else
+        {
+            backgroundButton.interactable = false;
+            unlockBuildingImage.SetActive(true);
+        }
     }
 
 
@@ -193,40 +200,42 @@ public class StoreObjectSc : MonoBehaviour
         unlockText = this.transform.GetChild(0).GetChild(2).GetComponent<Text>();
         unlockText.text = "Lv." + unlockLevel.ToString();
 
-        buildingButton = this.transform.GetChild(0).GetChild(3).GetComponent<Button>();
+        //buildingButton = this.transform.GetChild(0).GetChild(3).GetComponent<Button>();
 
-        buildingPriceText = buildingButton.transform.GetChild(0).GetComponent<Text>();
-        buildingPriceText.text = GetCommaText(buildingPrice);
+        //buildingPriceText = buildingButton.transform.GetChild(0).GetComponent<Text>();
+        //buildingPriceText.text = GetCommaText(buildingPrice);
 
-        incrementGoldText = buildingButton.transform.GetChild(1).GetComponent<Text>();
-        incrementGoldText.text = "골드 증가량 : " + GetCommaText(incrementGold);
+        //incrementGoldText = buildingButton.transform.GetChild(1).GetComponent<Text>();
+        //incrementGoldText.text = "골드 증가량 : " + GetCommaText(incrementGold);
 
-        unlockBuildingImage = buildingButton.transform.GetChild(2).gameObject;
+        unlockBuildingImage = this.transform.GetChild(0).GetChild(3).gameObject;
 
-        // 사지 않은 건물일 때
-        if (!isBuyBuilding)
-        {
-            unlockBuildingImage.SetActive(true);       // 잠금 이미지를 보여줌
 
-            // 증가량과 설명 텍스트를 숨김
-            incrementGoldText.gameObject.SetActive(false);
-        }
 
-        santaButton = this.transform.GetChild(0).GetChild(4).GetComponent<Button>();
+        //// 사지 않은 건물일 때
+        //if (!isBuyBuilding)
+        //{
+        //    unlockBuildingImage.SetActive(true);       // 잠금 이미지를 보여줌
+
+        //    // 증가량과 설명 텍스트를 숨김
+        //    incrementGoldText.gameObject.SetActive(false);
+        //}
+
+        //santaButton = this.transform.GetChild(0).GetChild(4).GetComponent<Button>();
         
-        santaPriceText = santaButton.transform.GetChild(0).GetComponent<Text>();
-        santaPriceText.text = GetCommaText(santaPrice);
+        //santaPriceText = santaButton.transform.GetChild(0).GetComponent<Text>();
+        //santaPriceText.text = GetCommaText(santaPrice);
 
-        unlockSantaImage = santaButton.transform.GetChild(2).gameObject;
+        //unlockSantaImage = santaButton.transform.GetChild(2).gameObject;
 
-        santaNameText = santaButton.transform.GetChild(3).GetComponent<Text>();
-        santaNameText.text = santaName;
+        //santaNameText = santaButton.transform.GetChild(3).GetComponent<Text>();
+        //santaNameText.text = santaName;
 
-        // 사지 않은 산타일 때
-        if (!isBuySanta)
-        {
-            unlockSantaImage.SetActive(true);       // 잠금 이미지를 보여줌
-        }
+        //// 사지 않은 산타일 때
+        //if (!isBuySanta)
+        //{
+        //    unlockSantaImage.SetActive(true);       // 잠금 이미지를 보여줌
+        //}
     }
 
     void Update()
