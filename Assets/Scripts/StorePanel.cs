@@ -5,25 +5,70 @@ using UnityEngine.UI;
 
 public class StorePanel : MonoBehaviour
 {
+    #region 변수
+    public static StorePanel Instance;
+
     [Header("---------- 상점 오브젝트")]
     public GameObject storeObject;              // 복제가 될 상점의 건물 오브젝트
 
     public StoreObjectSc selectedObject;
 
-    public Button buyBuildingButton;
+    public Button buyBuildingButton;                 // 건물 사기 버튼
     public Text selectedBuildingName;                // 선택한 상점 오브젝트의 건물 이름
     public Text selectedBuildingPrice;               // 선택한 상점 오브젝트의 건물 가격
     public Text incrementGoldText;                   // 선택한 상점 오브젝트 건물의 골드 증가량
 
-    public Button buySantaButton;
+    public Button buySantaButton;                   // 산타 사기 버튼
     public Text selectedSantaName;                  // 선택한 상점 오브젝트의 산타 이름
-    public Text selectedSantaPrice;
-    public Text incrementAmountText;
+    public Text selectedSantaPrice;                 // 선택한 상점 오브젝트의 산타 가격
+    public Text incrementAmountText;                // 선택한 상점 오브젝트 산타의 획득량 증가량
+
+
+    private int buildingPrice;
+    public int BuildingPrice
+    {
+        set
+        {
+            selectedBuildingPrice.text = GoldManager.ExpressUnitOfGold(value);
+        }
+    }
+
+    private int incrementGold;
+    public int IncrementGold
+    {
+        set
+        {
+            incrementGoldText.text = "+" + value.ToString();
+        }
+    }
+
+    private int santaPrice;
+    public int SantaPrice
+    {   
+        set
+        {
+            selectedSantaPrice.text = GoldManager.ExpressUnitOfGold(value);
+        }
+    }
+
+    private float incrementAmount;
+    public float IncrementAmount
+    {
+        set
+        {
+            incrementAmountText.text = value.ToString() + "%";
+        }
+    }
+
 
     public List<StoreObjectSc> BuildingList = new List<StoreObjectSc>();
 
+    #endregion
+
     void Awake()    // 게임 매니저의 Start보다 먼저 실행
     {
+        Instance = this;
+
         List<Dictionary<string, object>> data = CSVReader.Read("StoreData");       // csv 리더를 통해 StoreData 파일 가져오기
 
         // 가져온 내용으로 StoreObject 복제하기
@@ -96,37 +141,30 @@ public class StorePanel : MonoBehaviour
     }
 
     /// <summary>
-    /// 상점 목록의 버튼을 선택했을 때
+    /// 상점 목록의 버튼을 선택했을 때 선택된 오브젝트의 것으로 이름, 이미지, 가격 등을 설정
     /// </summary>
     public void SelectStoreObject()
     {
-        SetSelectedValue();
-        SetButtonListner();
-    }
-
-    /// <summary>
-    /// 선택된 오브젝트의 것으로 이름, 이미지, 가격 등을 설정
-    /// </summary>
-    private void SetSelectedValue()
-    {
         selectedBuildingName.text = selectedObject.buildingName;
-        selectedBuildingPrice.text = GoldManager.ExpressUnitOfGold(selectedObject.buildingPrice);
-        incrementGoldText.text = selectedObject.incrementGold.ToString();
+        BuildingPrice = selectedObject.buildingPrice;
+        IncrementGold = selectedObject.incrementGold;
 
         selectedSantaName.text = selectedObject.santaName;
-        selectedSantaPrice.text = GoldManager.ExpressUnitOfGold(selectedObject.santaPrice);
-        //incrementAmountText.text = selectedObject.
-
+        SantaPrice = selectedObject.santaPrice;
+        IncrementAmount = selectedObject.amountObtained;
     }
 
-    /// <summary>
-    /// 선택된 오브젝트의 것으로 버튼 리스너 설정
-    /// </summary>
-    public void SetButtonListner()
+ 
+    public void BuildingUpgradeButton()
     {
-        buyBuildingButton.onClick.AddListener(selectedObject.BuildingButtonClick);
-        buySantaButton.onClick.AddListener(selectedObject.SantaButtonClick);
+        selectedObject.BuildingButtonClick();
     }
+
+    public void SantaUpgradeButton()
+    {
+        selectedObject.SantaButtonClick();
+    }
+
 
     void Update()
     {
