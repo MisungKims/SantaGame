@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
     public void LevelUp()
     {
         level++;
-        lvText.text = "LV." + string.Format("{0:D3}", level.ToString());
+        lvText.text = string.Format("{0:D2}", level.ToString());
     }
 
     public void IncreaseGauge(float amount)
@@ -144,7 +144,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        lvText.text = "LV." + string.Format("{0:D3}", level); ;
+        lvText.text = string.Format("{0:D2}", level); ;
         
         gaugeSlider.value = gauge;
 
