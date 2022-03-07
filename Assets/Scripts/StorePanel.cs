@@ -6,18 +6,19 @@ using UnityEngine.UI;
 public class StorePanel : MonoBehaviour
 {
     [Header("---------- 상점 오브젝트")]
-    public Text goldTextStore;                  // 골드를 나타내는 텍스트
     public GameObject storeObject;              // 복제가 될 상점의 건물 오브젝트
 
     public StoreObjectSc selectedObject;
 
     public Button buyBuildingButton;
     public Text selectedBuildingName;                // 선택한 상점 오브젝트의 건물 이름
-    public Text selectedBuildingPrice;
+    public Text selectedBuildingPrice;               // 선택한 상점 오브젝트의 건물 가격
+    public Text incrementGoldText;                   // 선택한 상점 오브젝트 건물의 골드 증가량
 
     public Button buySantaButton;
-    public Text selectedSantaName;                // 선택한 상점 오브젝트의 산타 이름
+    public Text selectedSantaName;                  // 선택한 상점 오브젝트의 산타 이름
     public Text selectedSantaPrice;
+    public Text incrementAmountText;
 
     public List<StoreObjectSc> BuildingList = new List<StoreObjectSc>();
 
@@ -74,13 +75,16 @@ public class StorePanel : MonoBehaviour
         BuildingList.Add(copiedStoreObject);
     }
 
+    /// <summary>
+    /// 버튼의 Interactable 설정
+    /// </summary>
     void SetButtonInteractable()
     {
-        if (GameManager.myGold >= selectedObject.buildingPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
+        if (GameManager.Instance.MyGold >= selectedObject.buildingPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
             buyBuildingButton.interactable = true;                                             //  Interactable을 True로 설정
         else buyBuildingButton.interactable = false;
 
-        if (GameManager.myGold >= selectedObject.santaPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
+        if (GameManager.Instance.MyGold >= selectedObject.santaPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
             buySantaButton.interactable = true;                                             //  Interactable을 True로 설정
         else buySantaButton.interactable = false;
 
@@ -88,9 +92,36 @@ public class StorePanel : MonoBehaviour
 
     private void Start()
     {
+        SelectStoreObject();
+    }
+
+    /// <summary>
+    /// 상점 목록의 버튼을 선택했을 때
+    /// </summary>
+    public void SelectStoreObject()
+    {
+        SetSelectedValue();
         SetButtonListner();
     }
 
+    /// <summary>
+    /// 선택된 오브젝트의 것으로 이름, 이미지, 가격 등을 설정
+    /// </summary>
+    private void SetSelectedValue()
+    {
+        selectedBuildingName.text = selectedObject.buildingName;
+        selectedBuildingPrice.text = GoldManager.ExpressUnitOfGold(selectedObject.buildingPrice);
+        incrementGoldText.text = selectedObject.incrementGold.ToString();
+
+        selectedSantaName.text = selectedObject.santaName;
+        selectedSantaPrice.text = GoldManager.ExpressUnitOfGold(selectedObject.santaPrice);
+        //incrementAmountText.text = selectedObject.
+
+    }
+
+    /// <summary>
+    /// 선택된 오브젝트의 것으로 버튼 리스너 설정
+    /// </summary>
     public void SetButtonListner()
     {
         buyBuildingButton.onClick.AddListener(selectedObject.BuildingButtonClick);
@@ -99,15 +130,6 @@ public class StorePanel : MonoBehaviour
 
     void Update()
     {
-        goldTextStore.text = GameManager.myGold.ToString();
-
-        selectedBuildingName.text = selectedObject.buildingName;
-        selectedBuildingPrice.text = GoldManager.ExpressUnitOfGold(selectedObject.buildingPrice);
-        
-
-        selectedSantaName.text = selectedObject.santaName;
-        selectedSantaPrice.text = GoldManager.ExpressUnitOfGold(selectedObject.santaPrice);
-       
         SetButtonInteractable();
     }
 }
