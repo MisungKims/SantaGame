@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class Santa : MonoBehaviour
 {
-
-    public int level = 1;
+    #region 변수
+    
+    private int level = 1;
+    public int Level
+    {
+        get { return level; }
+        set { level = value; }
+    }
 
     Animator anim;
+    #endregion
 
+    #region 함수
+
+    // 산타 초기화
     public void InitSanta(string santaName)
     {
-        level = 1;
-        
         name += " " + santaName;
 
         SetCamTargetThis();
@@ -22,7 +30,7 @@ public class Santa : MonoBehaviour
         anim.SetInteger("SantaIndex", Random.Range(0, 11));
     }
 
-   
+
     public void SetCamTargetThis()
     {
         CameraMovement.Instance.StartChaseTarget(this.transform);
@@ -45,7 +53,9 @@ public class Santa : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region 유니티 메소드
     void Awake()
     {
         anim = GetComponent<Animator>();
@@ -55,4 +65,6 @@ public class Santa : MonoBehaviour
     {
         TouchSanta();
     }
+    #endregion
+
 }
