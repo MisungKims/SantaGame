@@ -13,6 +13,9 @@ public class StoreObjectSc : MonoBehaviour
 
     Button backgroundButton;
 
+ 
+    public int index;
+
     [Header("---------- 변수")]
     public int unlockLevel;                // 잠금 해제 가능 레벨
     public int second;                     // 몇 초 마다 증가할 것인지
@@ -38,6 +41,9 @@ public class StoreObjectSc : MonoBehaviour
     [Header("---------- 오브젝트")]
     public GameObject santaObject;
     Santa santaInstant;
+
+    public GameObject buildingGroup;
+    Building buildingInstant;
 
     #endregion
 
@@ -74,9 +80,22 @@ public class StoreObjectSc : MonoBehaviour
     {
        isBuyBuilding = true;
 
-        GameManager.Instance.MyGold -= buildingPrice;
+        GameManager.Instance.MyGold -= buildingPrice;                       // 건물 비용 지불
 
         GameManager.Instance.DoIncreaseGold(second, incrementGold);        // 정해진 시간마다 돈 증가하기 시작
+
+        NewBuilding();      // 건물 오브젝트 생성
+    }
+
+    // 새로운 건물 생성
+    void NewBuilding()
+    {
+        GameManager.Instance.HideStorePanel();          // 상점 창 숨기기
+
+        Debug.Log(index);
+
+        buildingInstant = buildingGroup.transform.GetChild(index).GetComponent<Building>();
+        buildingInstant.InitBuilding(multiplyBuildingPrice, buildingPrice, multiplyGold, incrementGold);
     }
 
     /// <summary>
@@ -92,7 +111,8 @@ public class StoreObjectSc : MonoBehaviour
         incrementGold = (int)(incrementGold * multiplyGold);            // 코인 증가량을 배율만큼 증가
         StorePanel.Instance.IncrementGold = incrementGold;
 
-        //buildingLevel++;                                                // 건물의 레벨 업
+        if (buildingInstant)
+            buildingInstant.Level++;                                                 // 건물의 레벨 업
     }
 
 
@@ -112,17 +132,17 @@ public class StoreObjectSc : MonoBehaviour
     {
         isBuySanta = true;
 
-        GameManager.Instance.MyGold -= santaPrice;
+        GameManager.Instance.MyGold -= santaPrice;      // 산타 비용 지불
 
-        GetNewSanta();      // 산타 오브젝트 생성
+        CreateNewSanta();      // 산타 오브젝트 생성
     }
 
     /// <summary>
     /// 새로운 산타 생성
     /// </summary>
-    void GetNewSanta()
+    void CreateNewSanta()
     {
-        GameManager.Instance.HideStorePanel();
+        GameManager.Instance.HideStorePanel();          // 상점 창 숨기기
 
         // 산타 오브젝트 생성
         GameObject instant = GameObject.Instantiate(santaObject, santaObject.transform.position, santaObject.transform.rotation, santaObject.transform.parent);
@@ -136,7 +156,7 @@ public class StoreObjectSc : MonoBehaviour
     /// </summary>
     void UpgradeSanta()
     {
-        GameManager.Instance.MyGold -= santaPrice;
+        GameManager.Instance.MyGold -= santaPrice;              // 산타 비용 지불
 
         santaPrice = (int)(santaPrice * multiplySantaPrice);    // 비용을 배율만큼 증가
         StorePanel.Instance.SantaPrice = santaPrice;
@@ -145,16 +165,9 @@ public class StoreObjectSc : MonoBehaviour
         StorePanel.Instance.IncrementAmount = amountObtained;
 
         if (santaInstant) 
-            santaInstant.Level++;
+            santaInstant.Level++;                               // 산타 레벨업
     }
 
-    /// <summary>
-    /// 1000 단위 마다 콤마를 붙여주는 함수
-    /// </summary>
-    string GetCommaText(int i)
-    {
-        return string.Format("{0: #,###; -#,###;0}", i);
-    }
 
     /// <summary>
     /// 플레이어의 레벨에 따른 버튼의 Interactable 설정

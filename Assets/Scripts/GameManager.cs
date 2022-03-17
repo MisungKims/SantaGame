@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     [Header("---------- 패널")]
     public GameObject mainPanel;     // 상점 패널
     public GameObject storePanel;     // 상점 패널
-    public GameObject santaPanel;     // 상점 패널
+    public GameObject clickObjPanel;     // 클릭 오브젝트 패널
 
     [Header("---------- 플레이어 값")]
     private float gauge;
@@ -70,27 +70,25 @@ public class GameManager : MonoBehaviour
 
     #region 함수
 
-    
-
     public void DoIncreaseGold(int second, int incrementGold)
     {
         //StartCoroutine(IncreaseGold(second, incrementGold));
     }
 
 
-    public void ShowSantaPanel()
+    public void ShowClickObjPanel()
     {
-        if(!santaPanel.activeSelf)
+        if(!clickObjPanel.activeSelf)
         {
             mainPanel.SetActive(false);
-            santaPanel.SetActive(true);
+            clickObjPanel.SetActive(true);
         }
     }
 
-    public void HideSantaPanel()
+    public void HideClickObjPanel()
     {
         mainPanel.SetActive(true);
-        santaPanel.SetActive(false);
+        clickObjPanel.SetActive(false);
     }
 
     // Store Panel을 보여주기
@@ -135,8 +133,7 @@ public class GameManager : MonoBehaviour
         
 
         storePanel.SetActive(false);
-        santaPanel.SetActive(false);
-
+        clickObjPanel.SetActive(false);
     }
 
     
