@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Text;
 
 public class StoreObjectSc : MonoBehaviour
 {
@@ -42,17 +43,60 @@ public class StoreObjectSc : MonoBehaviour
     public GameObject santaObject;        // 복제될 산타 프리팹
     public GameObject santaGroup;
     public GameObject buildingGroup;
+
+    private Building buildingInstant;
+    private Santa santaInstant;
+
+    // 캐싱
+    private StorePanel storeInstance;
+    private GameManager gameManagerInstance;
+    private Transform thisTransform;
+
+    StringBuilder sb = new StringBuilder();
    
-    public List<Building> BuildingList = new List<Building>();
-    public List<Santa> SantaList = new List<Santa>();
+    #endregion
+
+
+    #region 유니티 메소드
+
+    void Start()
+    {
+        storeInstance = StorePanel.Instance;
+        gameManagerInstance = GameManager.Instance;
+        thisTransform = this.transform;
+
+
+        backgroundButton = thisTransform.GetChild(0).GetComponent<Button>();
+
+        buildingNameText = thisTransform.GetChild(1).GetComponent<Text>();
+        buildingNameText.text = buildingName;
+
+        unlockText = thisTransform.GetChild(2).GetComponent<Text>();
+        sb.Append("Lv.");
+        sb.Append(unlockLevel.ToString());
+        unlockText.text = sb.ToString();
+
+        unlockImage = thisTransform.GetChild(3).gameObject;
+
+
+        //descText = this.transform.GetChild(0).GetChild(1).GetComponent<Text>();
+        //descText.text = desc;
+
+    }
+
+    void Update()
+    {
+        SetButtonInteractable();
+    }
 
     #endregion
+
 
     // 목록에 있는 버튼 클릭 시
     public void ButtonClick()
     {
-        StorePanel.Instance.selectedObject = this;       // 선택된 Object를 자신으로 변경
-        StorePanel.Instance.SelectStoreObject();
+        storeInstance.selectedObject = this;       // 선택된 Object를 자신으로 변경
+        storeInstance.SelectStoreObject();
     }
 
     void Unlock()
@@ -66,7 +110,7 @@ public class StoreObjectSc : MonoBehaviour
     /// </summary>
     public void BuildingButtonClick()
     {
-        if (GameManager.Instance.MyGold >= buildingPrice)           // 플레이어가 가진 돈이 건물의 가격보다 높을 때
+        if (gameManagerInstance.MyGold >= buildingPrice)           // 플레이어가 가진 돈이 건물의 가격보다 높을 때
         {
             if (!isBuyBuilding)
                 BuyNewBuilding();                                   // 사지 않은 건물이면 잠금 해제
@@ -81,9 +125,9 @@ public class StoreObjectSc : MonoBehaviour
     {
        isBuyBuilding = true;
 
-        GameManager.Instance.MyGold -= buildingPrice;                       // 건물 비용 지불
+        gameManagerInstance.MyGold -= buildingPrice;                       // 건물 비용 지불
 
-        GameManager.Instance.DoIncreaseGold(second, incrementGold);        // 정해진 시간마다 돈 증가하기 시작
+        gameManagerInstance.DoIncreaseGold(second, incrementGold);        // 정해진 시간마다 돈 증가하기 시작
 
         NewBuilding();      // 건물 오브젝트 생성
     }
@@ -91,10 +135,10 @@ public class StoreObjectSc : MonoBehaviour
     // 새로운 건물 생성
     void NewBuilding()
     {
-        GameManager.Instance.HideStorePanel();          // 상점 창 숨기기
+        gameManagerInstance.HideStorePanel();          // 상점 창 숨기기
 
-        BuildingList[index] = buildingGroup.transform.GetChild(index).GetComponent<Building>();
-        BuildingList[index].InitBuilding(index, buildingName, multiplyBuildingPrice, buildingPrice, multiplyGold, incrementGold);
+        buildingInstant = buildingGroup.transform.GetChild(index).GetComponent<Building>();
+        buildingInstant.InitBuilding(index, buildingName, multiplyBuildingPrice, buildingPrice, multiplyGold, incrementGold);
     }
 
     /// <summary>
@@ -102,19 +146,19 @@ public class StoreObjectSc : MonoBehaviour
     /// </summary>
     void UpgradeBuilding()
     {
-        if(BuildingList[index])
+        if(buildingInstant)
         {
-            BuildingList[index].Upgrade();
+            buildingInstant.Upgrade();
         }
 
-        StorePanel.Instance.BuildingPrice = buildingPrice;
-        StorePanel.Instance.IncrementGold = incrementGold;
+        storeInstance.BuildingPrice = buildingPrice;
+        storeInstance.IncrementGold = incrementGold;
     }
 
 
     public void SantaButtonClick()
     {
-        if (GameManager.Instance.MyGold >= santaPrice)            // 플레이어가 가진 돈이 건물의 가격보다 높을 때
+        if (gameManagerInstance.MyGold >= santaPrice)            // 플레이어가 가진 돈이 건물의 가격보다 높을 때
         {
             if (!isBuySanta) BuyNewSanta();                           // 사지 않은 건물이면 잠금 해제
             else UpgradeSanta();                                 // 산 건물이면 업그레이드
@@ -128,7 +172,7 @@ public class StoreObjectSc : MonoBehaviour
     {
         isBuySanta = true;
 
-        GameManager.Instance.MyGold -= santaPrice;      // 산타 비용 지불
+        gameManagerInstance.MyGold -= santaPrice;      // 산타 비용 지불
 
         CreateNewSanta();      // 산타 오브젝트 생성
     }
@@ -138,21 +182,11 @@ public class StoreObjectSc : MonoBehaviour
     /// </summary>
     void CreateNewSanta()
     {
-        GameManager.Instance.HideStorePanel();          // 상점 창 숨기기
+        gameManagerInstance.HideStorePanel();          // 상점 창 숨기기
 
-        
-        // 산타 오브젝트 생성
-        GameObject instant = GameObject.Instantiate(
-            santaObject, 
-            BuildingList[index].transform.GetChild(1).position, 
-            BuildingList[index].transform.GetChild(1).rotation, 
-            santaGroup.transform);
+        santaInstant = santaGroup.transform.GetChild(index).GetComponent<Santa>();
 
-        SantaList[index] = instant.transform.GetComponent<Santa>();
-
-        SantaList[index].InitSanta(index, santaName, multiplySantaPrice, santaPrice, multiplyAmountObtained, amountObtained);
-
-        SantaList[index].building = BuildingList[index];
+        santaInstant.InitSanta(index, santaName, multiplySantaPrice, santaPrice, multiplyAmountObtained, amountObtained, buildingInstant);
     }
 
     /// <summary>
@@ -160,13 +194,13 @@ public class StoreObjectSc : MonoBehaviour
     /// </summary>
     void UpgradeSanta()
     {
-        if (SantaList[index])
+        if (santaInstant)
         {
-            SantaList[index].Upgrade();
+            santaInstant.Upgrade();
         }
 
-        StorePanel.Instance.SantaPrice = santaPrice;
-        StorePanel.Instance.IncrementAmount = amountObtained;
+        storeInstance.SantaPrice = santaPrice;
+        storeInstance.IncrementAmount = amountObtained;
     }
 
 
@@ -175,7 +209,7 @@ public class StoreObjectSc : MonoBehaviour
     /// </summary>
     void SetButtonInteractable()
     {
-        if (GameManager.Instance.Level >= unlockLevel)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
+        if (gameManagerInstance.Level >= unlockLevel)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
         {
             backgroundButton.interactable = true;   //  Interactable을 True로 설정
             unlockImage.SetActive(false);
@@ -185,33 +219,5 @@ public class StoreObjectSc : MonoBehaviour
             backgroundButton.interactable = false;
             unlockImage.SetActive(true);
         }
-
-    }
-
-
-    void Start()
-    {
-        backgroundButton = this.transform.GetChild(0).GetComponent<Button>();
-
-        buildingNameText = this.transform.GetChild(0).GetChild(0).GetComponent<Text>();
-        buildingNameText.text = buildingName;
-
-      
-        descText = this.transform.GetChild(0).GetChild(1).GetComponent<Text>();
-        descText.text = desc;
-
-        unlockText = this.transform.GetChild(0).GetChild(2).GetComponent<Text>();
-        unlockText.text = "Lv." + unlockLevel.ToString();
-
-        unlockImage = this.transform.GetChild(0).GetChild(3).gameObject;
-
-        BuildingList = new List<Building>(new Building[StorePanel.Instance.ObjectList.Count]);
-        SantaList = new List<Santa>(new Santa[StorePanel.Instance.ObjectList.Count]);
-
-    }
-
-    void Update()
-    {
-        SetButtonInteractable();
     }
 }

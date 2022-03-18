@@ -63,6 +63,9 @@ public class StorePanel : MonoBehaviour
 
     public List<StoreObjectSc> ObjectList = new List<StoreObjectSc>();
 
+    // 캐싱
+    private GameManager gameManagerInstance;
+
     #endregion
 
     void Awake()    // 게임 매니저의 Start보다 먼저 실행
@@ -92,6 +95,7 @@ public class StorePanel : MonoBehaviour
         selectedObject = ObjectList[0];
     }
 
+    
     /// <summary>
     /// 상점 오브젝트 복제
     /// </summary>
@@ -126,12 +130,12 @@ public class StorePanel : MonoBehaviour
     /// </summary>
     void SetButtonInteractable()
     {
-        if (GameManager.Instance.MyGold >= selectedObject.buildingPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
+        if (gameManagerInstance.MyGold >= selectedObject.buildingPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
             buyBuildingButton.interactable = true;                                             //  Interactable을 True로 설정
         else buyBuildingButton.interactable = false;
 
         // 산타 오브젝트는 건물을 샀을 때만 Interactable이 True로
-        if (selectedObject.isBuyBuilding && GameManager.Instance.MyGold >= selectedObject.santaPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
+        if (selectedObject.isBuyBuilding && gameManagerInstance.MyGold >= selectedObject.santaPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
             buySantaButton.interactable = true;                                             //  Interactable을 True로 설정
         else buySantaButton.interactable = false;
     }
@@ -164,6 +168,8 @@ public class StorePanel : MonoBehaviour
     private void Start()
     {
         SelectStoreObject();
+
+        gameManagerInstance = GameManager.Instance;
     }
 
     void Update()

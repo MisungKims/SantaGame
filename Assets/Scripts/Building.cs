@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Text;
 
 public class Building : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class Building : MonoBehaviour
     private int level = 1;
     public int Level
     {
+        get { return level; }
         set { level = value; }
     }
 
@@ -24,11 +26,11 @@ public class Building : MonoBehaviour
 
     [SerializeField]
     private int buildingPrice;              // 건물 가격 
-    //public int BuildingPrice
-    //{
-    //    //get { return buildingPrice; }
-    //    //set { buildingPrice = value; }
-    //}
+    public int BuildingPrice
+    {
+        get { return buildingPrice; }
+        //set { buildingPrice = value; }
+    }
 
     [SerializeField]
     private float multiplyGold;             // 업그레이드 후 플레이어 돈 증가 배율
@@ -46,21 +48,32 @@ public class Building : MonoBehaviour
         //set { incrementGold = value; }
     }
 
-    private Vector3 distance;
-
-    //[SerializeField]
-    //private Santa santa;
-    //public Santa Santa
-    //{
-    //    get { return santa; }
-    //    set { santa = value; }
-    //}
-
-    private string buildingName;
 
     private int index;
+    public int Index
+    {
+        get { return index; }
+        //set { incrementGold = value; }
+    }
 
-    
+
+    private string buildingName;
+    public string BuilidingName
+    {
+        get { return buildingName; }
+    }
+
+    private Vector3 distance;
+
+    ClickObjWindow window;
+
+    StringBuilder sb = new StringBuilder();
+
+    // 캐싱
+    private StoreObjectSc objectList;
+    private GameManager gameManagerInstance;
+    private CameraMovement cameraInstance;
+
     #endregion
 
     #region 함수
@@ -87,13 +100,17 @@ public class Building : MonoBehaviour
 
     public void Upgrade()
     {
-        GameManager.Instance.MyGold -= buildingPrice;
+        if (gameManagerInstance.MyGold < buildingPrice)
+        {
+            return;
+        }
+        gameManagerInstance.MyGold -= buildingPrice;
 
         buildingPrice = (int)(buildingPrice * multiplyBuildingPrice);    // 비용을 배율만큼 증가
-        StorePanel.Instance.ObjectList[index].buildingPrice = buildingPrice;
+        objectList.buildingPrice = buildingPrice;
 
         incrementGold = (int)(incrementGold * multiplyGold);            // 코인 증가량을 배율만큼 증가
-        StorePanel.Instance.ObjectList[index].incrementGold = incrementGold;
+        objectList.incrementGold = incrementGold;
 
         level++;
     }
@@ -113,9 +130,15 @@ public class Building : MonoBehaviour
     /// </summary>
     public void ShowObjWindow()
     {
-        ClickObjWindow window = GameManager.Instance.clickObjWindow.transform.GetComponent<ClickObjWindow>();
-        window.Set(buildingName, level, buildingPrice, "+ " + incrementGold.ToString());
-       
+        window = GameManager.Instance.clickObjWindow.transform.GetComponent<ClickObjWindow>();
+
+        sb.Clear();
+        sb.Append("+ ");
+        sb.Append(incrementGold.ToString());
+
+        window.building = this;
+        window.SetBuildingInfo();
+
         GameManager.Instance.ShowClickObjWindow();
     }
 
@@ -148,6 +171,10 @@ public class Building : MonoBehaviour
     private void Start()
     {
         distance = this.transform.GetChild(0).localPosition;
+
+        objectList = StorePanel.Instance.ObjectList[index];
+        gameManagerInstance = GameManager.Instance;
+        cameraInstance = CameraMovement.Instance;
     }
 
     void Update()

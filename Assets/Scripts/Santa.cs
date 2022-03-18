@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Text;
 
 public class Santa : MonoBehaviour
 {
@@ -13,8 +14,7 @@ public class Santa : MonoBehaviour
         set { level = value; }
     }
 
-    Animator anim;
-
+  
     private float multiplySantaPrice;       // 업그레이드 후 산타 가격 증가 배율
     public float MultiplySantaPrice
     {
@@ -25,7 +25,7 @@ public class Santa : MonoBehaviour
     private int santaPrice;                 // 산타 가격 
     public int SantaPrice
     {
-        //get { return santaPrice; }
+        get { return santaPrice; }
         set { santaPrice = value; }
     }
 
@@ -39,7 +39,7 @@ public class Santa : MonoBehaviour
     private float amountObtained;           // 획득량 증가
     public float AmountObtained
     {
-        //get { return amountObtained; }
+        get { return amountObtained; }
         set { amountObtained = value; }
     }
 
@@ -47,10 +47,20 @@ public class Santa : MonoBehaviour
     public Building building;
 
     string santaName;
+    public string SantaName
+    {
+        get { return santaName; }
+    }
 
-    int index;
+    private int index;
+    public int Index
+    {
+        get { return index; }
+    }
 
     public static readonly WaitForSeconds m_waitForSecond1s = new WaitForSeconds(1f); // 캐싱
+
+    StringBuilder sb = new StringBuilder();
     #endregion
 
     #region 함수
@@ -60,7 +70,7 @@ public class Santa : MonoBehaviour
     /// 산타 초기화
     /// </summary>
     /// <param name="santaName">산타의 이름</param>
-    public void InitSanta(int index, string santaName, float multiplySantaPrice, int santaPrice, float multiplyAmountObtained, float amountObtained)
+    public void InitSanta(int index, string santaName, float multiplySantaPrice, int santaPrice, float multiplyAmountObtained, float amountObtained, Building building)
     {
         name += " " + santaName;            // 산타 이름 설정
 
@@ -70,10 +80,11 @@ public class Santa : MonoBehaviour
         this.santaPrice = santaPrice;
         this.multiplyAmountObtained = multiplyAmountObtained;
         this.amountObtained = amountObtained;
+        this.building = building;
 
         gameObject.SetActive(true);         // 산타가 보이도록
 
-        anim.SetInteger("SantaIndex", index);     // 어떤 산타를 불러올건지
+        //anim.SetInteger("SantaIndex", index);     // 어떤 산타를 불러올건지
 
         SetCamTargetThis();                 // 카메라가 산타를 따라다니도록
 
@@ -87,6 +98,11 @@ public class Santa : MonoBehaviour
     /// </summary>
     public void Upgrade()
     {
+        if (GameManager.Instance.MyGold < santaPrice)
+        {
+            return;
+        }
+
         GameManager.Instance.MyGold -= santaPrice;
 
         santaPrice = (int)(santaPrice * multiplySantaPrice);    // 비용을 배율만큼 증가
@@ -110,7 +126,15 @@ public class Santa : MonoBehaviour
     public void ShowObjWindow()
     {
         ClickObjWindow window = GameManager.Instance.clickObjWindow.transform.GetComponent<ClickObjWindow>();
-        window.Set(santaName, level, santaPrice, "골드 획득량 " + amountObtained.ToString() + "% 증가");
+
+        sb.Clear();
+        sb.Append("골드 획득량 ");
+        sb.Append(amountObtained.ToString());
+        sb.Append("% 증가");
+
+        window.santa = this;
+
+        window.SetSantaInfo();
 
         GameManager.Instance.ShowClickObjWindow();
     }
@@ -149,10 +173,10 @@ public class Santa : MonoBehaviour
     #endregion
 
     #region 유니티 메소드
-    void Awake()
-    {
-        anim = GetComponent<Animator>();
-    }
+    //void Awake()
+    //{
+    //    //anim = GetComponent<Animator>();
+    //}
 
     void Update()
     {
