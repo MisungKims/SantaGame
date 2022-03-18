@@ -61,20 +61,21 @@ public class StorePanel : MonoBehaviour
     }
 
 
-    public List<StoreObjectSc> BuildingList = new List<StoreObjectSc>();
+    public List<StoreObjectSc> ObjectList = new List<StoreObjectSc>();
 
     #endregion
 
     void Awake()    // 게임 매니저의 Start보다 먼저 실행
     {
         Instance = this;
-
+        
         List<Dictionary<string, object>> data = CSVReader.Read("StoreData");       // csv 리더를 통해 StoreData 파일 가져오기
 
         // 가져온 내용으로 StoreObject 복제하기
         for (int i = 0; i < data.Count; i++)
         {
             StoreInstant(
+                i,
                 data[i]["이름"].ToString(),
                 (int)data[i]["잠금 해제 레벨"],
                 (int)data[i]["초"],
@@ -88,20 +89,20 @@ public class StorePanel : MonoBehaviour
                 data[i]["Desc"].ToString());
         }
 
-        selectedObject = BuildingList[0];
+        selectedObject = ObjectList[0];
     }
 
     /// <summary>
     /// 상점 오브젝트 복제
     /// </summary>
-    /// <param name="i">리스트 인덱스</param>
-    void StoreInstant(string buildingName, int unlockLevel, int second, float multiplyBuildingPrice, int buildingPrice, float multiplyGold, int incrementGold, string santaName, float multiplySantaPrice, int santaPrice, string desc)
+    void StoreInstant(int index, string buildingName, int unlockLevel, int second, float multiplyBuildingPrice, int buildingPrice, float multiplyGold, int incrementGold, string santaName, float multiplySantaPrice, int santaPrice, string desc)
     {
         GameObject instant = GameObject.Instantiate(storeObject, storeObject.transform.position, Quaternion.identity, storeObject.transform.parent);
 
         // csv파일의 내용을 copiedStoreObject에 넣어줌
         StoreObjectSc copiedStoreObject = instant.transform.GetComponent<StoreObjectSc>();
 
+        copiedStoreObject.index = index;
         copiedStoreObject.buildingName = buildingName;                      // 건물 이름
         copiedStoreObject.unlockLevel = unlockLevel;                   // 잠금 해제 가능 레벨
         copiedStoreObject.second = second;                                    // 몇 초 마다 증가할 것인지
@@ -117,7 +118,7 @@ public class StorePanel : MonoBehaviour
         copiedStoreObject.gameObject.SetActive(true);
         copiedStoreObject.gameObject.name = buildingName;
 
-        BuildingList.Add(copiedStoreObject);
+        ObjectList.Add(copiedStoreObject);
     }
 
     /// <summary>
@@ -129,15 +130,10 @@ public class StorePanel : MonoBehaviour
             buyBuildingButton.interactable = true;                                             //  Interactable을 True로 설정
         else buyBuildingButton.interactable = false;
 
-        if (GameManager.Instance.MyGold >= selectedObject.santaPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
+        // 산타 오브젝트는 건물을 샀을 때만 Interactable이 True로
+        if (selectedObject.isBuyBuilding && GameManager.Instance.MyGold >= selectedObject.santaPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
             buySantaButton.interactable = true;                                             //  Interactable을 True로 설정
         else buySantaButton.interactable = false;
-
-    }
-
-    private void Start()
-    {
-        SelectStoreObject();
     }
 
     /// <summary>
@@ -154,20 +150,31 @@ public class StorePanel : MonoBehaviour
         IncrementAmount = selectedObject.amountObtained;
     }
 
- 
+    // 빌딩 업그레이드 버튼 클릭 시
     public void BuildingUpgradeButton()
     {
         selectedObject.BuildingButtonClick();
     }
 
+    // 산타 업그레이드 버튼 클릭 시
     public void SantaUpgradeButton()
     {
         selectedObject.SantaButtonClick();
     }
-
+    private void Start()
+    {
+        SelectStoreObject();
+    }
 
     void Update()
     {
         SetButtonInteractable();
+    }
+
+    private void OnEnable()
+    {
+        selectedObject = ObjectList[0];
+
+        SelectStoreObject();
     }
 }
