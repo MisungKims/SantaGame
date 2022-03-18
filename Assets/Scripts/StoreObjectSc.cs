@@ -21,7 +21,7 @@ public class StoreObjectSc : MonoBehaviour
     public int second;                     // 몇 초 마다 증가할 것인지
     public string desc;                    // 건물의 설명
 
-    private bool isBuyBuilding = false;     // 건물을 산 것인지 아닌지
+    public bool isBuyBuilding = false;     // 건물을 산 것인지 아닌지
     public string buildingName;            // 건물 이름
 
     public float multiplyBuildingPrice;    // 업그레이드 후 건물 가격 증가 배율
@@ -39,11 +39,12 @@ public class StoreObjectSc : MonoBehaviour
 
 
     [Header("---------- 오브젝트")]
-    public GameObject santaObject;
-    Santa santaInstant;
-
+    public GameObject santaObject;        // 복제될 산타 프리팹
+    public GameObject santaGroup;
     public GameObject buildingGroup;
-    Building buildingInstant;
+   
+    public List<Building> BuildingList = new List<Building>();
+    public List<Santa> SantaList = new List<Santa>();
 
     #endregion
 
@@ -92,10 +93,8 @@ public class StoreObjectSc : MonoBehaviour
     {
         GameManager.Instance.HideStorePanel();          // 상점 창 숨기기
 
-        Debug.Log(index);
-
-        buildingInstant = buildingGroup.transform.GetChild(index).GetComponent<Building>();
-        buildingInstant.InitBuilding(multiplyBuildingPrice, buildingPrice, multiplyGold, incrementGold);
+        BuildingList[index] = buildingGroup.transform.GetChild(index).GetComponent<Building>();
+        BuildingList[index].InitBuilding(index, buildingName, multiplyBuildingPrice, buildingPrice, multiplyGold, incrementGold);
     }
 
     /// <summary>
@@ -103,16 +102,13 @@ public class StoreObjectSc : MonoBehaviour
     /// </summary>
     void UpgradeBuilding()
     {
-        GameManager.Instance.MyGold -= buildingPrice;
+        if(BuildingList[index])
+        {
+            BuildingList[index].Upgrade();
+        }
 
-        buildingPrice = (int)(buildingPrice * multiplyBuildingPrice);    // 비용을 배율만큼 증가
         StorePanel.Instance.BuildingPrice = buildingPrice;
-
-        incrementGold = (int)(incrementGold * multiplyGold);            // 코인 증가량을 배율만큼 증가
         StorePanel.Instance.IncrementGold = incrementGold;
-
-        if (buildingInstant)
-            buildingInstant.Level++;                                                 // 건물의 레벨 업
     }
 
 
@@ -144,11 +140,19 @@ public class StoreObjectSc : MonoBehaviour
     {
         GameManager.Instance.HideStorePanel();          // 상점 창 숨기기
 
+        
         // 산타 오브젝트 생성
-        GameObject instant = GameObject.Instantiate(santaObject, santaObject.transform.position, santaObject.transform.rotation, santaObject.transform.parent);
-        santaInstant = instant.transform.GetComponent<Santa>();
+        GameObject instant = GameObject.Instantiate(
+            santaObject, 
+            BuildingList[index].transform.GetChild(1).position, 
+            BuildingList[index].transform.GetChild(1).rotation, 
+            santaGroup.transform);
 
-        santaInstant.InitSanta(santaName);
+        SantaList[index] = instant.transform.GetComponent<Santa>();
+
+        SantaList[index].InitSanta(index, santaName, multiplySantaPrice, santaPrice, multiplyAmountObtained, amountObtained);
+
+        SantaList[index].building = BuildingList[index];
     }
 
     /// <summary>
@@ -156,16 +160,13 @@ public class StoreObjectSc : MonoBehaviour
     /// </summary>
     void UpgradeSanta()
     {
-        GameManager.Instance.MyGold -= santaPrice;              // 산타 비용 지불
+        if (SantaList[index])
+        {
+            SantaList[index].Upgrade();
+        }
 
-        santaPrice = (int)(santaPrice * multiplySantaPrice);    // 비용을 배율만큼 증가
         StorePanel.Instance.SantaPrice = santaPrice;
-
-        amountObtained = (float)(amountObtained * multiplyAmountObtained);  // 획득량을 배율만큼 증가
         StorePanel.Instance.IncrementAmount = amountObtained;
-
-        if (santaInstant) 
-            santaInstant.Level++;                               // 산타 레벨업
     }
 
 
@@ -204,8 +205,9 @@ public class StoreObjectSc : MonoBehaviour
 
         unlockImage = this.transform.GetChild(0).GetChild(3).gameObject;
 
+        BuildingList = new List<Building>(new Building[StorePanel.Instance.ObjectList.Count]);
+        SantaList = new List<Santa>(new Santa[StorePanel.Instance.ObjectList.Count]);
 
-        
     }
 
     void Update()

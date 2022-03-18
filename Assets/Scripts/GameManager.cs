@@ -29,11 +29,14 @@ public class GameManager : MonoBehaviour
     [Header("---------- 패널")]
     public GameObject mainPanel;     // 상점 패널
     public GameObject storePanel;     // 상점 패널
-    public GameObject clickObjPanel;     // 클릭 오브젝트 패널
+    public GameObject clickObjWindow;     // 클릭 오브젝트 패널
 
     [Header("---------- 플레이어 값")]
+    [SerializeField]
     private float gauge;
+    [SerializeField]
     private int level = 1;
+    [SerializeField]
     private double myGold = 10000;
    
     public float Gauge
@@ -56,6 +59,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    
     public double MyGold
     {
         get { return myGold; }
@@ -76,19 +80,19 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void ShowClickObjPanel()
+    public void ShowClickObjWindow()
     {
-        if(!clickObjPanel.activeSelf)
+        if(!clickObjWindow.activeSelf)
         {
             mainPanel.SetActive(false);
-            clickObjPanel.SetActive(true);
+            clickObjWindow.SetActive(true);
         }
     }
 
-    public void HideClickObjPanel()
+    public void HideClickObjWindow()
     {
         mainPanel.SetActive(true);
-        clickObjPanel.SetActive(false);
+        clickObjWindow.SetActive(false);
     }
 
     // Store Panel을 보여주기
@@ -133,7 +137,7 @@ public class GameManager : MonoBehaviour
         
 
         storePanel.SetActive(false);
-        clickObjPanel.SetActive(false);
+        clickObjWindow.SetActive(false);
     }
 
     

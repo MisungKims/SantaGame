@@ -210,8 +210,6 @@ public class CameraMovement : MonoBehaviour
     // 타깃 추적 시작
     public void StartChaseTarget()
     {
-        GameManager.Instance.ShowClickObjPanel();               // 산타 정보 창 띄우기
-
         chaseState = ChaseState.chaseStart;                     // 카메라의 상태 변경
 
         StartCoroutine(ChangeChaseState(ChaseState.chasing));   // 3초 후 chasing 상태로 변경
@@ -220,7 +218,7 @@ public class CameraMovement : MonoBehaviour
     // 타깃 추적 종료
     public void EndChaseTarget()
     {
-        GameManager.Instance.HideClickObjPanel();             // 클릭 오브젝트 창 없애기
+        GameManager.Instance.HideClickObjWindow();             // 클릭 오브젝트 창 없애기
 
         if (chasingSanta) chasingSanta = null;
         else if (chasingBuilding) chasingBuilding = null;
