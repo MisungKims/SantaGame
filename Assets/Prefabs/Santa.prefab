@@ -382,7 +382,6 @@ GameObject:
   - component: {fileID: 7791495445768499683}
   - component: {fileID: 7882312169074711633}
   - component: {fileID: 7795823280174412244}
-  - component: {fileID: 7795823280174412245}
   m_Layer: 0
   m_Name: Santa
   m_TagString: Santa
@@ -418,7 +417,7 @@ Animator:
   m_GameObject: {fileID: 7797250450615995639}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 49afdd6a5de3005468e28c1ebef7f43c, type: 3}
-  m_Controller: {fileID: 9100000, guid: a28d4a83542e9634586dc37b903e99e1, type: 2}
+  m_Controller: {fileID: 9100000, guid: e45e545fb71b2ce4c8f03e6f6dc6f505, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -441,18 +440,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &7795823280174412245
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7797250450615995639}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bd11f9cc84ef8a4282ccf0c380111f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7797259337699422533
 GameObject:
   m_ObjectHideFlags: 0
