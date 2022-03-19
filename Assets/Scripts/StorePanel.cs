@@ -11,17 +11,36 @@ public class StorePanel : MonoBehaviour
     [Header("---------- 상점 오브젝트")]
     public GameObject storeObject;              // 복제가 될 상점의 건물 오브젝트
 
+    [Header("-------------------- 건물")]
+    [SerializeField]
+    private Button buyBuildingButton;                 // 건물 사기 버튼
+    [SerializeField]
+    private Text selectedBuildingName;                // 선택한 상점 오브젝트의 건물 이름
+    [SerializeField]
+    private Text selectedBuildingPrice;               // 선택한 상점 오브젝트의 건물 가격
+    [SerializeField]
+    private Text incrementGoldText;                   // 선택한 상점 오브젝트 건물의 골드 증가량
+    [SerializeField]
+    private GameObject buildingImageGroup;            // 건물의 이미지 그룹
+
+    private GameObject buildingImg;
+
+    [Header("-------------------- 산타")]
+    [SerializeField]
+    private Button buySantaButton;                   // 산타 사기 버튼
+    [SerializeField]
+    private Text selectedSantaName;                  // 선택한 상점 오브젝트의 산타 이름
+    [SerializeField]
+    private Text selectedSantaPrice;                 // 선택한 상점 오브젝트의 산타 가격
+    [SerializeField]
+    private Text incrementAmountText;                // 선택한 상점 오브젝트 산타의 획득량 증가량
+    [SerializeField]
+    private GameObject santaImageGroup;            // 산타의 이미지 그룹
+
+    private GameObject santaImg;
+
+    [HideInInspector]
     public StoreObjectSc selectedObject;
-
-    public Button buyBuildingButton;                 // 건물 사기 버튼
-    public Text selectedBuildingName;                // 선택한 상점 오브젝트의 건물 이름
-    public Text selectedBuildingPrice;               // 선택한 상점 오브젝트의 건물 가격
-    public Text incrementGoldText;                   // 선택한 상점 오브젝트 건물의 골드 증가량
-
-    public Button buySantaButton;                   // 산타 사기 버튼
-    public Text selectedSantaName;                  // 선택한 상점 오브젝트의 산타 이름
-    public Text selectedSantaPrice;                 // 선택한 상점 오브젝트의 산타 가격
-    public Text incrementAmountText;                // 선택한 상점 오브젝트 산타의 획득량 증가량
 
 
     private int buildingPrice;
@@ -125,33 +144,39 @@ public class StorePanel : MonoBehaviour
         ObjectList.Add(copiedStoreObject);
     }
 
-    /// <summary>
-    /// 버튼의 Interactable 설정
-    /// </summary>
+    // 버튼의 Interactable 설정
     void SetButtonInteractable()
     {
-        if (gameManagerInstance.MyGold >= selectedObject.buildingPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
-            buyBuildingButton.interactable = true;                                             //  Interactable을 True로 설정
+        // 가진 돈이 건물의 가격보다 클 때
+        if (gameManagerInstance.MyGold >= selectedObject.buildingPrice)        
+            buyBuildingButton.interactable = true;                //  Interactable을 True로 설정
         else buyBuildingButton.interactable = false;
 
-        // 산타 오브젝트는 건물을 샀을 때만 Interactable이 True로
-        if (selectedObject.isBuyBuilding && gameManagerInstance.MyGold >= selectedObject.santaPrice)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
-            buySantaButton.interactable = true;                                             //  Interactable을 True로 설정
+        // 산타 오브젝트는 건물을 샀을 때, 가진 돈이 산타의 가격보다 클 때
+        if (selectedObject.isBuyBuilding && gameManagerInstance.MyGold >= selectedObject.santaPrice)
+            buySantaButton.interactable = true;                 //  Interactable을 True로 설정
         else buySantaButton.interactable = false;
     }
 
-    /// <summary>
-    /// 상점 목록의 버튼을 선택했을 때 선택된 오브젝트의 것으로 이름, 이미지, 가격 등을 설정
-    /// </summary>
+    // 상점 목록의 버튼을 선택했을 때 선택된 오브젝트의 것으로 이름, 이미지, 가격 등을 설정
     public void SelectStoreObject()
     {
+        if (buildingImg)
+            buildingImg.SetActive(false);
+        if (santaImg)
+            santaImg.SetActive(false);
+
         selectedBuildingName.text = selectedObject.buildingName;
         BuildingPrice = selectedObject.buildingPrice;
         IncrementGold = selectedObject.incrementGold;
+        buildingImg = buildingImageGroup.transform.GetChild(selectedObject.index).gameObject;
+        buildingImg.SetActive(true);
 
         selectedSantaName.text = selectedObject.santaName;
         SantaPrice = selectedObject.santaPrice;
         IncrementAmount = selectedObject.amountObtained;
+        santaImg = santaImageGroup.transform.GetChild(selectedObject.index).gameObject;
+        santaImg.SetActive(true);
     }
 
     // 빌딩 업그레이드 버튼 클릭 시

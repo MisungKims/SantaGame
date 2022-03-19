@@ -6,15 +6,21 @@ using System.Text;
 
 public class ClickObjWindow : MonoBehaviour
 {
-    public GameObject buildingImage;
-    public GameObject santaImage;
+    [SerializeField]
+    private GameObject buildingImages;
+    [SerializeField]
+    private GameObject santaImages;
 
+    private GameObject ObjImg;
 
-    public Text NameText;
-    public Text LevelText;
-    public Text DescText;
-    public Button UpgradeButton;
-    public Text PriceText;
+    [SerializeField]
+    private Text NameText;
+    [SerializeField]
+    private Text LevelText;
+    [SerializeField]
+    private Text DescText;
+    [SerializeField]
+    private Text PriceText;
 
 
     StringBuilder levelSb = new StringBuilder();
@@ -64,10 +70,18 @@ public class ClickObjWindow : MonoBehaviour
         }
     }
 
-    public Building building;
-    public Santa santa;
+    private Building building;
+    public Building Builidng
+    {
+        set { building = value; }
+    }
 
-   
+    private Santa santa;
+    public Santa Santa
+    {
+        set { santa = value; }
+    }
+
     public void SetBuildingInfo()
     {
         ObjName = building.BuilidingName;
@@ -81,7 +95,8 @@ public class ClickObjWindow : MonoBehaviour
 
         ObjAmount = goldSb.ToString();
 
-        buildingImage.transform.GetChild(building.Index).gameObject.SetActive(true);
+        ObjImg = buildingImages.transform.GetChild(building.Index).gameObject;
+        ObjImg.SetActive(true);
     }
 
     public void SetSantaInfo()
@@ -98,7 +113,8 @@ public class ClickObjWindow : MonoBehaviour
 
         ObjAmount = goldSb.ToString();
 
-        santaImage.transform.GetChild(santa.Index).gameObject.SetActive(true);
+        ObjImg = santaImages.transform.GetChild(santa.Index).gameObject;
+        ObjImg.SetActive(true);
     }
 
 
@@ -122,13 +138,12 @@ public class ClickObjWindow : MonoBehaviour
     {
         if (building)
         {
-            buildingImage.transform.GetChild(building.Index).gameObject.SetActive(false);
+            ObjImg.SetActive(false);
             building = null;
-            
         }
         else if (santa)
         {
-            santaImage.transform.GetChild(santa.Index).gameObject.SetActive(false);
+            ObjImg.SetActive(false);
             santa = null;
         }
     }

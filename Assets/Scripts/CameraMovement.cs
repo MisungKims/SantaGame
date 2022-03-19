@@ -41,39 +41,43 @@ public class CameraMovement : MonoBehaviour
     ChaseState chaseState = ChaseState.noChase;
 
     [Header("---------- Move")]
-    public float moveSpeed = 0.06f;
-    public Vector2 currentPos, previousPos;
-    public Vector3 movePos;
-    public bool canMove = true;
+    private float moveSpeed = 0.06f;
+    private Vector2 currentPos, previousPos;
+    private Vector3 movePos;
+    private bool canMove = true;
 
     [Header("---------- Rotate")]
-    public float rotateSpeed = 1;
+    private float rotateSpeed = 1;
 
-    public float minRotateX = -10f;                // 회전 시 x축의 Min 값
-    public float maxRotateX = 20f;                 // 회전 시 x축의 Max 값
+    private float minRotateX = -10f;                // 회전 시 x축의 Min 값
+    private float maxRotateX = 20f;                 // 회전 시 x축의 Max 값
 
-    public float minRotateY = -55f;                // 회전 시 y축의 Min 값
-    public float maxRotateY = 55f;                 // 회전 시 y축의 Max 값
+    private float minRotateY = -55f;                // 회전 시 y축의 Min 값
+    private float maxRotateY = 55f;                 // 회전 시 y축의 Max 값
 
-    public float mouseX;
-    public float mouseY;
-    float touchX;
-    float touchY;
+    //private float mouseX;
+    //private float mouseY;
+    private float touchX;
+    private float touchY;
 
-    Vector3 FirstPoint;
-    Vector3 SecondPoint;
-    float xAngle;
-    float yAngle;
-    float xAngleTemp;
-    float yAngleTemp;
+    //Vector3 FirstPoint;
+    //Vector3 SecondPoint;
+    //float xAngle;
+    //float yAngle;
+    //float xAngleTemp;
+    //float yAngleTemp;
 
 
     [Header("---------- Zoom")]
     public Camera cam;
-    public float perspectiveZoomSpeed = 5f;  //줌인,줌아웃할때 속도   
-    public float zoomMinValue = 6f;
-    public float zoomMaxValue = 70f;
-    public float sensitive = 1f;
+    private float perspectiveZoomSpeed = 5f;  //줌인,줌아웃할때 속도   
+    private float zoomMinValue = 6f;
+    private float zoomMaxValue = 70f;
+    private float sensitive = 1f;
+
+
+    private GameManager gameManager;
+
     #endregion
 
     #region 사용자 정의 함수
@@ -147,6 +151,14 @@ public class CameraMovement : MonoBehaviour
         }
     }
 
+    Vector2 touchZeroPrevPos;
+    Vector2 touchOnePrevPos;
+
+    float prevTouchDeltaMag;
+    float touchDeltaMag;
+
+    float deltaMagnitudeDiff;
+
     // 카메라 줌 인/줌 아웃
     void Zoom()
     {
@@ -158,15 +170,15 @@ public class CameraMovement : MonoBehaviour
 
         //터치에 대한 이전 위치값을 각각 저장함
         //처음 터치한 위치(touchZero.position)에서 이전 프레임에서의 터치 위치와 이번 프로임에서 터치 위치의 차이를 뺌
-        Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition; //deltaPosition는 이동방향 추적할 때 사용
-        Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+        touchZeroPrevPos = touchZero.position - touchZero.deltaPosition; //deltaPosition는 이동방향 추적할 때 사용
+        touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
 
         // 각 프레임에서 터치 사이의 벡터 거리 구함
-        float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude; //magnitude는 두 점간의 거리 비교(벡터)
-        float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
+        prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude; //magnitude는 두 점간의 거리 비교(벡터)
+        touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
 
         // 거리 차이 구함(거리가 이전보다 크면(마이너스가 나오면)손가락을 벌린 상태_줌인 상태)
-        float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+        deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
 
         cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, cam.fieldOfView + deltaMagnitudeDiff * perspectiveZoomSpeed, sensitive * Time.deltaTime);
         cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, zoomMinValue, zoomMaxValue);
@@ -189,11 +201,11 @@ public class CameraMovement : MonoBehaviour
                 Zoom();                 // 줌 인/아웃
             }
 
-            else  // PC에서 확인하기 위함
-            {
-                if (chaseState == ChaseState.chasing)          // 추적할 타겟이 있으면
-                    CamRotate();                    // 오브젝트를 중심으로 카메라 회전
-            }
+            //else  // PC에서 확인하기 위함
+            //{
+            //    if (chaseState == ChaseState.chasing)          // 추적할 타겟이 있으면
+            //        CamRotate();                    // 오브젝트를 중심으로 카메라 회전
+            //}
         }
     }
     #endregion
@@ -218,7 +230,7 @@ public class CameraMovement : MonoBehaviour
     // 타깃 추적 종료
     public void EndChaseTarget()
     {
-        GameManager.Instance.HideClickObjWindow();             // 클릭 오브젝트 창 없애기
+        gameManager.HideClickObjWindow();             // 클릭 오브젝트 창 없애기
 
         if (chasingSanta) chasingSanta = null;
         else if (chasingBuilding) chasingBuilding = null;
@@ -233,7 +245,8 @@ public class CameraMovement : MonoBehaviour
     {
         cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, chasingSantaFieldOfView, Time.deltaTime);          // 타겟을 향해 줌인
 
-        Quaternion chasingCamRot = Quaternion.Euler(new Vector3(chasingRotateX, cam.transform.rotation.y, cam.transform.rotation.z));    // 카메라의 x축을 조정
+        // 카메라의 x축을 조정
+        Quaternion chasingCamRot = Quaternion.Euler(new Vector3(chasingRotateX, cam.transform.rotation.y, cam.transform.rotation.z));    
         cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, chasingCamRot, Time.deltaTime);
     }
 
@@ -242,9 +255,11 @@ public class CameraMovement : MonoBehaviour
     {
         cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, chasingBuildingFieldOfView, Time.deltaTime);          // 타겟을 향해 줌인
 
-        cam.transform.position = Vector3.Lerp(cam.transform.position, chasingBuilding.position + buildingDistance, Time.deltaTime);     // 카메라의 위치 조정
+        // 카메라의 위치 조정
+        cam.transform.position = Vector3.Lerp(cam.transform.position, chasingBuilding.position + buildingDistance, Time.deltaTime);
 
-        Quaternion chasingCamRot = Quaternion.Euler(new Vector3(chasingRotateX, cam.transform.rotation.y, cam.transform.rotation.z));    // 카메라의 x축을 조정
+        // 카메라의 x축을 조정
+        Quaternion chasingCamRot = Quaternion.Euler(new Vector3(chasingRotateX, cam.transform.rotation.y, cam.transform.rotation.z));   
         cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, chasingCamRot, Time.deltaTime);
     }
 
@@ -279,12 +294,13 @@ public class CameraMovement : MonoBehaviour
         }
     }
 
+    Vector3 targetPos;
     void FollowSanta()
     {
         // 추적 시작 후 산타를 따라다님
         if (chasingSanta != null)
         {
-            Vector3 targetPos = chasingSanta.position + distance;
+            targetPos = chasingSanta.position + distance;
             cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos, Time.deltaTime);
         }
     }
@@ -310,6 +326,8 @@ public class CameraMovement : MonoBehaviour
 
     private void Start()
     {
+        gameManager = GameManager.Instance; ;
+
         // 카메라의 상태 지정
         chaseState = ChaseState.noChase;            
 
