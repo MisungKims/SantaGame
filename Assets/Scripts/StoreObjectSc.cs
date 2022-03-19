@@ -22,7 +22,8 @@ public class StoreObjectSc : MonoBehaviour
     public int second;                     // 몇 초 마다 증가할 것인지
     public string desc;                    // 건물의 설명
 
-    public bool isBuyBuilding = false;     // 건물을 산 것인지 아닌지
+    public bool isBuyBuilding = false;
+   
     public string buildingName;            // 건물 이름
 
     public float multiplyBuildingPrice;    // 업그레이드 후 건물 가격 증가 배율
@@ -30,8 +31,8 @@ public class StoreObjectSc : MonoBehaviour
     public float multiplyGold;             // 업그레이드 후 플레이어 돈 증가 배율
     public int incrementGold;              // 플레이어의 돈 증가량
 
-    public bool isBuySanta = false;        // 산타를 산 것인지 아닌지
     public string santaName;               // 산타 이름
+    private bool isBuySanta = false;        // 산타를 구매했는지 안했는지
 
     public float multiplySantaPrice;       // 업그레이드 후 산타 가격 증가 배율
     public int santaPrice;                 // 산타 가격 
@@ -45,6 +46,11 @@ public class StoreObjectSc : MonoBehaviour
     public GameObject buildingGroup;
 
     private Building buildingInstant;
+    public Building BuildingInstant
+    {
+        get { return BuildingInstant; }
+    }
+
     private Santa santaInstant;
 
     // 캐싱
@@ -105,29 +111,25 @@ public class StoreObjectSc : MonoBehaviour
         unlockImage.SetActive(false);
     }
 
-    /// <summary>
-    /// 건물 사기 버튼 클릭 시 잠금 해제 혹은 건물 업그레이드
-    /// </summary>
+
+    // 건물 사기 버튼 클릭 시 건물 구매 혹은 업그레이드
     public void BuildingButtonClick()
     {
         if (gameManagerInstance.MyGold >= buildingPrice)           // 플레이어가 가진 돈이 건물의 가격보다 높을 때
         {
             if (!isBuyBuilding)
-                BuyNewBuilding();                                   // 사지 않은 건물이면 잠금 해제
+                BuyNewBuilding();                                   // 사지 않은 건물이면 새로 구매
             else UpgradeBuilding();                                 // 산 건물이면 업그레이드
         }
     }
 
-    /// <summary>
-    /// 산 건물의 잠금을 해제
-    /// </summary>
+    
+    // 새로운 건물 구매
     void BuyNewBuilding()
     {
        isBuyBuilding = true;
 
-        gameManagerInstance.MyGold -= buildingPrice;                       // 건물 비용 지불
-
-        gameManagerInstance.DoIncreaseGold(second, incrementGold);        // 정해진 시간마다 돈 증가하기 시작
+       gameManagerInstance.MyGold -= buildingPrice;                       // 건물 비용 지불
 
         NewBuilding();      // 건물 오브젝트 생성
     }
@@ -141,33 +143,26 @@ public class StoreObjectSc : MonoBehaviour
         buildingInstant.InitBuilding(index, buildingName, multiplyBuildingPrice, buildingPrice, multiplyGold, incrementGold);
     }
 
-    /// <summary>
-    /// 건물을 업그레이드
-    /// </summary>
+    // 건물을 업그레이드
     void UpgradeBuilding()
     {
-        if(buildingInstant)
-        {
-            buildingInstant.Upgrade();
-        }
-
+        buildingInstant.Upgrade();
+       
         storeInstance.BuildingPrice = buildingPrice;
         storeInstance.IncrementGold = incrementGold;
     }
 
-
+    // 산타 사기 버튼 클릭 시 산타 구매 혹은 업그레이드
     public void SantaButtonClick()
     {
         if (gameManagerInstance.MyGold >= santaPrice)            // 플레이어가 가진 돈이 건물의 가격보다 높을 때
         {
-            if (!isBuySanta) BuyNewSanta();                           // 사지 않은 건물이면 잠금 해제
+            if (!isBuySanta) BuyNewSanta();                    // 사지 않은 건물이면 새로 구매
             else UpgradeSanta();                                 // 산 건물이면 업그레이드
         }
     }
 
-    /// <summary>
-    /// 산타의 잠금을 해제
-    /// </summary>
+    // 새로운 산타 구입
     void BuyNewSanta()
     {
         isBuySanta = true;
@@ -177,9 +172,7 @@ public class StoreObjectSc : MonoBehaviour
         CreateNewSanta();      // 산타 오브젝트 생성
     }
 
-    /// <summary>
-    /// 새로운 산타 생성
-    /// </summary>
+    // 새로운 산타 생성
     void CreateNewSanta()
     {
         gameManagerInstance.HideStorePanel();          // 상점 창 숨기기
@@ -189,24 +182,16 @@ public class StoreObjectSc : MonoBehaviour
         santaInstant.InitSanta(index, santaName, multiplySantaPrice, santaPrice, multiplyAmountObtained, amountObtained, buildingInstant);
     }
 
-    /// <summary>
-    /// 산타를 업그레이드
-    /// </summary>
+    // 산타를 업그레이드
     void UpgradeSanta()
     {
-        if (santaInstant)
-        {
-            santaInstant.Upgrade();
-        }
-
+        santaInstant.Upgrade();
+       
         storeInstance.SantaPrice = santaPrice;
         storeInstance.IncrementAmount = amountObtained;
     }
 
-
-    /// <summary>
-    /// 플레이어의 레벨에 따른 버튼의 Interactable 설정
-    /// </summary>
+    // 플레이어의 레벨에 따른 버튼의 Interactable 설정
     void SetButtonInteractable()
     {
         if (gameManagerInstance.Level >= unlockLevel)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때

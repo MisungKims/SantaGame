@@ -56,7 +56,6 @@ public class Building : MonoBehaviour
         //set { incrementGold = value; }
     }
 
-
     private string buildingName;
     public string BuilidingName
     {
@@ -65,7 +64,7 @@ public class Building : MonoBehaviour
 
     private Vector3 distance;
 
-    ClickObjWindow window;
+    private ClickObjWindow window;
 
     StringBuilder sb = new StringBuilder();
 
@@ -79,9 +78,14 @@ public class Building : MonoBehaviour
     #region 함수
 
     /// <summary>
-    /// 건물 초기화
+    /// 건물 초기 설정
     /// </summary>
-    /// <param name="buildingName">산타의 이름</param>
+    /// <param name="index">건물의 인덱스</param>
+    /// <param name="name">건물의 이름</param>
+    /// <param name="multiplyPrice">건물의 가격 증가 배수</param>
+    /// <param name="price">건물의 가격</param>
+    /// <param name="mGold">골드 증가량 배수</param>
+    /// <param name="iGold">골드 증가량</param>
     public void InitBuilding(int index, string name, float multiplyPrice, int price, float mGold, int iGold)
     {
         gameObject.SetActive(true);         // 건물이 보이도록
@@ -98,6 +102,7 @@ public class Building : MonoBehaviour
         ShowObjWindow();                    // 오브젝트 정보 창이 보이도록
     }
 
+    // 건물 업그레이드
     public void Upgrade()
     {
         if (gameManagerInstance.MyGold < buildingPrice)
@@ -115,9 +120,7 @@ public class Building : MonoBehaviour
         level++;
     }
 
-    /// <summary>
-    /// 카메라가 해당 산타를 따라다님
-    /// </summary>
+    // 카메라가 해당 산타를 따라다님
     public void SetCamTargetThis()
     {
         CameraMovement.Instance.StartChaseTarget();
@@ -125,9 +128,7 @@ public class Building : MonoBehaviour
         CameraMovement.Instance.buildingDistance = distance;
     }
 
-    /// <summary>
-    /// 오브젝트 정보창 보여줌
-    /// </summary>
+    // 오브젝트 정보창 보여줌
     public void ShowObjWindow()
     {
         window = GameManager.Instance.clickObjWindow.transform.GetComponent<ClickObjWindow>();
@@ -136,15 +137,13 @@ public class Building : MonoBehaviour
         sb.Append("+ ");
         sb.Append(incrementGold.ToString());
 
-        window.building = this;
+        window.Builidng = this;
         window.SetBuildingInfo();
 
         GameManager.Instance.ShowClickObjWindow();
     }
 
-    /// <summary>
-    /// 건물 터치 시 카메라의 Target을 해당 건물로 set
-    /// </summary>
+    // 건물 터치 시 카메라의 Target을 해당 건물로 set
     void TouchBuilding()
     {
         if (Input.GetMouseButtonDown(0))
@@ -167,7 +166,6 @@ public class Building : MonoBehaviour
     #endregion
 
     #region 유니티 메소드
-
     private void Start()
     {
         distance = this.transform.GetChild(0).localPosition;
@@ -180,12 +178,6 @@ public class Building : MonoBehaviour
     void Update()
     {
         TouchBuilding();
-
-        //if (this.gameObject.activeSelf)
-        //{
-        //    GameManager.Instance.MyGold += IncrementGold * Time.deltaTime;
-        //}
     }
     #endregion
-
 }

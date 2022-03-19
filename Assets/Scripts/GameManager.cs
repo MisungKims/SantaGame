@@ -21,10 +21,14 @@ public class GameManager : MonoBehaviour
     }
 
     [Header("---------- 메인 오브젝트")]
-    public Slider gaugeSlider;        // 게이지를 나타내는 슬라이더
-    public Text lvText;               // 레벨을 나타내는 텍스트
-    public Text goldText;            // 돈을 나타내는 텍스트
-    public Text dateText;             // 날짜를 나타내는 텍스트
+    [SerializeField]
+    private Slider gaugeSlider;        // 게이지를 나타내는 슬라이더
+    [SerializeField]
+    private Text lvText;               // 레벨을 나타내는 텍스트
+    [SerializeField]
+    private Text goldText;            // 돈을 나타내는 텍스트
+    [SerializeField]
+    private Text dateText;             // 날짜를 나타내는 텍스트
     
     [Header("---------- 패널")]
     public GameObject mainPanel;     // 상점 패널
@@ -38,6 +42,7 @@ public class GameManager : MonoBehaviour
     private int level = 1;
     [SerializeField]
     private double myGold = 10000;
+
    
     public float Gauge
     {
@@ -59,7 +64,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    
     public double MyGold
     {
         get { return myGold; }
@@ -70,16 +74,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // 캐싱
+    private CameraMovement cameraMovement;
+
     #endregion
 
     #region 함수
 
-    public void DoIncreaseGold(int second, int incrementGold)
-    {
-        //StartCoroutine(IncreaseGold(second, incrementGold));
-    }
-
-
+    // 오브젝트 정보 창 보여줌
     public void ShowClickObjWindow()
     {
         if(!clickObjWindow.activeSelf)
@@ -89,26 +91,27 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // 오브젝트 정보 창 숨김
     public void HideClickObjWindow()
     {
         mainPanel.SetActive(true);
         clickObjWindow.SetActive(false);
     }
 
-    // Store Panel을 보여주기
+    // Store Panel을 보여줌
     public void ShowStorePanel()
     {
-        storePanel.SetActive(true);                 
+        storePanel.SetActive(true);
 
-        CameraMovement.Instance.SetCanMove(false);      // 카메라 움직일 수 없게
+        cameraMovement.SetCanMove(false);      // 카메라 움직일 수 없게
     }
 
-    // Store Panel을 숨기기
+    // Store Panel을 숨김
     public void HideStorePanel()
     {
         storePanel.SetActive(false);
 
-        CameraMovement.Instance.SetCanMove(true);       // 카메라 움직일 수 있게
+        cameraMovement.SetCanMove(true);       // 카메라 움직일 수 있게
     }
 
     #endregion
@@ -138,7 +141,7 @@ public class GameManager : MonoBehaviour
 
         storePanel.SetActive(false);
         clickObjWindow.SetActive(false);
-    }
 
-    
+        cameraMovement = CameraMovement.Instance;
+    }
 }

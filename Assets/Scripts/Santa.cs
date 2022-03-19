@@ -58,9 +58,12 @@ public class Santa : MonoBehaviour
         get { return index; }
     }
 
+    ClickObjWindow window;
+
     public static readonly WaitForSeconds m_waitForSecond1s = new WaitForSeconds(1f); // Ä³½Ì
 
     StringBuilder sb = new StringBuilder();
+
     #endregion
 
     #region ÇÔ¼ö
@@ -125,15 +128,9 @@ public class Santa : MonoBehaviour
 
     public void ShowObjWindow()
     {
-        ClickObjWindow window = GameManager.Instance.clickObjWindow.transform.GetComponent<ClickObjWindow>();
+        window = GameManager.Instance.clickObjWindow.transform.GetComponent<ClickObjWindow>();
 
-        sb.Clear();
-        sb.Append("°ñµå È¹µæ·® ");
-        sb.Append(amountObtained.ToString());
-        sb.Append("% Áõ°¡");
-
-        window.santa = this;
-
+        window.Santa = this;
         window.SetSantaInfo();
 
         GameManager.Instance.ShowClickObjWindow();
