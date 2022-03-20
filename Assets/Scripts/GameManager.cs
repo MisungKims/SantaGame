@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.Text;
 
 public class GameManager : MonoBehaviour
 {
@@ -24,6 +25,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Slider gaugeSlider;        // 게이지를 나타내는 슬라이더
     [SerializeField]
+    private Text gaugeText;        // 게이지를 나타내는 텍스트
+    [SerializeField]
     private Text lvText;               // 레벨을 나타내는 텍스트
     [SerializeField]
     private Text goldText;            // 돈을 나타내는 텍스트
@@ -43,6 +46,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private double myGold = 10000;
 
+    StringBuilder gaugeSb = new StringBuilder();
    
     public float Gauge
     {
@@ -51,6 +55,11 @@ public class GameManager : MonoBehaviour
         {
             gauge = value;
             gaugeSlider.value = gauge;
+
+            gaugeSb.Clear();
+            gaugeSb.Append(gauge.ToString());
+            gaugeSb.Append("%");
+            gaugeText.text = gaugeSb.ToString();
         }
     }
 

@@ -62,6 +62,7 @@ public class Building : MonoBehaviour
         get { return buildingName; }
     }
 
+    [SerializeField]
     private Vector3 distance;
 
     private ClickObjWindow window;
@@ -70,8 +71,8 @@ public class Building : MonoBehaviour
 
     // 캐싱
     private StoreObjectSc objectList;
-    private GameManager gameManagerInstance;
-    private CameraMovement cameraInstance;
+    private GameManager gameManager;
+    private CameraMovement cameraMovement;
 
     #endregion
 
@@ -105,11 +106,11 @@ public class Building : MonoBehaviour
     // 건물 업그레이드
     public void Upgrade()
     {
-        if (gameManagerInstance.MyGold < buildingPrice)
+        if (gameManager.MyGold < buildingPrice)
         {
             return;
         }
-        gameManagerInstance.MyGold -= buildingPrice;
+        gameManager.MyGold -= buildingPrice;
 
         buildingPrice = (int)(buildingPrice * multiplyBuildingPrice);    // 비용을 배율만큼 증가
         objectList.buildingPrice = buildingPrice;
@@ -123,15 +124,15 @@ public class Building : MonoBehaviour
     // 카메라가 해당 산타를 따라다님
     public void SetCamTargetThis()
     {
-        CameraMovement.Instance.StartChaseTarget();
-        CameraMovement.Instance.chasingBuilding = this.transform;
-        CameraMovement.Instance.buildingDistance = distance;
+        cameraMovement.chasingBuilding = this.transform;
+        cameraMovement.buildingDistance = this.transform.GetChild(0).localPosition;
+        cameraMovement.StartChaseTarget();
     }
 
     // 오브젝트 정보창 보여줌
     public void ShowObjWindow()
     {
-        window = GameManager.Instance.clickObjWindow.transform.GetComponent<ClickObjWindow>();
+        window = gameManager.clickObjWindow.transform.GetComponent<ClickObjWindow>();
 
         sb.Clear();
         sb.Append("+ ");
@@ -140,7 +141,7 @@ public class Building : MonoBehaviour
         window.Builidng = this;
         window.SetBuildingInfo();
 
-        GameManager.Instance.ShowClickObjWindow();
+        gameManager.ShowClickObjWindow();
     }
 
     // 건물 터치 시 카메라의 Target을 해당 건물로 set
@@ -162,17 +163,19 @@ public class Building : MonoBehaviour
         }
     }
 
-   
+
     #endregion
 
     #region 유니티 메소드
+
+    private void Awake()
+    {
+        gameManager = GameManager.Instance;
+        cameraMovement = CameraMovement.Instance;
+    }
     private void Start()
     {
-        distance = this.transform.GetChild(0).localPosition;
-
         objectList = StorePanel.Instance.ObjectList[index];
-        gameManagerInstance = GameManager.Instance;
-        cameraInstance = CameraMovement.Instance;
     }
 
     void Update()
