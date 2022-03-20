@@ -91,8 +91,8 @@ public class ClickObjWindow : MonoBehaviour
 
         goldSb.Clear();
         goldSb.Append("+ ");
-        goldSb.Append(building.IncrementGold.ToString());
-
+        goldSb.Append(GoldManager.ExpressUnitOfGold(building.IncrementGold));
+        
         ObjAmount = goldSb.ToString();
 
         ObjImg = buildingImages.transform.GetChild(building.Index).gameObject;

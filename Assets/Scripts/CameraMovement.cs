@@ -326,7 +326,7 @@ public class CameraMovement : MonoBehaviour
 
     private void Start()
     {
-        gameManager = GameManager.Instance; ;
+        gameManager = GameManager.Instance;
 
         // 카메라의 상태 지정
         chaseState = ChaseState.noChase;            

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Text;
 
 public class StorePanel : MonoBehaviour
 {
@@ -42,6 +43,8 @@ public class StorePanel : MonoBehaviour
     [HideInInspector]
     public StoreObjectSc selectedObject;
 
+    StringBuilder goldSb = new StringBuilder();
+    StringBuilder amountSb = new StringBuilder();
 
     private int buildingPrice;
     public int BuildingPrice
@@ -57,7 +60,10 @@ public class StorePanel : MonoBehaviour
     {
         set
         {
-            incrementGoldText.text = "+" + value.ToString();
+            goldSb.Clear();
+            goldSb.Append("+");
+            goldSb.Append(GoldManager.ExpressUnitOfGold(value));
+            incrementGoldText.text = goldSb.ToString();
         }
     }
 
@@ -75,7 +81,11 @@ public class StorePanel : MonoBehaviour
     {
         set
         {
-            incrementAmountText.text = value.ToString() + "%";
+            amountSb.Clear();
+            amountSb.Append(value);
+            amountSb.Append("%");
+
+            incrementAmountText.text = amountSb.ToString();
         }
     }
 

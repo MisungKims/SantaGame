@@ -179,7 +179,7 @@ public class StoreObjectSc : MonoBehaviour
 
         santaInstant = santaGroup.transform.GetChild(index).GetComponent<Santa>();
 
-        santaInstant.InitSanta(index, santaName, multiplySantaPrice, santaPrice, multiplyAmountObtained, amountObtained, buildingInstant);
+        santaInstant.InitSanta(index, santaName, (float)second, multiplySantaPrice, santaPrice, multiplyAmountObtained, amountObtained, buildingInstant);
     }
 
     // 산타를 업그레이드
