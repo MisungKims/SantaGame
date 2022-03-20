@@ -29,9 +29,7 @@ public class CameraMovement : MonoBehaviour
     [SerializeField]
     private float basicFieldOfView = 60f;            // 카메라의 기본  field of view
     [SerializeField]
-    private float chasingSantaFieldOfView = 15f;          // 산타 추적 시 카메라의 field of view
-    [SerializeField]
-    private float chasingBuildingFieldOfView = 25f;          // 건물 추적 시 카메라의 field of view
+    private float chasingSantaFieldOfView = 10f;          // 산타 추적 시 카메라의 field of view
     [SerializeField]
     private float basicRotateX = 30f;               // 카메라의 기본  x축
     [SerializeField]
@@ -77,6 +75,9 @@ public class CameraMovement : MonoBehaviour
 
 
     private GameManager gameManager;
+
+
+    Vector3 targetPos;
 
     #endregion
 
@@ -211,10 +212,10 @@ public class CameraMovement : MonoBehaviour
     #endregion
 
     #region 타깃 추적
-    // 3초 후 ChaseState 변경
+    // 10초 후 ChaseState 변경
     IEnumerator ChangeChaseState(ChaseState cs)
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(10f);
 
         chaseState = cs;
     }
@@ -224,7 +225,7 @@ public class CameraMovement : MonoBehaviour
     {
         chaseState = ChaseState.chaseStart;                     // 카메라의 상태 변경
 
-        StartCoroutine(ChangeChaseState(ChaseState.chasing));   // 3초 후 chasing 상태로 변경
+        StartCoroutine(ChangeChaseState(ChaseState.chasing));   // 10초 후 chasing 상태로 변경
     }
 
     // 타깃 추적 종료
@@ -237,13 +238,13 @@ public class CameraMovement : MonoBehaviour
 
         chaseState = ChaseState.chaseEnd;                     // 카메라의 상태 변경 
 
-        StartCoroutine(ChangeChaseState(ChaseState.noChase));       // 3초 후 noChase 상태로 변경
+        StartCoroutine(ChangeChaseState(ChaseState.noChase));       // 10초 후 noChase 상태로 변경
     }
 
     // 타깃 추적 시작 시 카메라 세팅 (산타가 타깃일 때)
     void SetStartChaseCam()
     {
-        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, chasingSantaFieldOfView, Time.deltaTime);          // 타겟을 향해 줌인
+        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, chasingSantaFieldOfView, Time.deltaTime * 1.6f);          // 타겟을 향해 줌인
 
         // 카메라의 x축을 조정
         Quaternion chasingCamRot = Quaternion.Euler(new Vector3(chasingRotateX, cam.transform.rotation.y, cam.transform.rotation.z));    
@@ -253,13 +254,12 @@ public class CameraMovement : MonoBehaviour
     // 건물이 타깃일 때는 건물을 향해 줌인
     void SetZoomInBuilding()
     {
-        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, chasingBuildingFieldOfView, Time.deltaTime);          // 타겟을 향해 줌인
-
         // 카메라의 위치 조정
-        cam.transform.position = Vector3.Lerp(cam.transform.position, chasingBuilding.position + buildingDistance, Time.deltaTime);
+        targetPos = chasingBuilding.position + buildingDistance;
+        cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos, Time.deltaTime * 1.6f);
 
         // 카메라의 x축을 조정
-        Quaternion chasingCamRot = Quaternion.Euler(new Vector3(chasingRotateX, cam.transform.rotation.y, cam.transform.rotation.z));   
+        Quaternion chasingCamRot = Quaternion.Euler(new Vector3(chasingRotateX, cam.transform.rotation.y, cam.transform.rotation.z));
         cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, chasingCamRot, Time.deltaTime);
     }
 
@@ -294,7 +294,6 @@ public class CameraMovement : MonoBehaviour
         }
     }
 
-    Vector3 targetPos;
     void FollowSanta()
     {
         // 추적 시작 후 산타를 따라다님
@@ -303,6 +302,12 @@ public class CameraMovement : MonoBehaviour
             targetPos = chasingSanta.position + distance;
             cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos, Time.deltaTime);
         }
+
+        //if (chasingBuilding != null)
+        //{
+        //    targetPos = chasingBuilding.position + chasingBuilding.GetChild(0).localPosition;
+        //    cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos, Time.deltaTime * 1.6f);
+        //}
     }
     #endregion
 

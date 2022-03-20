@@ -78,8 +78,7 @@ public class Santa : MonoBehaviour
     // 산타 초기 설정
     public void InitSanta(int index, string santaName, float second, float multiplySantaPrice, int santaPrice, float multiplyAmountObtained, float amountObtained, Building building)
     {
-        name += " " + santaName;
-
+        
         this.index = index;
         this.santaName = santaName;
         this.second = second;
@@ -88,6 +87,9 @@ public class Santa : MonoBehaviour
         this.multiplyAmountObtained = multiplyAmountObtained;
         this.amountObtained = amountObtained;
         this.building = building;
+
+        //this.transform.position = this.building.transform.GetChild(1).position;
+
 
         gameObject.SetActive(true);         // 산타가 보이도록
 
@@ -123,8 +125,8 @@ public class Santa : MonoBehaviour
     // 카메라가 해당 산타를 따라다님
     public void SetCamTargetThis()
     {
-        cameraMovement.StartChaseTarget();
         cameraMovement.chasingSanta = this.transform;
+        cameraMovement.StartChaseTarget();
     }
 
     // 클릭 오브젝트 창 보여줌

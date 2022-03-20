@@ -62,6 +62,7 @@ public class Building : MonoBehaviour
         get { return buildingName; }
     }
 
+    [SerializeField]
     private Vector3 distance;
 
     private ClickObjWindow window;
@@ -123,9 +124,9 @@ public class Building : MonoBehaviour
     // 카메라가 해당 산타를 따라다님
     public void SetCamTargetThis()
     {
-        cameraMovement.StartChaseTarget();
         cameraMovement.chasingBuilding = this.transform;
-        cameraMovement.buildingDistance = distance;
+        cameraMovement.buildingDistance = this.transform.GetChild(0).localPosition;
+        cameraMovement.StartChaseTarget();
     }
 
     // 오브젝트 정보창 보여줌
@@ -169,13 +170,12 @@ public class Building : MonoBehaviour
 
     private void Awake()
     {
-        objectList = StorePanel.Instance.ObjectList[index];
         gameManager = GameManager.Instance;
         cameraMovement = CameraMovement.Instance;
     }
     private void Start()
     {
-        distance = this.transform.GetChild(0).localPosition;
+        objectList = StorePanel.Instance.ObjectList[index];
     }
 
     void Update()
