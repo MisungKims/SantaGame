@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Text;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -43,11 +46,14 @@ public class GameManager : MonoBehaviour
     private float gauge;
     [SerializeField]
     private int level = 1;
-    [SerializeField]
-    private double myGold = 10000;
+
+    private BigInteger myGold = 1200;
 
     StringBuilder gaugeSb = new StringBuilder();
-   
+
+    [SerializeField]
+    private Text text;             // 날짜를 나타내는 텍스트
+
     public float Gauge
     {
         get{ return gauge; }
@@ -73,13 +79,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public double MyGold
+    public BigInteger MyGold
     {
         get { return myGold; }
         set
         {
             myGold = value;
             goldText.text = GoldManager.ExpressUnitOfGold(myGold);
+
+            //goldText.text = BigIntegerManager.GetUnit(myGold);
         }
     }
 
@@ -140,7 +148,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         Level = 1;
@@ -152,5 +159,35 @@ public class GameManager : MonoBehaviour
         clickObjWindow.SetActive(false);
 
         cameraMovement = CameraMovement.Instance;
+
+
+        //int santaHouse = 1000;
+        //BigInteger pri = santaHouse;
+
+        //BigInteger j = (BigInteger)130.2;
+
+        //for (int i = 0; i < 15; i++)
+        //{
+        //    pri *= (BigInteger)j;
+        //    text.text += GoldManager.ExpressUnitOfGold(pri) + "\n";
+        //    j += (BigInteger)1.2;
+        //}
+
+        int santaHouse = 5000;
+        BigInteger pri = santaHouse;
+
+        BigInteger j = (BigInteger)2;
+
+        for (int i = 0; i < 15; i++)
+        {
+            pri *= (BigInteger)j;
+            text.text += GoldManager.ExpressUnitOfGold(pri) + "\n";
+            j += 2;
+        }
     }
+
+    //void Update()
+    //{
+    //    MyGold = myGold;
+    //}
 }
