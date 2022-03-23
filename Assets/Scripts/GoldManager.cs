@@ -7,7 +7,7 @@ using System.Text;
 
 public class GoldManager : MonoBehaviour
 {
-   
+
     private static readonly BigInteger unitSize = 1000;
     private static bool isInit = false;
     private static int unitCapacity = 5;
@@ -17,7 +17,7 @@ public class GoldManager : MonoBehaviour
     private static readonly List<string> unitOfGold = new List<String>();
 
     private StringBuilder sb = new StringBuilder();
-    
+
     private static void InitUnit(int capacity)
     {
         unitCapacity += capacity;
@@ -52,12 +52,12 @@ public class GoldManager : MonoBehaviour
         isInit = true;
     }
 
-    public static int GetPoint(int value)
+    public static int GetDecimal(int value)
     {
         return (value % 1000) / 100;
     }
 
-    private static (int value, int index, int point) GetSize(BigInteger value)
+    private static (int value, int index, int decimalPoint) GetSize(BigInteger value)
     {
         BigInteger currentVal = value;
         int index = 0;
@@ -74,7 +74,7 @@ public class GoldManager : MonoBehaviour
             index += 1;
         }
 
-        int point = GetPoint(lastVal);
+        int point = GetDecimal(lastVal);
 
         while (unitOfGold.Count <= index)
         {
@@ -93,8 +93,32 @@ public class GoldManager : MonoBehaviour
 
         var sizeStruct = GetSize(myGold);
 
-        return string.Format("{0}.{1}{2}", sizeStruct.value, sizeStruct.point, unitOfGold[sizeStruct.index]);
+        return string.Format("{0}.{1}{2}", sizeStruct.value, sizeStruct.decimalPoint, unitOfGold[sizeStruct.index]);
     }
+
+    //public static BigInteger GetBigInteger(string unit)
+    //{
+    //    if (!isInit)
+    //    {
+    //        InitUnit(5);
+    //    }
+
+    //    string[] strArr = unit.Split('.');
+
+    //    if (strArr.Length >= 2)
+    //    {
+    //        BigInteger value = BigInteger.Parse(strArr[0]);
+    //        BigInteger decimalPoint = BigInteger.Parse((Regex.Replace(strArr[1], "[^0-9]", "")));
+    //        string unitStr = Regex.Replace(strArr[1], "[^A-Z]", "");
+
+    //        if (decimalPoint == 0) return (_unitsMap[unitStr] * value);
+    //        else
+    //        {
+    //            var unitValue = _unitsMap[unitStr];
+    //            return (unitValue * value) + (unitValue / 10) * point;
+    //        }
+    //    }
+    //}
 
 }
 
