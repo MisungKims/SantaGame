@@ -27,15 +27,15 @@ public class StoreObjectSc : MonoBehaviour
     public string buildingName;            // 건물 이름
 
     public float multiplyBuildingPrice;    // 업그레이드 후 건물 가격 증가 배율
-    public int buildingPrice;              // 건물 가격 
+    public string buildingPrice;              // 건물 가격 
     public float multiplyGold;             // 업그레이드 후 플레이어 돈 증가 배율
-    public int incrementGold;              // 플레이어의 돈 증가량
+    public string incrementGold;              // 플레이어의 돈 증가량
 
     public string santaName;               // 산타 이름
     private bool isBuySanta = false;        // 산타를 구매했는지 안했는지
 
     public float multiplySantaPrice;       // 업그레이드 후 산타 가격 증가 배율
-    public int santaPrice;                 // 산타 가격 
+    public string santaPrice;                 // 산타 가격 
     public float multiplyAmountObtained;   // 업그레이드 후 획득량 증가 배율
     public float amountObtained;           // 획득량 증가
 
@@ -115,12 +115,12 @@ public class StoreObjectSc : MonoBehaviour
     // 건물 사기 버튼 클릭 시 건물 구매 혹은 업그레이드
     public void BuildingButtonClick()
     {
-        if (gameManagerInstance.MyGold >= buildingPrice)           // 플레이어가 가진 돈이 건물의 가격보다 높을 때
-        {
-            if (!isBuyBuilding)
-                BuyNewBuilding();                                   // 사지 않은 건물이면 새로 구매
-            else UpgradeBuilding();                                 // 산 건물이면 업그레이드
-        }
+        //if (gameManagerInstance.MyGold >= buildingPrice)           // 플레이어가 가진 돈이 건물의 가격보다 높을 때
+        //{
+        //    if (!isBuyBuilding)
+        //        BuyNewBuilding();                                   // 사지 않은 건물이면 새로 구매
+        //    else UpgradeBuilding();                                 // 산 건물이면 업그레이드
+        //}
     }
 
     
@@ -129,7 +129,7 @@ public class StoreObjectSc : MonoBehaviour
     {
        isBuyBuilding = true;
 
-       gameManagerInstance.MyGold -= buildingPrice;                       // 건물 비용 지불
+       //gameManagerInstance.MyGold -= buildingPrice;                       // 건물 비용 지불
 
         NewBuilding();      // 건물 오브젝트 생성
     }
@@ -140,7 +140,7 @@ public class StoreObjectSc : MonoBehaviour
         gameManagerInstance.HideStorePanel();          // 상점 창 숨기기
 
         buildingInstant = buildingGroup.transform.GetChild(index).GetComponent<Building>();
-        buildingInstant.InitBuilding(index, buildingName, multiplyBuildingPrice, buildingPrice, multiplyGold, incrementGold);
+        //buildingInstant.InitBuilding(index, buildingName, multiplyBuildingPrice, buildingPrice, multiplyGold, incrementGold);
     }
 
     // 건물을 업그레이드
@@ -148,18 +148,18 @@ public class StoreObjectSc : MonoBehaviour
     {
         buildingInstant.Upgrade();
        
-        storeInstance.BuildingPrice = buildingPrice;
-        storeInstance.IncrementGold = incrementGold;
+        //storeInstance.BuildingPrice = buildingPrice;
+        //storeInstance.IncrementGold = incrementGold;
     }
 
     // 산타 사기 버튼 클릭 시 산타 구매 혹은 업그레이드
     public void SantaButtonClick()
     {
-        if (gameManagerInstance.MyGold >= santaPrice)            // 플레이어가 가진 돈이 건물의 가격보다 높을 때
-        {
-            if (!isBuySanta) BuyNewSanta();                    // 사지 않은 건물이면 새로 구매
-            else UpgradeSanta();                                 // 산 건물이면 업그레이드
-        }
+        //if (gameManagerInstance.MyGold >= santaPrice)            // 플레이어가 가진 돈이 건물의 가격보다 높을 때
+        //{
+        //    if (!isBuySanta) BuyNewSanta();                    // 사지 않은 건물이면 새로 구매
+        //    else UpgradeSanta();                                 // 산 건물이면 업그레이드
+        //}
     }
 
     // 새로운 산타 구입
@@ -167,7 +167,7 @@ public class StoreObjectSc : MonoBehaviour
     {
         isBuySanta = true;
 
-        gameManagerInstance.MyGold -= santaPrice;      // 산타 비용 지불
+        //gameManagerInstance.MyGold -= santaPrice;      // 산타 비용 지불
 
         CreateNewSanta();      // 산타 오브젝트 생성
     }
@@ -179,7 +179,7 @@ public class StoreObjectSc : MonoBehaviour
 
         santaInstant = santaGroup.transform.GetChild(index).GetComponent<Santa>();
 
-        santaInstant.InitSanta(index, santaName, (float)second, multiplySantaPrice, santaPrice, multiplyAmountObtained, amountObtained, buildingInstant);
+        //santaInstant.InitSanta(index, santaName, (float)second, multiplySantaPrice, santaPrice, multiplyAmountObtained, amountObtained, buildingInstant);
     }
 
     // 산타를 업그레이드
@@ -187,7 +187,7 @@ public class StoreObjectSc : MonoBehaviour
     {
         santaInstant.Upgrade();
        
-        storeInstance.SantaPrice = santaPrice;
+        //storeInstance.SantaPrice = santaPrice;
         storeInstance.IncrementAmount = amountObtained;
     }
 

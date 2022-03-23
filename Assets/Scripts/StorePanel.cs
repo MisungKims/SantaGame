@@ -112,12 +112,12 @@ public class StorePanel : MonoBehaviour
                 (int)data[i]["잠금 해제 레벨"],
                 (int)data[i]["초"],
                 (float)data[i]["건물 가격 배수"],
-                (int)data[i]["건물 가격"],
-                 (float)data[i]["골드 증가 배수"],
-                (int)data[i]["골드 증가량"],
+                (string)data[i]["건물 가격"],
+                (string)data[i]["골드 증가량"],
                 data[i]["산타 이름"].ToString(),
                 (float)data[i]["산타 가격 배수"],
-                (int)data[i]["산타 가격"],
+                (string)data[i]["산타 가격"],
+                (float)data[i]["알바 효율 증가"],
                 data[i]["Desc"].ToString());
         }
 
@@ -128,7 +128,7 @@ public class StorePanel : MonoBehaviour
     /// <summary>
     /// 상점 오브젝트 복제
     /// </summary>
-    void StoreInstant(int index, string buildingName, int unlockLevel, int second, float multiplyBuildingPrice, int buildingPrice, float multiplyGold, int incrementGold, string santaName, float multiplySantaPrice, int santaPrice, string desc)
+    void StoreInstant(int index, string buildingName, int unlockLevel, int second, float multiplyBuildingPrice, string buildingPrice, string incrementGold, string santaName, float multiplySantaPrice, string santaPrice, float efficiency, string desc)
     {
         GameObject instant = GameObject.Instantiate(storeObject, storeObject.transform.position, Quaternion.identity, storeObject.transform.parent);
 
@@ -141,7 +141,6 @@ public class StorePanel : MonoBehaviour
         copiedStoreObject.second = second;                                    // 몇 초 마다 증가할 것인지
         copiedStoreObject.multiplyBuildingPrice = multiplyBuildingPrice;       // 업그레이드 후 건물 가격 증가 배율
         copiedStoreObject.buildingPrice = buildingPrice;                      // 건물 가격 
-        copiedStoreObject.multiplyGold = multiplyGold;                // 업그레이드 후 플레이어 돈 증가 배율
         copiedStoreObject.incrementGold = incrementGold;                    // 플레이어의 돈 증가량
         copiedStoreObject.santaName = santaName;                    // 산타 이름
         copiedStoreObject.multiplySantaPrice = multiplySantaPrice;          // 업그레이드 후 건물 가격 증가 배율
@@ -158,14 +157,14 @@ public class StorePanel : MonoBehaviour
     void SetButtonInteractable()
     {
         // 가진 돈이 건물의 가격보다 클 때
-        if (gameManagerInstance.MyGold >= selectedObject.buildingPrice)        
-            buyBuildingButton.interactable = true;                //  Interactable을 True로 설정
-        else buyBuildingButton.interactable = false;
+        //if (gameManagerInstance.MyGold >= selectedObject.buildingPrice)        
+        //    buyBuildingButton.interactable = true;                //  Interactable을 True로 설정
+        //else buyBuildingButton.interactable = false;
 
-        // 산타 오브젝트는 건물을 샀을 때, 가진 돈이 산타의 가격보다 클 때
-        if (selectedObject.isBuyBuilding && gameManagerInstance.MyGold >= selectedObject.santaPrice)
-            buySantaButton.interactable = true;                 //  Interactable을 True로 설정
-        else buySantaButton.interactable = false;
+        //// 산타 오브젝트는 건물을 샀을 때, 가진 돈이 산타의 가격보다 클 때
+        //if (selectedObject.isBuyBuilding && gameManagerInstance.MyGold >= selectedObject.santaPrice)
+        //    buySantaButton.interactable = true;                 //  Interactable을 True로 설정
+        //else buySantaButton.interactable = false;
     }
 
     // 상점 목록의 버튼을 선택했을 때 선택된 오브젝트의 것으로 이름, 이미지, 가격 등을 설정
@@ -177,13 +176,13 @@ public class StorePanel : MonoBehaviour
             santaImg.SetActive(false);
 
         selectedBuildingName.text = selectedObject.buildingName;
-        BuildingPrice = selectedObject.buildingPrice;
-        IncrementGold = selectedObject.incrementGold;
+        //BuildingPrice = selectedObject.buildingPrice;
+        //IncrementGold = selectedObject.incrementGold;
         buildingImg = buildingImageGroup.transform.GetChild(selectedObject.index).gameObject;
         buildingImg.SetActive(true);
 
         selectedSantaName.text = selectedObject.santaName;
-        SantaPrice = selectedObject.santaPrice;
+        //SantaPrice = selectedObject.santaPrice;
         IncrementAmount = selectedObject.amountObtained;
         santaImg = santaImageGroup.transform.GetChild(selectedObject.index).gameObject;
         santaImg.SetActive(true);

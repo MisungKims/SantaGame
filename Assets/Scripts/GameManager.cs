@@ -161,29 +161,34 @@ public class GameManager : MonoBehaviour
         cameraMovement = CameraMovement.Instance;
 
 
-        //int santaHouse = 1000;
+        //BigInteger[] arr = new BigInteger[15];
+
+        //int santaHouse = 130;
         //BigInteger pri = santaHouse;
 
-        //BigInteger j = (BigInteger)130.2;
+        //BigInteger j = (BigInteger)11;
 
         //for (int i = 0; i < 15; i++)
         //{
-        //    pri *= (BigInteger)j;
-        //    text.text += GoldManager.ExpressUnitOfGold(pri) + "\n";
-        //    j += (BigInteger)1.2;
+        //    pri *= j;
+            
+        //    arr[i] = pri;
         //}
 
-        int santaHouse = 5000;
-        BigInteger pri = santaHouse;
-
-        BigInteger j = (BigInteger)2;
-
-        for (int i = 0; i < 15; i++)
-        {
-            pri *= (BigInteger)j;
-            text.text += GoldManager.ExpressUnitOfGold(pri) + "\n";
-            j += 2;
-        }
+        //text.text += GoldManager.ExpressUnitOfGold(arr[0] * 3) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[1] * 5) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[2] * 7) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[3] * 9) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[4] * 11) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[5] * 13) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[6] * 15) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[7] * 17) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[8] * 19) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[9] * 21) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[10] * 23) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[11] * 25) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[12] * 27) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[13] * 29) + "\n";
     }
 
     //void Update()

@@ -113,10 +113,10 @@ public class Building : MonoBehaviour
         gameManager.MyGold -= buildingPrice;
 
         buildingPrice = (int)(buildingPrice * multiplyBuildingPrice);    // 비용을 배율만큼 증가
-        objectList.buildingPrice = buildingPrice;
+        //objectList.buildingPrice = buildingPrice;
 
         incrementGold = (int)(incrementGold * multiplyGold);            // 코인 증가량을 배율만큼 증가
-        objectList.incrementGold = incrementGold;
+        //objectList.incrementGold = incrementGold;
 
         level++;
     }

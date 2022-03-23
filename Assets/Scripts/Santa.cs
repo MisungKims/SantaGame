@@ -114,7 +114,7 @@ public class Santa : MonoBehaviour
         gameManager.MyGold -= santaPrice;
 
         santaPrice = (int)(santaPrice * multiplySantaPrice);    // 비용을 배율만큼 증가
-        objectList.santaPrice = santaPrice;
+        //objectList.santaPrice = santaPrice;
 
         amountObtained = (int)(amountObtained * multiplyAmountObtained);            // 코인 획득량을 배율만큼 증가
         objectList.amountObtained = amountObtained;
