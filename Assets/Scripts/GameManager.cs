@@ -28,14 +28,22 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Slider gaugeSlider;        // 게이지를 나타내는 슬라이더
     [SerializeField]
-    private Text gaugeText;        // 게이지를 나타내는 텍스트
+    private Text gaugeText;            // 게이지를 나타내는 텍스트
     [SerializeField]
     private Text lvText;               // 레벨을 나타내는 텍스트
     [SerializeField]
-    private Text goldText;            // 돈을 나타내는 텍스트
+    private Text goldText;             // 돈을 나타내는 텍스트
+    [SerializeField]
+    private Text carrotsText;          // 당근을 나타내는 텍스트
+    [SerializeField]
+    private Text diaText;              // 다이아를 나타내는 텍스트
+    [SerializeField]
+    private Text santaCountText;              // 다이아를 나타내는 텍스트
     [SerializeField]
     private Text dateText;             // 날짜를 나타내는 텍스트
-    
+
+    public Text text;             // 날짜를 나타내는 텍스트
+
     [Header("---------- 패널")]
     public GameObject mainPanel;     // 상점 패널
     public GameObject storePanel;     // 상점 패널
@@ -46,13 +54,14 @@ public class GameManager : MonoBehaviour
     private float gauge;
     [SerializeField]
     private int level = 1;
+    [SerializeField]
+    private int santaCount =0;
 
-    private BigInteger myGold = 1200;
+    private BigInteger myGold = 3560000;
+    private BigInteger myCarrots = 13000;
+    private BigInteger myDia = 36000;
 
     StringBuilder gaugeSb = new StringBuilder();
-
-    [SerializeField]
-    private Text text;             // 날짜를 나타내는 텍스트
 
     public float Gauge
     {
@@ -86,10 +95,38 @@ public class GameManager : MonoBehaviour
         {
             myGold = value;
             goldText.text = GoldManager.ExpressUnitOfGold(myGold);
-
-            //goldText.text = BigIntegerManager.GetUnit(myGold);
         }
     }
+
+    public BigInteger MyCarrots
+    {
+        get { return myCarrots; }
+        set
+        {
+            myCarrots = value;
+            carrotsText.text = GoldManager.ExpressUnitOfGold(MyCarrots);
+        }
+    }
+
+    public BigInteger MyDia
+    {
+        get { return myDia; }
+        set
+        {
+            myDia = value;
+            diaText.text = GoldManager.ExpressUnitOfGold(myDia);
+        }
+    }
+    public int SantaCount
+    {
+        get { return santaCount; }
+        set
+        {
+            santaCount = value;
+            santaCountText.text = santaCount.ToString();
+        }
+    }
+
 
     // 캐싱
     private CameraMovement cameraMovement;
@@ -152,7 +189,10 @@ public class GameManager : MonoBehaviour
     {
         Level = 1;
         Gauge = 0;
+        SantaCount = 0;
         MyGold = myGold;
+        MyCarrots = myCarrots;
+        MyDia = myDia;
         
 
         storePanel.SetActive(false);
@@ -171,7 +211,7 @@ public class GameManager : MonoBehaviour
         //for (int i = 0; i < 15; i++)
         //{
         //    pri *= j;
-            
+
         //    arr[i] = pri;
         //}
 
@@ -189,6 +229,10 @@ public class GameManager : MonoBehaviour
         //text.text += GoldManager.ExpressUnitOfGold(arr[11] * 25) + "\n";
         //text.text += GoldManager.ExpressUnitOfGold(arr[12] * 27) + "\n";
         //text.text += GoldManager.ExpressUnitOfGold(arr[13] * 29) + "\n";
+
+        text.text = GoldManager.UnitToBigInteger("143.5").ToString();
+        //Debug.Log(BigIntegerManager.UnitToValue(BigInteger.Pow(1000, 702)));
+
     }
 
     //void Update()

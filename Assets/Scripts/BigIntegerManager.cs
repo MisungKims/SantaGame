@@ -98,8 +98,6 @@ using UnityEngine;
 
             var sizeStruct = GetSize(value);
 
-        Debug.Log("INDEX : " + sizeStruct.idx);
-
         return $"{sizeStruct.value}.{sizeStruct.point}{_units[sizeStruct.idx]}";
         }
 
@@ -147,4 +145,5 @@ using UnityEngine;
                     return result;
             }
         }
+
     }

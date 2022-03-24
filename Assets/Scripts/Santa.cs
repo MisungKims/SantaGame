@@ -23,25 +23,18 @@ public class Santa : MonoBehaviour
         set { multiplySantaPrice = value; }
     }
 
-    private int santaPrice;                 // 산타 가격 
-    public int SantaPrice
+    private string santaPrice;                 // 산타 가격 
+    public string SantaPrice
     {
         get { return santaPrice; }
         set { santaPrice = value; }
     }
 
-    private float multiplyAmountObtained;   // 업그레이드 후 획득량 증가 배율
-    public float MultiplyAmountObtained
+    private int santaEfficiency;
+    public int SantaEfficiency
     {
-        //get { return multiplyAmountObtained; }
-        set { multiplyAmountObtained = value; }
-    }
-
-    private float amountObtained;           // 획득량 증가
-    public float AmountObtained
-    {
-        get { return amountObtained; }
-        set { amountObtained = value; }
+        get { return santaEfficiency; }
+        set { santaEfficiency = value; }
     }
 
     [SerializeField]
@@ -62,9 +55,8 @@ public class Santa : MonoBehaviour
     StringBuilder sb = new StringBuilder();
 
     // 캐싱
-    private static WaitForSeconds m_waitForSecond1s;
+    private static WaitForSeconds m_waitForSecond;
 
-    private StoreObjectSc objectList;
     private GameManager gameManager;
     private CameraMovement cameraMovement;
 
@@ -76,20 +68,15 @@ public class Santa : MonoBehaviour
 
 
     // 산타 초기 설정
-    public void InitSanta(int index, string santaName, float second, float multiplySantaPrice, int santaPrice, float multiplyAmountObtained, float amountObtained, Building building)
+    public void InitSanta(int index, string santaName, float second, float multiplySantaPrice, string santaPrice, int santaEfficiency, Building building)
     {
-        
         this.index = index;
         this.santaName = santaName;
         this.second = second;
         this.multiplySantaPrice = multiplySantaPrice;
         this.santaPrice = santaPrice;
-        this.multiplyAmountObtained = multiplyAmountObtained;
-        this.amountObtained = amountObtained;
+        this.santaEfficiency = santaEfficiency;
         this.building = building;
-
-        //this.transform.position = this.building.transform.GetChild(1).position;
-
 
         gameObject.SetActive(true);         // 산타가 보이도록
 
@@ -99,25 +86,23 @@ public class Santa : MonoBehaviour
 
         StartCoroutine(Increment());        // 골드획득 자동화 시작
 
-        m_waitForSecond1s = new WaitForSeconds(second);
+        m_waitForSecond = new WaitForSeconds(second);
     }
 
 
     // 산타 업그레이드
     public void Upgrade()
     {
-        if (gameManager.MyGold < santaPrice)
+        if (!GoldManager.CompareBigintAndUnit(gameManager.MyCarrots, santaPrice))
         {
             return;
         }
 
-        gameManager.MyGold -= santaPrice;
+        gameManager.MyCarrots -= GoldManager.UnitToBigInteger(santaPrice);
 
-        santaPrice = (int)(santaPrice * multiplySantaPrice);    // 비용을 배율만큼 증가
-        //objectList.santaPrice = santaPrice;
+        santaPrice = GoldManager.MultiplyUnit(santaPrice, multiplySantaPrice);
 
-        amountObtained = (int)(amountObtained * multiplyAmountObtained);            // 코인 획득량을 배율만큼 증가
-        objectList.amountObtained = amountObtained;
+        building.IncrementGold = GoldManager.MultiplyUnit(building.IncrementGold, 1 + (santaEfficiency * 0.001f));
 
         level++;
     }
@@ -164,11 +149,10 @@ public class Santa : MonoBehaviour
     {
         while (true)
         {
-            yield return m_waitForSecond1s;
+            yield return m_waitForSecond;
 
-            gameManager.MyGold += building.IncrementGold;
+            gameManager.MyGold += GoldManager.UnitToBigInteger(building.IncrementGold);
         }
-
     }
     #endregion
 
@@ -177,7 +161,6 @@ public class Santa : MonoBehaviour
     {
         //anim = GetComponent<Animator>();
 
-        objectList = StorePanel.Instance.ObjectList[index];
         gameManager = GameManager.Instance;
         cameraMovement = CameraMovement.Instance;
     }

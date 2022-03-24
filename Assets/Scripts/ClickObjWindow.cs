@@ -22,6 +22,9 @@ public class ClickObjWindow : MonoBehaviour
     [SerializeField]
     private Text PriceText;
 
+    [SerializeField]
+    private Button UpgradeButton;
+
 
     StringBuilder levelSb = new StringBuilder();
     StringBuilder goldSb = new StringBuilder();
@@ -60,13 +63,13 @@ public class ClickObjWindow : MonoBehaviour
         }
     }
 
-    private int objPrice;
-    public int ObjPrice
+    private string objPrice;
+    public string ObjPrice
     {
         set
         {
             objPrice = value;
-            PriceText.text = GoldManager.ExpressUnitOfGold(objPrice);
+            PriceText.text = objPrice;
         }
     }
 
@@ -91,7 +94,7 @@ public class ClickObjWindow : MonoBehaviour
 
         goldSb.Clear();
         goldSb.Append("+ ");
-        goldSb.Append(GoldManager.ExpressUnitOfGold(building.IncrementGold));
+        goldSb.Append(building.IncrementGold);
         
         ObjAmount = goldSb.ToString();
 
@@ -107,8 +110,8 @@ public class ClickObjWindow : MonoBehaviour
         ObjPrice = santa.SantaPrice;
 
         goldSb.Clear();
-        goldSb.Append("골드 획득량 ");
-        goldSb.Append(santa.AmountObtained.ToString());
+        goldSb.Append("알바 효율 ");
+        goldSb.Append(santa.SantaEfficiency.ToString());
         goldSb.Append("% 증가");
 
         ObjAmount = goldSb.ToString();
@@ -117,7 +120,7 @@ public class ClickObjWindow : MonoBehaviour
         ObjImg.SetActive(true);
     }
 
-
+    // 업그레이드 버튼 클릭시
     public void UpgradeButtonClick()
     {
         if (building)
@@ -132,6 +135,20 @@ public class ClickObjWindow : MonoBehaviour
 
             SetSantaInfo();
         }
+    }
+
+    // 업그레이드 버튼의 Interactable 설정
+    void SetButtonInteractable()
+    {
+        //가진 돈이 오브젝트의 가격보다 클 때
+        if (GoldManager.CompareBigintAndUnit(GameManager.Instance.MyGold, objPrice))
+            UpgradeButton.interactable = true;                //  Interactable을 True로 설정
+        else UpgradeButton.interactable = false;
+    }
+
+    void Update()
+    {
+        SetButtonInteractable();
     }
 
     private void OnDisable()
