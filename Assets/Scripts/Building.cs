@@ -25,15 +25,15 @@ public class Building : MonoBehaviour
     //}
 
     [SerializeField]
-    private int buildingPrice;              // 건물 가격 
-    public int BuildingPrice
+    private string buildingPrice;              // 건물 가격 
+    public string BuildingPrice
     {
         get { return buildingPrice; }
         //set { buildingPrice = value; }
     }
 
-    [SerializeField]
-    private float multiplyGold;             // 업그레이드 후 플레이어 돈 증가 배율
+    //[SerializeField]
+    //private float multiplyGold;             // 업그레이드 후 플레이어 돈 증가 배율
     //public float MultiplyGold
     //{
     //    //get { return multiplyGold; }
@@ -41,11 +41,11 @@ public class Building : MonoBehaviour
     //}
 
     [SerializeField]
-    private int incrementGold;              // 플레이어의 돈 증가량
-    public int IncrementGold
+    private string incrementGold;              // 플레이어의 돈 증가량
+    public string IncrementGold
     {
         get { return incrementGold; }
-        //set { incrementGold = value; }
+        set { incrementGold = value; }
     }
 
 
@@ -62,7 +62,7 @@ public class Building : MonoBehaviour
         get { return buildingName; }
     }
 
-    [SerializeField]
+
     private Vector3 distance;
 
     private ClickObjWindow window;
@@ -70,7 +70,6 @@ public class Building : MonoBehaviour
     StringBuilder sb = new StringBuilder();
 
     // 캐싱
-    private StoreObjectSc objectList;
     private GameManager gameManager;
     private CameraMovement cameraMovement;
 
@@ -87,7 +86,7 @@ public class Building : MonoBehaviour
     /// <param name="price">건물의 가격</param>
     /// <param name="mGold">골드 증가량 배수</param>
     /// <param name="iGold">골드 증가량</param>
-    public void InitBuilding(int index, string name, float multiplyPrice, int price, float mGold, int iGold)
+    public void InitBuilding(int index, string name, float multiplyPrice, string price, string iGold)
     {
         gameObject.SetActive(true);         // 건물이 보이도록
 
@@ -95,7 +94,6 @@ public class Building : MonoBehaviour
         buildingName = name;
         multiplyBuildingPrice = multiplyPrice;
         buildingPrice = price;
-        multiplyGold = mGold;
         incrementGold = iGold;
 
         SetCamTargetThis();                 // 카메라가 산타를 따라다니도록
@@ -106,17 +104,16 @@ public class Building : MonoBehaviour
     // 건물 업그레이드
     public void Upgrade()
     {
-        if (gameManager.MyGold < buildingPrice)
+        if (!GoldManager.CompareBigintAndUnit(gameManager.MyGold, buildingPrice))
         {
             return;
         }
-        gameManager.MyGold -= buildingPrice;
 
-        buildingPrice = (int)(buildingPrice * multiplyBuildingPrice);    // 비용을 배율만큼 증가
-        objectList.buildingPrice = buildingPrice;
+        gameManager.MyGold -= GoldManager.UnitToBigInteger(buildingPrice);  // 업그레이드 비용 지불
 
-        incrementGold = (int)(incrementGold * multiplyGold);            // 코인 증가량을 배율만큼 증가
-        objectList.incrementGold = incrementGold;
+        buildingPrice = GoldManager.MultiplyUnit(buildingPrice, multiplyBuildingPrice); // 비용을 배율만큼 증가
+
+        incrementGold = GoldManager.MultiplyUnit(incrementGold, 1.1f);  // 골드 증가량을 배율만큼 증가
 
         level++;
     }
@@ -173,11 +170,7 @@ public class Building : MonoBehaviour
         gameManager = GameManager.Instance;
         cameraMovement = CameraMovement.Instance;
     }
-    private void Start()
-    {
-        objectList = StorePanel.Instance.ObjectList[index];
-    }
-
+   
     void Update()
     {
         TouchBuilding();

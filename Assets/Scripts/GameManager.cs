@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Text;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -25,14 +28,22 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Slider gaugeSlider;        // 게이지를 나타내는 슬라이더
     [SerializeField]
-    private Text gaugeText;        // 게이지를 나타내는 텍스트
+    private Text gaugeText;            // 게이지를 나타내는 텍스트
     [SerializeField]
     private Text lvText;               // 레벨을 나타내는 텍스트
     [SerializeField]
-    private Text goldText;            // 돈을 나타내는 텍스트
+    private Text goldText;             // 돈을 나타내는 텍스트
+    [SerializeField]
+    private Text carrotsText;          // 당근을 나타내는 텍스트
+    [SerializeField]
+    private Text diaText;              // 다이아를 나타내는 텍스트
+    [SerializeField]
+    private Text santaCountText;              // 다이아를 나타내는 텍스트
     [SerializeField]
     private Text dateText;             // 날짜를 나타내는 텍스트
-    
+
+    public Text text;             // 날짜를 나타내는 텍스트
+
     [Header("---------- 패널")]
     public GameObject mainPanel;     // 상점 패널
     public GameObject storePanel;     // 상점 패널
@@ -44,10 +55,14 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private int level = 1;
     [SerializeField]
-    private double myGold = 10000;
+    private int santaCount =0;
+
+    private BigInteger myGold = 3560000;
+    private BigInteger myCarrots = 13000;
+    private BigInteger myDia = 36000;
 
     StringBuilder gaugeSb = new StringBuilder();
-   
+
     public float Gauge
     {
         get{ return gauge; }
@@ -73,7 +88,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public double MyGold
+    public BigInteger MyGold
     {
         get { return myGold; }
         set
@@ -82,6 +97,36 @@ public class GameManager : MonoBehaviour
             goldText.text = GoldManager.ExpressUnitOfGold(myGold);
         }
     }
+
+    public BigInteger MyCarrots
+    {
+        get { return myCarrots; }
+        set
+        {
+            myCarrots = value;
+            carrotsText.text = GoldManager.ExpressUnitOfGold(MyCarrots);
+        }
+    }
+
+    public BigInteger MyDia
+    {
+        get { return myDia; }
+        set
+        {
+            myDia = value;
+            diaText.text = GoldManager.ExpressUnitOfGold(myDia);
+        }
+    }
+    public int SantaCount
+    {
+        get { return santaCount; }
+        set
+        {
+            santaCount = value;
+            santaCountText.text = santaCount.ToString();
+        }
+    }
+
 
     // 캐싱
     private CameraMovement cameraMovement;
@@ -140,17 +185,58 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         Level = 1;
         Gauge = 0;
+        SantaCount = 0;
         MyGold = myGold;
+        MyCarrots = myCarrots;
+        MyDia = myDia;
         
 
         storePanel.SetActive(false);
         clickObjWindow.SetActive(false);
 
         cameraMovement = CameraMovement.Instance;
+
+
+        //BigInteger[] arr = new BigInteger[15];
+
+        //int santaHouse = 130;
+        //BigInteger pri = santaHouse;
+
+        //BigInteger j = (BigInteger)11;
+
+        //for (int i = 0; i < 15; i++)
+        //{
+        //    pri *= j;
+
+        //    arr[i] = pri;
+        //}
+
+        //text.text += GoldManager.ExpressUnitOfGold(arr[0] * 3) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[1] * 5) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[2] * 7) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[3] * 9) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[4] * 11) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[5] * 13) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[6] * 15) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[7] * 17) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[8] * 19) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[9] * 21) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[10] * 23) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[11] * 25) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[12] * 27) + "\n";
+        //text.text += GoldManager.ExpressUnitOfGold(arr[13] * 29) + "\n";
+
+        text.text = GoldManager.UnitToBigInteger("143.5").ToString();
+        //Debug.Log(BigIntegerManager.UnitToValue(BigInteger.Pow(1000, 702)));
+
     }
+
+    //void Update()
+    //{
+    //    MyGold = myGold;
+    //}
 }
