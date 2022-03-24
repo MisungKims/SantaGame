@@ -7,32 +7,123 @@ using System.Text;
 public class StoreObjectSc : MonoBehaviour
 {
     #region 변수
-    Text buildingNameText;                  // 건물의 이름 Text
+    [Header("---------- 오브젝트")]
+    [SerializeField]
     Text descText;                          // 설명 Text
-    Text unlockText;                        // Unlock 레벨 Text
+    [SerializeField]
     Text secondText;                        // 초 Text
+    [SerializeField]
     Text incrementAmountText;               // 골드 증가량 Text
-    GameObject infoText;
+    [SerializeField]
+    GameObject unlockingObject;
 
-    GameObject unlockImage;                 // 자물쇠 이미지
+    [SerializeField]
+    Text objectNameText;               // 골드 증가량 Text
+    [SerializeField]
+    Text lockingLevelText;                        // Unlock 레벨 Text
+    [SerializeField]
+    GameObject lockingImage;                 // 자물쇠 이미지
+    [SerializeField]
+    Text PrerequisitesText;
+    [SerializeField]
+    GameObject unlockButton;                 // 자물쇠 이미지
+
+    [Header("----------------- 빌딩")]
+
+    [SerializeField]
+    Text buildingNameText;                  // 건물의 이름 Text
+    [SerializeField]
+    Text buildingLevelText;                  // 건물의 이름 Text
+    [SerializeField]
+    Button upgradeBuildingButton;                  // 건물의 이름 Text
+    [SerializeField]
+    Text buildingPriceText;                  // 건물의 이름 Text
+    [SerializeField]
+    Text incrementGoldText;                  // 건물의 이름 Text
+    [SerializeField]
+    GameObject buildingImageGroup;                  // 건물의 이름 Text
+
+    [Header("----------------- 산타")]
+
+    [SerializeField]
+    Text santaNameText;                  // 건물의 이름 Text
+    [SerializeField]
+    Text santaLevelText;                  // 건물의 이름 Text
+    [SerializeField]
+    Button upgradeSantaButton;                  // 건물의 이름 Text
+    [SerializeField]
+    Text santaPriceText;                  // 건물의 이름 Text
+    [SerializeField]
+    Text efficiencyText;                  // 건물의 이름 Text
+    [SerializeField]
+    GameObject santaImageGroup;                  // 건물의 이름 Text
+
 
     Button backgroundButton;
 
  
     public int index;
 
-    [Header("---------- 변수")]
-    public int unlockLevel;                // 잠금 해제 가능 레벨
-    public int second;                     // 몇 초 마다 증가할 것인지
-    public string desc;                    // 건물의 설명
+    private string desc;                    // 건물의 설명
+    public string Desc
+    {
+        get { return desc; }
+        set
+        {
+            desc = value;
+            descText.text = desc;
+        }
+    }
 
-    public bool isBuyBuilding = false;
-    
-   
-    public string buildingName;                 // 건물 이름
+    private int unlockLevel;                // 잠금 해제 가능 레벨
+    public int UnlockLevel
+    {
+        get { return unlockLevel; }
+        set
+        {
+            unlockLevel = value;
 
-    public float multiplyBuildingPrice;         // 업그레이드 후 건물 가격 증가 배율
+            sb.Append("Lv.");
+            sb.Append(unlockLevel.ToString());
+            sb.Append(" 에 잠금 해제 가능");
+            lockingLevelText.text = sb.ToString();
+        }
+    }
 
+    private int second;                     // 몇 초 마다 증가할 것인지
+    public int Second
+    {
+        get { return second; }
+        set
+        {
+            second = value;
+            secondText.text = string.Format("{0}초", second);
+        }
+    }
+
+    private string incrementGold;              // 돈 증가량
+    public string IncrementGold
+    {
+        get { return incrementGold; }
+        set
+        {
+            incrementGold = value;
+            incrementAmountText.text = incrementGold;
+            incrementGoldText.text = string.Format("+ {0}", GoldManager.MultiplyUnit(incrementGold, 0.1f)); 
+        }
+    }
+
+    private string buildingName;                 // 건물 이름
+    public string BuildingName
+    {
+        set
+        {
+            buildingName = value;
+            buildingNameText.text = buildingName;
+        }
+    }
+
+  
     private string buildingPrice;              // 건물 가격 
     public string BuildingPrice
     {
@@ -40,11 +131,10 @@ public class StoreObjectSc : MonoBehaviour
         set 
         {
             buildingPrice = value;
-            if(storeInstance) storeInstance.BuildingPrice = buildingPrice;
+            buildingPriceText.text = buildingPrice;
         }
     }
 
-   
     private int buildingLevel = 1;
     public int BuildingLevel
     {
@@ -52,23 +142,28 @@ public class StoreObjectSc : MonoBehaviour
         set 
         {
             buildingLevel = value;
-            if (storeInstance) storeInstance.BuildingLevel = buildingLevel;
+            buildingLevelText.text = string.Format("Lv. {0}", buildingLevel);
         }
     }
 
-    public string santaName;               // 산타 이름
-    private bool isBuySanta = false;        // 산타를 구매했는지 안했는지
+    private string santaName;               // 산타 이름
+    public string SantaName
+    {
+        set
+        {
+            santaName = value;
+            santaNameText.text = santaName;
+        }
+    }
 
-    public float multiplySantaPrice;       // 업그레이드 후 산타 가격 증가 배율
-
-    public string santaPrice;               // 산타 가격 
+    private string santaPrice;               // 산타 가격 
     public string SantaPrice
     {
         get { return santaPrice; }
         set
         {
             santaPrice = value;
-            if (storeInstance) storeInstance.SantaPrice = santaPrice;
+            santaPriceText.text = santaPrice.ToString();
         }
     }
 
@@ -80,23 +175,27 @@ public class StoreObjectSc : MonoBehaviour
         set
         {
             santaLevel = value;
-            if (storeInstance) storeInstance.SantaLevel = santaLevel;
+            santaLevelText.text = string.Format("Lv. {0}", santaLevel);
         }
     }
 
-    private string incrementGold;              // 돈 증가량
-    public string IncrementGold
+    private int santaEfficiency;            // 알바 효율
+    public int SantaEfficiency
     {
-        get { return incrementGold; }
+        get { return santaEfficiency; }
         set
         {
-            incrementGold = value;
-            if (incrementAmountText) incrementAmountText.text = incrementGold;
-            if (storeInstance) storeInstance.IncrementGold = incrementGold;
+            santaEfficiency = value;
+            efficiencyText.text = string.Format("{0}%", santaEfficiency.ToString());
         }
     }
 
-    public int santaEfficiency;            // 알바 효율
+
+    public bool isBuyBuilding = false;       // 건물을 구매했는지 안했는지 (잠금해제를 했는지)
+    public float multiplyBuildingPrice;         // 업그레이드 후 건물 가격 증가 배율
+
+    private bool isBuySanta = false;        // 산타를 구매했는지 안했는지
+    public float multiplySantaPrice;       // 업그레이드 후 산타 가격 증가 배율
 
 
     [Header("---------- 오브젝트")]
@@ -137,6 +236,7 @@ public class StoreObjectSc : MonoBehaviour
             SantaPrice = santaInstant.SantaPrice;
             SantaLevel = santaInstant.Level;
         }
+
     }
 
     void Start()
@@ -145,79 +245,58 @@ public class StoreObjectSc : MonoBehaviour
         gameManager = GameManager.Instance;
         thisTransform = this.transform;
 
-        InitUI();
+        objectNameText.text = name;
+
+        //PrerequisitesText.text = string.Format("! {0} 필요", storeInstance.ObjectList[index - 1].name);
     }
 
     void Update()
     {
-        SetButtonInteractable();
+        SetObjectActive();
+
     }
 
     #endregion
 
-    // UI 초기 설정
-    void InitUI()
-    {
-        backgroundButton = thisTransform.GetChild(0).GetComponent<Button>();
-
-        buildingNameText = thisTransform.GetChild(1).GetComponent<Text>();
-        buildingNameText.text = buildingName;
-
-        unlockText = thisTransform.GetChild(2).GetComponent<Text>();
-        sb.Append("Lv.");
-        sb.Append(unlockLevel.ToString());
-        sb.Append(" 에 잠금 해제");
-        unlockText.text = sb.ToString();
-
-        unlockImage = thisTransform.GetChild(3).gameObject;
-
-        infoText = thisTransform.GetChild(4).gameObject;
-
-        incrementAmountText = infoText.transform.GetChild(0).GetComponent<Text>();
-        incrementAmountText.text = incrementGold;
-
-        secondText = infoText.transform.GetChild(1).GetComponent<Text>();
-        secondSb.Append(second.ToString());
-        secondSb.Append("초");
-        secondText.text = secondSb.ToString();
-    }
 
     // 목록에 있는 버튼 클릭 시
     public void ButtonClick()
     {
         storeInstance.selectedObject = this;       // 선택된 Object를 자신으로 변경
-        storeInstance.SelectStoreObject();
+        //storeInstance.SelectStoreObject();
     }
 
-    void Unlock()
+    public void Unlock()    // 잠금 해제
     {
-        backgroundButton.interactable = true;   //  Interactable을 True로 설정
-        unlockImage.SetActive(false);
+        lockingImage.SetActive(false);
+        unlockingObject.SetActive(true);
+
+        if (!isBuyBuilding)
+            BuyNewBuilding();                                   // 사지 않은 건물이면 새로 구매
     }
 
+    // 새로운 건물 생성
+    void BuyNewBuilding()
+    {
+        isBuyBuilding = true;
+
+        gameManager.MyGold -= GoldManager.UnitToBigInteger(buildingPrice);        // 건물 비용 지불
+
+        NewBuilding();      // 건물 오브젝트 생성
+    }
 
     // 건물 사기 버튼 클릭 시 건물 구매 혹은 업그레이드
     public void BuildingButtonClick()
     {
         if (GoldManager.CompareBigintAndUnit(gameManager.MyGold, buildingPrice))           // 플레이어가 가진 돈이 건물의 가격보다 높을 때
         {
-            if (!isBuyBuilding)
-                BuyNewBuilding();                                   // 사지 않은 건물이면 새로 구매
-            else UpgradeBuilding();                                 // 산 건물이면 업그레이드
+            //if (!isBuyBuilding)
+            //    BuyNewBuilding();                                   // 사지 않은 건물이면 새로 구매
+            UpgradeBuilding();                                 // 산 건물이면 업그레이드
         }
     }
 
-    
-    // 새로운 건물 구매
-    void BuyNewBuilding()
-    {
-       isBuyBuilding = true;
-
-       gameManager.MyGold -= GoldManager.UnitToBigInteger(buildingPrice);        // 건물 비용 지불
-    
-        NewBuilding();      // 건물 오브젝트 생성
-    }
-
+   
     // 새로운 건물 생성
     void NewBuilding()
     {
@@ -277,24 +356,32 @@ public class StoreObjectSc : MonoBehaviour
         SantaLevel = santaLevel + 1;
     }
 
-    // 플레이어의 레벨에 따른 버튼의 Interactable 설정
-    void SetButtonInteractable()
+    // 플레이어의 레벨에 따른 오브젝트의 active 설정
+    void SetObjectActive()
     {
-        if (gameManager.Level >= unlockLevel)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 크고 가진 돈이 건물의 가격보다 클 때
+        if (!isBuyBuilding)      // 건물을 사지 않았을 때 (잠금해제 안했을 때)
         {
-            backgroundButton.interactable = true;   //  Interactable을 True로 설정
-            infoText.SetActive(true);
-            unlockImage.SetActive(false);
-            unlockText.gameObject.SetActive(false);
-        }
-        else
-        {
-            backgroundButton.interactable = false;
-            infoText.SetActive(false);
-            unlockImage.SetActive(true);
-            unlockText.gameObject.SetActive(true);
+            lockingImage.SetActive(true);
+            unlockingObject.SetActive(false);
+
+            if (gameManager.Level >= unlockLevel)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 클 때
+            {
+                unlockButton.SetActive(true);
+                //if (index != 0 && storeInstance.ObjectList[index - 1].isBuyBuilding)      // 선행 조건으로 필요한 건물을 샀을 때
+                //{
+                //    unlockButton.SetActive(true);
+                //    PrerequisitesText.gameObject.SetActive(false);
+                //}
+                //else
+                //{
+                //    unlockButton.SetActive(false);
+                //    PrerequisitesText.gameObject.SetActive(true);
+                //}
+            }
+            else
+            {
+                unlockButton.SetActive(false);
+            }
         }
     }
-
-   
 }
