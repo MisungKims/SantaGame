@@ -12,131 +12,10 @@ public class StorePanel : MonoBehaviour
     [Header("---------- 상점 오브젝트")]
     public GameObject storeObject;              // 복제가 될 상점의 건물 오브젝트
 
-    //[Header("-------------------- 건물")]
-    //[SerializeField]
-    //private Button buyBuildingButton;                 // 건물 사기 버튼
-    //[SerializeField]
-    //private Text selectedBuildingName;                // 선택한 상점 오브젝트의 건물 이름
-    //[SerializeField]
-    //private Text selectedBuildingLevel;                // 선택한 상점 오브젝트의 건물 레벨
-    //[SerializeField]
-    //private Text selectedBuildingPrice;               // 선택한 상점 오브젝트의 건물 가격
-    //[SerializeField]
-    //private Text incrementGoldText;                   // 선택한 상점 오브젝트 건물의 골드 증가량
-    //[SerializeField]
-    //private GameObject buildingImageGroup;            // 건물의 이미지 그룹
-
-    //private GameObject buildingImg;
-
-    //[Header("-------------------- 산타")]
-    //[SerializeField]
-    //private Button buySantaButton;                   // 산타 사기 버튼
-    //[SerializeField]
-    //private Text selectedSantaName;                  // 선택한 상점 오브젝트의 산타 이름
-    //[SerializeField]
-    //private Text selectedSantaLevel;                  // 선택한 상점 오브젝트의 산타 레벨
-    //[SerializeField]
-    //private Text selectedSantaPrice;                 // 선택한 상점 오브젝트의 산타 가격
-    //[SerializeField]
-    //private Text santaEfficiencyText;                // 선택한 상점 오브젝트 산타의 알바 효율 증가
-    //[SerializeField]
-    //private GameObject santaImageGroup;            // 산타의 이미지 그룹
-
-    //private GameObject santaImg;
-
-    //[Header("-------------------- 공통")]
-    //[SerializeField]
-    //private Text incrementAmountText;                   // 선택한 오브젝트의 총 골드 증가량
-    //[SerializeField]
-    //private Text secondText;                            // 선택한 오브젝트의 초
-   
-
     [HideInInspector]
-    public StoreObjectSc selectedObject;
-
-    StringBuilder goldSb = new StringBuilder();
-    StringBuilder amountSb = new StringBuilder();
-
-    //private string buildingPrice;
-    //public string BuildingPrice
-    //{
-    //    set
-    //    {
-    //        selectedBuildingPrice.text = value;
-    //    }
-    //}
-
-    //private string santaPrice;
-    //public string SantaPrice
-    //{
-    //    set
-    //    {
-    //        selectedSantaPrice.text = value;
-    //    }
-    //}
-
-
-    //private string incrementGold;
-    //public string IncrementGold
-    //{
-    //    set
-    //    {
-    //        goldSb.Clear();
-    //        goldSb.Append("+");
-    //        goldSb.Append(value);
-    //        incrementGoldText.text = goldSb.ToString();
-
-    //        incrementAmountText.text = value;
-    //    }
-    //}
-
-    //private float santaEfficiency;
-    //public float SantaEfficiency
-    //{
-    //    set
-    //    {
-    //        santaEfficiency = value;
-
-    //        amountSb.Clear();
-    //        amountSb.Append(santaEfficiency);
-    //        amountSb.Append("%");
-
-    //        santaEfficiencyText.text = amountSb.ToString();
-    //    }
-    //}
-
-    //private int second;
-    //public int Second
-    //{
-    //    set
-    //    {
-    //        secondText.text = value.ToString();
-    //    }
-    //}
-
-    //private int buildingLevel;
-    //public int BuildingLevel
-    //{
-    //    set
-    //    {
-    //        selectedBuildingLevel.text = string.Format("LV. {0}", value);
-    //    }
-    //}
-
-    //private int santaLevel;
-    //public int SantaLevel
-    //{
-    //    set
-    //    {
-    //        selectedSantaLevel.text = string.Format("LV. {0}", value);
-    //    }
-    //}
-
-
     public List<StoreObjectSc> ObjectList = new List<StoreObjectSc>();
 
-    // 캐싱
-    private GameManager gameManager;
+    private string prerequisites = null;
 
     #endregion
 
@@ -164,8 +43,6 @@ public class StorePanel : MonoBehaviour
                  data[i]["Desc"].ToString()
                  );
         }
-
-        selectedObject = ObjectList[0];
     }
 
     /// <summary>
@@ -194,75 +71,18 @@ public class StorePanel : MonoBehaviour
         copiedStoreObject.gameObject.SetActive(true);
         copiedStoreObject.gameObject.name = buildingName;
 
+        if (prerequisites == null)
+        {
+            copiedStoreObject.Prerequisites = prerequisites;
+            prerequisites = buildingName;
+        }
+        else
+        {
+            copiedStoreObject.Prerequisites = prerequisites;
+            prerequisites = buildingName;
+        }
+
         ObjectList.Add(copiedStoreObject);
     }
 
-    // 버튼의 Interactable 설정
-    //void SetButtonInteractable()
-    //{
-    //    //가진 돈이 건물의 가격보다 클 때
-    //    if (GoldManager.CompareBigintAndUnit(gameManager.MyGold, selectedObject.BuildingPrice))
-    //        buyBuildingButton.interactable = true;                //  Interactable을 True로 설정
-    //    else buyBuildingButton.interactable = false;
-
-    //    // 산타 오브젝트는 건물을 샀을 때, 가진 돈이 산타의 가격보다 클 때
-    //    if (selectedObject.isBuyBuilding && GoldManager.CompareBigintAndUnit(gameManager.MyGold, selectedObject.santaPrice))
-    //        buySantaButton.interactable = true;                 //  Interactable을 True로 설정
-    //    else buySantaButton.interactable = false;
-    //}
-
-    //// 상점 목록의 버튼을 선택했을 때 선택된 오브젝트의 것으로 이름, 이미지, 가격 등을 설정
-    //public void SelectStoreObject()
-    //{
-    //    if (buildingImg)
-    //        buildingImg.SetActive(false);
-    //    if (santaImg)
-    //        santaImg.SetActive(false);
-
-    //    selectedBuildingName.text = selectedObject.buildingName;
-    //    BuildingLevel = selectedObject.BuildingLevel;
-    //    BuildingPrice = selectedObject.BuildingPrice;
-    //    buildingImg = buildingImageGroup.transform.GetChild(selectedObject.index).gameObject;
-    //    buildingImg.SetActive(true);
-
-    //    selectedSantaName.text = selectedObject.santaName;
-    //    santaLevel = selectedObject.SantaLevel;
-    //    SantaPrice = selectedObject.santaPrice;
-    //    santaImg = santaImageGroup.transform.GetChild(selectedObject.index).gameObject;
-    //    santaImg.SetActive(true);
-
-    //    SantaEfficiency = selectedObject.santaEfficiency;
-    //    IncrementGold = selectedObject.IncrementGold;
-    //    second = selectedObject.second;
-    //}
-
-    //// 빌딩 업그레이드 버튼 클릭 시
-    //public void BuildingUpgradeButton()
-    //{
-    //    selectedObject.BuildingButtonClick();
-    //}
-
-    //// 산타 업그레이드 버튼 클릭 시
-    //public void SantaUpgradeButton()
-    //{
-    //    selectedObject.SantaButtonClick();
-    //}
-    private void Start()
-    {
-       // SelectStoreObject();
-
-        gameManager = GameManager.Instance;
-    }
-
-    //void Update()
-    //{
-    //    SetButtonInteractable();
-    //}
-
-    //private void OnEnable()
-    //{
-    //    selectedObject = ObjectList[0];
-
-    //    SelectStoreObject();
-    //}
 }
