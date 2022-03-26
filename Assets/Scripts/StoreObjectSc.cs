@@ -34,8 +34,8 @@ public class StoreObjectSc : MonoBehaviour
     Text buildingNameText;                  // 건물의 이름 Text
     [SerializeField]
     Text buildingLevelText;                  // 건물의 이름 Text
-    [SerializeField]
-    Button upgradeBuildingButton;                  // 건물의 이름 Text
+    //[SerializeField]
+    //Button upgradeBuildingButton;                  // 건물의 이름 Text
     [SerializeField]
     Text buildingPriceText;                  // 건물의 이름 Text
     [SerializeField]
@@ -49,8 +49,8 @@ public class StoreObjectSc : MonoBehaviour
     Text santaNameText;                  // 건물의 이름 Text
     [SerializeField]
     Text santaLevelText;                  // 건물의 이름 Text
-    [SerializeField]
-    Button upgradeSantaButton;                  // 건물의 이름 Text
+    //[SerializeField]
+    //Button upgradeSantaButton;                  // 건물의 이름 Text
     [SerializeField]
     Text santaPriceText;                  // 건물의 이름 Text
     [SerializeField]
@@ -83,6 +83,7 @@ public class StoreObjectSc : MonoBehaviour
         {
             unlockLevel = value;
 
+            sb.Clear();
             sb.Append("Lv.");
             sb.Append(unlockLevel.ToString());
             sb.Append(" 에 잠금 해제 가능");
@@ -120,6 +121,7 @@ public class StoreObjectSc : MonoBehaviour
         {
             buildingName = value;
             buildingNameText.text = buildingName;
+            objectNameText.text = buildingName;
         }
     }
 
@@ -191,11 +193,25 @@ public class StoreObjectSc : MonoBehaviour
     }
 
 
+    private string prerequisites;
+    public string Prerequisites
+    {
+        set
+        {
+            prerequisites = value;
+            PrerequisitesText.text = string.Format("! {0} 필요", prerequisites);
+        }
+    }
+
+
     public bool isBuyBuilding = false;       // 건물을 구매했는지 안했는지 (잠금해제를 했는지)
     public float multiplyBuildingPrice;         // 업그레이드 후 건물 가격 증가 배율
 
     private bool isBuySanta = false;        // 산타를 구매했는지 안했는지
     public float multiplySantaPrice;       // 업그레이드 후 산타 가격 증가 배율
+
+
+    private bool isGetPrerequisites = false;
 
 
     [Header("---------- 오브젝트")]
@@ -213,11 +229,10 @@ public class StoreObjectSc : MonoBehaviour
     // 캐싱
     private StorePanel storeInstance;
     private GameManager gameManager;
-    private Transform thisTransform;
+
+    private GameObject prerequisitesGb;
 
     StringBuilder sb = new StringBuilder();
-    StringBuilder secondSb = new StringBuilder();
-
     #endregion
 
 
@@ -243,33 +258,58 @@ public class StoreObjectSc : MonoBehaviour
     {
         storeInstance = StorePanel.Instance;
         gameManager = GameManager.Instance;
-        thisTransform = this.transform;
+        prerequisitesGb = PrerequisitesText.gameObject;
 
-        objectNameText.text = name;
+        if (index == 0)
+        {
+            isGetPrerequisites = true;
+        }
 
-        //PrerequisitesText.text = string.Format("! {0} 필요", storeInstance.ObjectList[index - 1].name);
+        if (!isBuyBuilding)      // 건물을 사지 않았을 때 (잠금해제 안했을 때)
+        {
+            lockingImage.SetActive(true);
+            unlockingObject.SetActive(false);
+        }
     }
 
     void Update()
     {
         SetObjectActive();
-
     }
-
     #endregion
 
-
-    // 목록에 있는 버튼 클릭 시
-    public void ButtonClick()
+    // 플레이어의 레벨에 따른 오브젝트의 active 설정
+    void SetObjectActive()
     {
-        storeInstance.selectedObject = this;       // 선택된 Object를 자신으로 변경
-        //storeInstance.SelectStoreObject();
+        if (!isBuyBuilding)                                         // 건물을 사지 않았을 때 (잠금해제 안했을 때)
+        {
+            if (gameManager.Level < unlockLevel)                    // 잠금해제 불가능한 레벨일 때
+            {
+                unlockButton.SetActive(false);                      // 잠금해제 버튼과 선행조건 텍스트를 숨김
+                prerequisitesGb.SetActive(false);
+            }
+            else                                                    // 잠금해제 가능 레벨일 때
+            {
+                if (isGetPrerequisites)                             // 선행 조건을 만족 했으면
+                {
+                    unlockButton.SetActive(true);                       // 잠금해제 버튼만 보여줌
+                    prerequisitesGb.SetActive(false);
+                }
+                else
+                {
+                    unlockButton.SetActive(false);
+                    prerequisitesGb.SetActive(true);
+                }
+            }
+        }
     }
 
     public void Unlock()    // 잠금 해제
     {
         lockingImage.SetActive(false);
         unlockingObject.SetActive(true);
+
+        storeInstance.ObjectList[index + 1].isGetPrerequisites = true;      // 다음 건물의 선행조건을 만족시킴
 
         if (!isBuyBuilding)
             BuyNewBuilding();                                   // 사지 않은 건물이면 새로 구매
@@ -356,32 +396,5 @@ public class StoreObjectSc : MonoBehaviour
         SantaLevel = santaLevel + 1;
     }
 
-    // 플레이어의 레벨에 따른 오브젝트의 active 설정
-    void SetObjectActive()
-    {
-        if (!isBuyBuilding)      // 건물을 사지 않았을 때 (잠금해제 안했을 때)
-        {
-            lockingImage.SetActive(true);
-            unlockingObject.SetActive(false);
-
-            if (gameManager.Level >= unlockLevel)        // 플레이어의 레벨이 잠금 해제 가능 레벨보다 클 때
-            {
-                unlockButton.SetActive(true);
-                //if (index != 0 && storeInstance.ObjectList[index - 1].isBuyBuilding)      // 선행 조건으로 필요한 건물을 샀을 때
-                //{
-                //    unlockButton.SetActive(true);
-                //    PrerequisitesText.gameObject.SetActive(false);
-                //}
-                //else
-                //{
-                //    unlockButton.SetActive(false);
-                //    PrerequisitesText.gameObject.SetActive(true);
-                //}
-            }
-            else
-            {
-                unlockButton.SetActive(false);
-            }
-        }
-    }
+   
 }
