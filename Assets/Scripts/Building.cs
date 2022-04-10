@@ -113,7 +113,7 @@ public class Building : MonoBehaviour
 
         buildingPrice = GoldManager.MultiplyUnit(buildingPrice, multiplyBuildingPrice); // 비용을 배율만큼 증가
 
-        incrementGold = GoldManager.MultiplyUnit(incrementGold, 1.1f);  // 골드 증가량을 배율만큼 증가
+        incrementGold = GoldManager.MultiplyUnit(incrementGold, 1.1f * gameManager.goldEfficiency);  // 골드 증가량을 배율만큼 증가
 
         level++;
     }

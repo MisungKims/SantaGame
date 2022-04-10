@@ -127,6 +127,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public float goldEfficiency = 1.0f;
 
     // Ä³½Ì
     private CameraMovement cameraMovement;
