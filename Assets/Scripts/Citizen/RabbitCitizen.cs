@@ -5,12 +5,15 @@ using UnityEngine;
 public class RabbitCitizen : MonoBehaviour
 {
     private Animator anim;
-    private WaitForSeconds wait;
+    private WaitForSeconds waitForSecond;
     private GameManager gameManager;
 
     [SerializeField]
     private string carrot = "100.0A";
 
+    private float waitSecond;
+
+    private bool isTouch = false;
 
     // Start is called before the first frame update
     void Awake()
@@ -25,20 +28,40 @@ public class RabbitCitizen : MonoBehaviour
         int rand = Random.Range(0, 12);
         anim.SetInteger("SantaIndex", rand);
 
+        waitSecond = Random.Range(20.0f, 70.0f);
+        waitForSecond = new WaitForSeconds(waitSecond);
 
-        wait = new WaitForSeconds(3f);
-
-        StartCoroutine(GetCarrot());
+        StartCoroutine(GetCarrotTimer());
     }
 
-    IEnumerator GetCarrot()
+    // 당근 획득 타이머
+    IEnumerator GetCarrotTimer()
     {
         while(true)
         {
-           gameManager.MyCarrots += GoldManager.UnitToBigInteger(carrot);
-           
-            yield return wait;
+            yield return waitForSecond;
 
+            gameManager.MyCarrots += GoldManager.UnitToBigInteger(carrot);
+
+            yield return IsGetCarrot();
         }
+    }
+
+    // 당근 받기
+    // 10초 동안 안받으면 자동으로 받아짐
+    IEnumerator IsGetCarrot()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            if (isTouch)  
+            {
+                break;
+            }
+            yield return new WaitForSeconds(1f);
+        }
+       
+        //TODO: 당근 받기
+
+        yield return null;
     }
 }
