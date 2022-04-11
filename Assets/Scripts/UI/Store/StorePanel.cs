@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using System.Text;
 
 public class StorePanel : MonoBehaviour
 {
@@ -11,20 +9,36 @@ public class StorePanel : MonoBehaviour
 
     [Header("---------- 상점 오브젝트")]
     public GameObject storeObject;              // 복제가 될 상점의 건물 오브젝트
+    public GameObject storeObjectParent;              // 건물 오브젝트의 부모
 
     [HideInInspector]
     public List<StoreObjectSc> ObjectList = new List<StoreObjectSc>();
 
     private string prerequisites = null;
 
+    private RectTransform rectTransform;
+    private RectTransform parentRectTransform;
+    private float margin = 410;
+
     #endregion
 
     void Awake()    // 게임 매니저의 Start보다 먼저 실행
     {
         Instance = this;
-        
-        List<Dictionary<string, object>> data = CSVReader.Read("StoreData");       // csv 리더를 통해 StoreData 파일 가져오기
 
+        rectTransform = storeObject.transform.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = new Vector3(206, 300, 0);
+
+        parentRectTransform = storeObjectParent.transform.GetComponent<RectTransform>();
+        parentRectTransform.sizeDelta = new Vector2(513, 298);
+
+        ReadCSV();
+    }
+
+    void ReadCSV()
+    {
+        // csv 리더를 통해 StoreData 파일 가져오기
+        List<Dictionary<string, object>> data = CSVReader.Read("StoreData");
         // 가져온 내용으로 StoreObject 생성하기
         for (int i = 0; i < data.Count; i++)
         {
@@ -50,10 +64,11 @@ public class StorePanel : MonoBehaviour
     /// </summary>
     void StoreInstant(int index, string buildingName, int unlockLevel, int second, float multiplyBuildingPrice, string buildingPrice, string incrementGold, string santaName, float multiplySantaPrice, string santaPrice, int efficiency, string desc)
     {
-        GameObject instant = GameObject.Instantiate(storeObject, storeObject.transform.position, Quaternion.identity, storeObject.transform.parent);
-
         // csv파일의 내용을 copiedStoreObject에 넣어줌
-        StoreObjectSc copiedStoreObject = instant.transform.GetComponent<StoreObjectSc>();
+        StoreObjectSc copiedStoreObject = GameObject.Instantiate(storeObject, storeObjectParent.transform).transform.GetComponent<StoreObjectSc>();
+        copiedStoreObject.transform.GetComponent<RectTransform>().anchoredPosition = rectTransform.anchoredPosition;
+        rectTransform.anchoredPosition += new Vector2(margin, 0);
+        parentRectTransform.sizeDelta += new Vector2(375, 0);
 
         copiedStoreObject.index = index;
         copiedStoreObject.BuildingName = buildingName;                      // 건물 이름

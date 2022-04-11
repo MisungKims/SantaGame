@@ -16,29 +16,13 @@ public class Building : MonoBehaviour
         set { level = value; }
     }
 
-    [SerializeField]
     private float multiplyBuildingPrice;    // 업그레이드 후 건물 가격 증가 배율
-    //public float MultiplyBuildingPrice
-    //{
-    //    //get { return multiplyBuildingPrice; }
-    //    set { multiplyBuildingPrice = value; }
-    //}
 
-    [SerializeField]
     private string buildingPrice;              // 건물 가격 
     public string BuildingPrice
     {
         get { return buildingPrice; }
-        //set { buildingPrice = value; }
     }
-
-    //[SerializeField]
-    //private float multiplyGold;             // 업그레이드 후 플레이어 돈 증가 배율
-    //public float MultiplyGold
-    //{
-    //    //get { return multiplyGold; }
-    //    set { multiplyGold = value; }
-    //}
 
     [SerializeField]
     private string incrementGold;              // 플레이어의 돈 증가량
@@ -48,12 +32,10 @@ public class Building : MonoBehaviour
         set { incrementGold = value; }
     }
 
-
     private int index;
     public int Index
     {
         get { return index; }
-        //set { incrementGold = value; }
     }
 
     private string buildingName;
@@ -62,6 +44,7 @@ public class Building : MonoBehaviour
         get { return buildingName; }
     }
 
+    public Santa santa;
 
     private Vector3 distance;
 
@@ -118,7 +101,7 @@ public class Building : MonoBehaviour
         level++;
     }
 
-    // 카메라가 해당 산타를 따라다님
+    // 카메라가 해당 건물을 따라다님
     public void SetCamTargetThis()
     {
         cameraMovement.chasingBuilding = this.transform;

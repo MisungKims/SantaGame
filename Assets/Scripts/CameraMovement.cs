@@ -258,9 +258,13 @@ public class CameraMovement : MonoBehaviour
         targetPos = chasingBuilding.position + buildingDistance;
         cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos, Time.deltaTime * 1.6f);
 
+
+        //Quaternion chasingCamRot = Quaternion.Euler(new Vector3(chasingRotateX, cam.transform.rotation.y, cam.transform.rotation.z));
+        //cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, chasingCamRot, Time.deltaTime);
+
         // 카메라의 x축을 조정
-        Quaternion chasingCamRot = Quaternion.Euler(new Vector3(chasingRotateX, cam.transform.rotation.y, cam.transform.rotation.z));
-        cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, chasingCamRot, Time.deltaTime);
+        Vector3 chasingCamAngles = new Vector3(chasingRotateX, cam.transform.rotation.y, cam.transform.rotation.z);
+        cam.transform.eulerAngles = Vector3.Lerp(cam.transform.eulerAngles, chasingCamAngles, Time.deltaTime);
     }
 
     // 타깃 추적 종료 시 카메라를 기본값으로 세팅

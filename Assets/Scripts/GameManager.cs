@@ -44,6 +44,11 @@ public class GameManager : MonoBehaviour
 
     public Text text;             // 날짜를 나타내는 텍스트
 
+    public string getAttendanceRewardDate;      // 마지막으로 출석 보상을 받은 날짜
+    [SerializeField]
+    private GameObject attendanceNotificationImage;     // 출석 보상 알림 이미지      
+
+
     [Header("---------- 패널")]
     public GameObject mainPanel;     // 상점 패널
     public GameObject storePanel;     // 상점 패널
@@ -55,11 +60,14 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private int level = 1;
     [SerializeField]
-    private int santaCount =0;
+    private int santaCount = 0;
+
+  
 
     private BigInteger myGold = 3560000;
     private BigInteger myCarrots = 13000;
-    private BigInteger myDia = 36000;
+    private int myDia = 0;
+    //private BigInteger myDia = 36000;
 
     StringBuilder gaugeSb = new StringBuilder();
 
@@ -108,15 +116,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public BigInteger MyDia
+    public int MyDia
     {
         get { return myDia; }
         set
         {
             myDia = value;
-            diaText.text = GoldManager.ExpressUnitOfGold(myDia);
+            diaText.text = myDia.ToString();
         }
     }
+
+    //public BigInteger MyDia
+    //{
+    //    get { return myDia; }
+    //    set
+    //    {
+    //        myDia = value;
+    //        diaText.text = GoldManager.ExpressUnitOfGold(myDia);
+    //    }
+    //}
     public int SantaCount
     {
         get { return santaCount; }
@@ -127,7 +145,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public float goldEfficiency = 1.0f;
+    public float goldEfficiency = 1.0f;         // 토끼 주민 초대 시 증가할 효율
+
+  
 
     // 캐싱
     private CameraMovement cameraMovement;
@@ -169,6 +189,28 @@ public class GameManager : MonoBehaviour
         cameraMovement.SetCanMove(true);       // 카메라 움직일 수 있게
     }
 
+
+    // 받을 출석 보상이 있을 때 알려주는 UI
+    public void SetNotificationImage()
+    {
+        // 마지막 출석 보상 수령 날짜가 오늘 날짜와 다르면 받을 출석 보상이 있으므로,
+        // UI로 알려줌
+        if (getAttendanceRewardDate != DateTime.Now.ToString("yyyy.MM.dd"))
+        {
+            attendanceNotificationImage.SetActive(true);
+        }
+    }
+
+    // 출석 보상을 받음
+    public void GetAttendanceReward()
+    {
+        // 마지막 출석 보상 수령날짜를 오늘 날짜로 변경
+        getAttendanceRewardDate = DateTime.Now.ToString("yyyy.MM.dd");
+
+        // 더이상 받을 출석 보상이 없을 때 알림 이미지의 Active를 false로
+        attendanceNotificationImage.SetActive(false);
+    }
+
     #endregion
 
 
@@ -201,9 +243,7 @@ public class GameManager : MonoBehaviour
 
         cameraMovement = CameraMovement.Instance;
 
-
-      
-
+        SetNotificationImage();
 
         //BigInteger start = 100;
         //string value = start.ToString();
@@ -218,7 +258,7 @@ public class GameManager : MonoBehaviour
         //    text.text += value + "\n";
         //}
 
-        
+
         //Debug.Log(BigIntegerManager.UnitToValue(BigInteger.Pow(1000, 702)));
 
     }
