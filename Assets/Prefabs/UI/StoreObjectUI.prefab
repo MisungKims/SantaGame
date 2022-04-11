@@ -1365,7 +1365,7 @@ GameObject:
   - component: {fileID: 1955002267146816682}
   - component: {fileID: 1955002267146816677}
   m_Layer: 5
-  m_Name: StoreObject
+  m_Name: StoreObjectUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1390,7 +1390,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 5946, y: 300}
   m_SizeDelta: {x: 515.6137, y: 374.3426}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1955002267146816677
@@ -1416,13 +1416,11 @@ MonoBehaviour:
   unlockButton: {fileID: 7114241059582729494}
   buildingNameText: {fileID: 1955002268346439828}
   buildingLevelText: {fileID: 1955002268375769491}
-  upgradeBuildingButton: {fileID: 1955002266435707180}
   buildingPriceText: {fileID: 1955002267809334885}
   incrementGoldText: {fileID: 1955002266552066168}
   buildingImageGroup: {fileID: 1955002266379872595}
   santaNameText: {fileID: 1955002266317492375}
   santaLevelText: {fileID: 1955002266831145749}
-  upgradeSantaButton: {fileID: 1955002266375306798}
   santaPriceText: {fileID: 1955002266735413144}
   efficiencyText: {fileID: 1955002266712565914}
   santaImageGroup: {fileID: 1955002267078439590}

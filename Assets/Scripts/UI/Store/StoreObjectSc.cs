@@ -292,13 +292,13 @@ public class StoreObjectSc : MonoBehaviour
             {
                 if (isGetPrerequisites)                             // 선행 조건을 만족 했으면
                 {
-                    unlockButton.SetActive(true);                       // 잠금해제 버튼만 보여줌
+                    unlockButton.SetActive(true);                   // 잠금해제 버튼만 보여줌
                     prerequisitesGb.SetActive(false);
                 }
-                else
+                else                                                 // 선행 조건을 만족하지 않았으면
                 {
                     unlockButton.SetActive(false);
-                    prerequisitesGb.SetActive(true);
+                    prerequisitesGb.SetActive(true);                 // 선행조건 텍스트만 보여줌
                 }
             }
         }
@@ -342,7 +342,8 @@ public class StoreObjectSc : MonoBehaviour
     {
         gameManager.HideStorePanel();          // 상점 창 숨기기
 
-        buildingInstant = buildingGroup.transform.GetChild(index).GetComponent<Building>();
+        buildingInstant = BuildingGroup.instance.BuildingList[index].GetComponent<Building>();
+      //  buildingInstant = buildingGroup.transform.GetChild(index).GetComponent<Building>();
         buildingInstant.InitBuilding(index, buildingName, multiplyBuildingPrice, buildingPrice, incrementGold);
     }
 
@@ -381,7 +382,8 @@ public class StoreObjectSc : MonoBehaviour
     {
         gameManager.HideStorePanel();          // 상점 창 숨기기
 
-        santaInstant = buildingGroup.transform.GetChild(index).GetChild(1).GetComponent<Santa>();
+
+        santaInstant = buildingInstant.santa;
 
         santaInstant.InitSanta(index, santaName, (float)second, multiplySantaPrice, santaPrice, santaEfficiency, buildingInstant);
     }

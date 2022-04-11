@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
+using UnityEngine.UI;
 
 public class Santa : MonoBehaviour
 {
     #region 변수
-    [SerializeField]
     private int level = 1;
     public int Level
     {
@@ -14,8 +14,31 @@ public class Santa : MonoBehaviour
         set { level = value; }
     }
 
+
+    [SerializeField]
+    private Slider getGoldSlider;
+    private int count = 0;
+    public int Count
+    {
+        get { return count; }
+        set
+        {
+            count = value;
+            getGoldSlider.value = count;
+        }
+    }
+
     private float second;
-  
+    public float Second
+    {
+        set
+        {
+            second = value;
+            getGoldSlider.maxValue = second;
+        }
+    }
+    
+
     private float multiplySantaPrice;       // 업그레이드 후 산타 가격 증가 배율
     public float MultiplySantaPrice
     {
@@ -37,9 +60,7 @@ public class Santa : MonoBehaviour
         set { santaEfficiency = value; }
     }
 
-    [SerializeField]
-    public Building building;
-
+   
     string santaName;
     public string SantaName
     {
@@ -51,6 +72,8 @@ public class Santa : MonoBehaviour
     {
         get { return index; }
     }
+
+    private Building building;
 
     StringBuilder sb = new StringBuilder();
 
@@ -72,13 +95,14 @@ public class Santa : MonoBehaviour
     {
         this.index = index;
         this.santaName = santaName;
-        this.second = second;
+        Second = second;
         this.multiplySantaPrice = multiplySantaPrice;
         this.santaPrice = santaPrice;
         this.santaEfficiency = santaEfficiency;
         this.building = building;
 
         gameObject.SetActive(true);         // 산타가 보이도록
+        getGoldSlider.transform.parent.gameObject.SetActive(true);   // 골드 자동 슬라이더가 보이도록
 
         SetCamTargetThis();                 // 카메라가 산타를 따라다니도록
 
@@ -149,10 +173,22 @@ public class Santa : MonoBehaviour
     {
         while (true)
         {
-            yield return m_waitForSecond;
-
+            yield return StartCoroutine(TimeCount());
+           
             gameManager.MyGold += GoldManager.UnitToBigInteger(building.IncrementGold);
         }
+    }
+
+    // 정해진 시간만큼 카운트
+    IEnumerator TimeCount()
+    {
+        for (int i = 0; i <= second; i++)
+        {
+            yield return new WaitForSeconds(1f);
+
+            Count++;
+        }
+        Count = 0;
     }
     #endregion
 
