@@ -8,6 +8,8 @@ public class Building : MonoBehaviour
     #region 변수
     public GameObject clickObjWindow;
 
+    private Transform thisTransform;
+
     [SerializeField]
     private int level = 1;
     public int Level
@@ -104,9 +106,7 @@ public class Building : MonoBehaviour
     // 카메라가 해당 건물을 따라다님
     public void SetCamTargetThis()
     {
-        cameraMovement.chasingBuilding = this.transform;
-        cameraMovement.buildingDistance = this.transform.GetChild(0).localPosition;
-        cameraMovement.StartChaseTarget();
+        cameraMovement.ChaseBuilding(thisTransform, thisTransform.GetChild(0).transform);
     }
 
     // 오브젝트 정보창 보여줌
@@ -134,7 +134,7 @@ public class Building : MonoBehaviour
 
             if (true == (Physics.Raycast(ray.origin, ray.direction * 10, out hit)))
             {
-                if (hit.collider.CompareTag("Building"))
+                if (hit.collider.CompareTag("Building") && hit.collider.name == this.name)
                 {
                     SetCamTargetThis();
                     ShowObjWindow();
@@ -152,6 +152,8 @@ public class Building : MonoBehaviour
     {
         gameManager = GameManager.Instance;
         cameraMovement = CameraMovement.Instance;
+
+        thisTransform = this.transform;
     }
    
     void Update()

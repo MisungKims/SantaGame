@@ -15,16 +15,12 @@ public class CameraMovement : MonoBehaviour
         }
     }
 
-    public Vector3 distance;                // 항상 떨어져있어야 할 거리
+    [SerializeField]
+    private Transform distanceTransform;
+    private Vector3 distance;                // 항상 떨어져있어야 할 거리
 
     [Header("---------- Chase")]
-
-    [SerializeField]
-    public Transform chasingSanta = null;          // 추적할 타겟
-
-    public Transform chasingBuilding = null;
-
-    public Vector3 buildingDistance;
+    private Transform chasingTarget = null;          // 추적할 타겟
 
     [SerializeField]
     private float basicFieldOfView = 60f;            // 카메라의 기본  field of view
@@ -33,10 +29,13 @@ public class CameraMovement : MonoBehaviour
     [SerializeField]
     private float basicRotateX = 30f;               // 카메라의 기본  x축
     [SerializeField]
-    private float chasingRotateX = 19.7f;         // 추적 시 카메라의 x축
+    private float chasingRotateX = 23f;         // 추적 시 카메라의 x축
 
-    enum ChaseState { chaseStart, chasing, chaseEnd, noChase };         // 카메라의 상태
-    ChaseState chaseState = ChaseState.noChase;
+    Vector3 chasingCamAngles;
+    Vector3 basicCamAngles;
+
+    enum EChaseState { chasing, noChase };         // 카메라의 상태
+    EChaseState chaseState = EChaseState.noChase;
 
     [Header("---------- Move")]
     private float moveSpeed = 0.06f;
@@ -163,9 +162,6 @@ public class CameraMovement : MonoBehaviour
     // 카메라 줌 인/줌 아웃
     void Zoom()
     {
-        if (chaseState == ChaseState.chaseStart) chaseState = ChaseState.chasing;
-        else if (chaseState == ChaseState.chaseEnd) chaseState = ChaseState.noChase;
-
         Touch touchZero = Input.GetTouch(0); //첫번째 손가락 터치를 저장
         Touch touchOne = Input.GetTouch(1); //두번째 손가락 터치를 저장
 
@@ -191,9 +187,9 @@ public class CameraMovement : MonoBehaviour
         {
             if (Input.touchCount == 1)  // 한 손가락으로 터치 시 
             {
-                if (chaseState == ChaseState.noChase)          // 추적 중이 아니면
+                if (chaseState == EChaseState.noChase)          // 추적 중이 아니면
                     CamMove();                                 // 카메라 이동
-                else if (chaseState == ChaseState.chasing)      // 추적 중이면
+                else if (chaseState == EChaseState.chasing)      // 추적 중이면
                     CamRotate();                               // 오브젝트를 중심으로 카메라 회전
             }
 
@@ -212,107 +208,107 @@ public class CameraMovement : MonoBehaviour
     #endregion
 
     #region 타깃 추적
-    // 10초 후 ChaseState 변경
-    IEnumerator ChangeChaseState(ChaseState cs)
+    
+    // 카메라가 산타를 따라다님
+    public void ChaseSanta(Transform obj)
     {
-        yield return new WaitForSeconds(10f);
+        chaseState = EChaseState.chasing;    // 카메라의 상태 변경
 
-        chaseState = cs;
+        chasingTarget = obj;
+
+        // 카메라 조정
+        StartCoroutine(ChangeFieldOfView(chasingSantaFieldOfView, chaseState));
+        StartCoroutine(ChangeAngles(chasingCamAngles, chaseState));
+        StartCoroutine(SetCamPos(distance, false, chaseState));
     }
 
-    // 타깃 추적 시작
-    public void StartChaseTarget()
+    // 카메라가 빌딩의 카메라 위치로 이동
+    public void ChaseBuilding(Transform obj, Transform distance)
     {
-        chaseState = ChaseState.chaseStart;                     // 카메라의 상태 변경
+        chaseState = EChaseState.chasing;    // 카메라의 상태 변경
 
-        StartCoroutine(ChangeChaseState(ChaseState.chasing));   // 10초 후 chasing 상태로 변경
+        // 카메라 조정
+        StartCoroutine(SetCamPos(obj.position + distance.localPosition, true, chaseState));
+        StartCoroutine(ChangeAngles(distance.eulerAngles, chaseState));
     }
 
     // 타깃 추적 종료
     public void EndChaseTarget()
     {
+        chaseState = EChaseState.noChase;                    // 카메라의 상태 변경 
+
         gameManager.HideClickObjWindow();             // 클릭 오브젝트 창 없애기
 
-        if (chasingSanta) chasingSanta = null;
-        else if (chasingBuilding) chasingBuilding = null;
-
-        chaseState = ChaseState.chaseEnd;                     // 카메라의 상태 변경 
-
-        StartCoroutine(ChangeChaseState(ChaseState.noChase));       // 10초 후 noChase 상태로 변경
-    }
-
-    // 타깃 추적 시작 시 카메라 세팅 (산타가 타깃일 때)
-    void SetStartChaseCam()
-    {
-        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, chasingSantaFieldOfView, Time.deltaTime * 1.6f);          // 타겟을 향해 줌인
-
-        // 카메라의 x축을 조정
-        Quaternion chasingCamRot = Quaternion.Euler(new Vector3(chasingRotateX, cam.transform.rotation.y, cam.transform.rotation.z));    
-        cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, chasingCamRot, Time.deltaTime);
-    }
-
-    // 건물이 타깃일 때는 건물을 향해 줌인
-    void SetZoomInBuilding()
-    {
-        // 카메라의 위치 조정
-        targetPos = chasingBuilding.position + buildingDistance;
-        cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos, Time.deltaTime * 1.6f);
-
-
-        //Quaternion chasingCamRot = Quaternion.Euler(new Vector3(chasingRotateX, cam.transform.rotation.y, cam.transform.rotation.z));
-        //cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, chasingCamRot, Time.deltaTime);
-
-        // 카메라의 x축을 조정
-        Vector3 chasingCamAngles = new Vector3(chasingRotateX, cam.transform.rotation.y, cam.transform.rotation.z);
-        cam.transform.eulerAngles = Vector3.Lerp(cam.transform.eulerAngles, chasingCamAngles, Time.deltaTime);
-    }
-
-    // 타깃 추적 종료 시 카메라를 기본값으로 세팅
-    void SetEndChaseCam()
-    {
-        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, basicFieldOfView, Time.deltaTime);            // 줌 아웃
-
-        // 카메라의 x축을 원래대로
-        Quaternion chasingCamRot = Quaternion.Euler(new Vector3(basicRotateX, 0, 0));
-        cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, chasingCamRot, Time.deltaTime);
-
-        cam.transform.position = Vector3.Lerp(cam.transform.position, distance, Time.deltaTime);
-    }
-
-    void SetChaseCam()
-    {
-        if (chaseState == ChaseState.chaseStart)
+        if (chasingTarget)
         {
-            if (chasingSanta != null)
+            chasingTarget = null;
+            StartCoroutine(ChangeFieldOfView(basicFieldOfView, chaseState));
+        }
+       
+        // 카메라를 기본값으로 세팅
+        StartCoroutine(ChangeAngles(basicCamAngles, chaseState));
+        StartCoroutine(SetCamPos(distance, true, chaseState));
+    }
+
+
+    /// <summary>
+    /// 카메라의 FieldOfView를 조절하여 타겟을 향해 줌 인/줌 아웃
+    /// </summary>
+    /// <param name="fieldOfView">조절할 Field Of View</param>
+    /// <returns></returns>
+    IEnumerator ChangeFieldOfView(float fieldOfView, EChaseState state)
+    {
+        while (Mathf.Abs(cam.fieldOfView - fieldOfView) > 0.05f && chaseState == state)
+        {
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, fieldOfView, Time.deltaTime * 1.6f);          // 타겟을 향해 줌인
+
+            yield return null;
+        }
+    }
+
+    /// <summary>
+    /// 카메라의 앵글을 조절
+    /// </summary>
+    /// <param name="angle">조절할 각도</param>
+    /// <returns></returns>
+    IEnumerator ChangeAngles(Vector3 angle, EChaseState state)
+    {
+        while (Vector3.Distance(cam.transform.eulerAngles, angle) > 0.05f && chaseState == state)
+        {
+            cam.transform.eulerAngles = Vector3.Lerp(cam.transform.eulerAngles, angle, Time.deltaTime);
+
+            yield return null;
+        }
+    }
+
+    /// <summary>
+    /// 카메라의 위치를 조정
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator SetCamPos(Vector3 targetPos, bool isFix, EChaseState state)
+    {
+        // 카메라가 타깃을 따라 움직이지 않을 때
+        if(isFix)
+        {
+            while (Vector3.Distance(cam.transform.position, targetPos) > 0.05f && chaseState == state)
             {
-                SetStartChaseCam();     // 산타 추적 시작 시 카메라 세팅
+                cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos, Time.deltaTime * 1.6f);
+
+                yield return null;
             }
-            else if(chasingBuilding != null)
+        }
+        // 카메라가 타깃을 따라 움직일 때
+        else
+        {
+            while (chaseState == EChaseState.chasing)
             {
-                SetZoomInBuilding();    // 건물로 줌인
-            }         
-        }
-        else if (chaseState == ChaseState.chaseEnd)
-        {
-            SetEndChaseCam();               // 타겟 추적 종료 시 카메라 세팅
+                cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos + chasingTarget.position, Time.deltaTime);
+
+                yield return null;
+            }
         }
     }
 
-    void FollowSanta()
-    {
-        // 추적 시작 후 산타를 따라다님
-        if (chasingSanta != null)
-        {
-            targetPos = chasingSanta.position + distance;
-            cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos, Time.deltaTime);
-        }
-
-        //if (chasingBuilding != null)
-        //{
-        //    targetPos = chasingBuilding.position + chasingBuilding.GetChild(0).localPosition;
-        //    cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos, Time.deltaTime * 1.6f);
-        //}
-    }
     #endregion
 
     #endregion
@@ -338,16 +334,21 @@ public class CameraMovement : MonoBehaviour
         gameManager = GameManager.Instance;
 
         // 카메라의 상태 지정
-        chaseState = ChaseState.noChase;            
+        chaseState = EChaseState.noChase;            
 
         // 카메라의 기본 값 조정
         cam.fieldOfView = basicFieldOfView;
 
         // 카메라의 기본 각도 조정
-        cam.transform.rotation = Quaternion.Euler(new Vector3(basicRotateX, 0, 0));
+        basicCamAngles = new Vector3(basicRotateX, 0, 0);
+        cam.transform.eulerAngles = basicCamAngles;
+
+        // 추적 시 카메라의 각도 설정
+        chasingCamAngles = new Vector3(chasingRotateX, 0, 0);
 
         // 카메라의 기본 위치 조정
-        distance = this.transform.GetChild(1).localPosition;
+        distance = distanceTransform.localPosition;
+        //distance = this.transform.GetChild(1).localPosition;
         cam.transform.position = distance;
     }
 
@@ -355,10 +356,6 @@ public class CameraMovement : MonoBehaviour
     private void LateUpdate()
     {
         CameraMove();       // 카메라의 움직임
-
-        SetChaseCam();      // 타켓 추적 시작/종료 시 카메라 세팅
-
-        FollowSanta();     // 추적 시작 후 오브젝트를 따라다님
     }
     #endregion
 }
