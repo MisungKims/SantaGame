@@ -134,19 +134,18 @@ public class Santa : MonoBehaviour
     // 카메라가 해당 산타를 따라다님
     public void SetCamTargetThis()
     {
-        cameraMovement.chasingSanta = this.transform;
-        cameraMovement.StartChaseTarget();
+        CameraMovement.Instance.ChaseSanta(this.transform);
     }
 
     // 클릭 오브젝트 창 보여줌
     public void ShowObjWindow()
     {
-        window = gameManager.clickObjWindow.transform.GetComponent<ClickObjWindow>();
+        window = GameManager.Instance.clickObjWindow.transform.GetComponent<ClickObjWindow>();
 
         window.Santa = this;
         window.SetSantaInfo();
 
-        gameManager.ShowClickObjWindow();
+        GameManager.Instance.ShowClickObjWindow();
     }
 
     // 산타 터치 시 카메라의 Target을 해당 산타로 set
@@ -193,10 +192,10 @@ public class Santa : MonoBehaviour
     #endregion
 
     #region 유니티 메소드
-    void Awake()
+    void Start()
     {
         //anim = GetComponent<Animator>();
-
+        
         gameManager = GameManager.Instance;
         cameraMovement = CameraMovement.Instance;
     }

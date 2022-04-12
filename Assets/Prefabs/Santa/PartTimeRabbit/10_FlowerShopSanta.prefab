@@ -164,7 +164,7 @@ GameObject:
   - component: {fileID: 95673997328824092}
   m_Layer: 0
   m_Name: 10_FlowerShopSanta
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -198,8 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bd11f9cc84ef8a4282ccf0c380111f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level: 1
-  building: {fileID: 0}
+  getGoldSlider: {fileID: 0}
 --- !u!95 &95673997328824092
 Animator:
   serializedVersion: 3
