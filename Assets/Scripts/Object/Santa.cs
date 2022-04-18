@@ -1,3 +1,9 @@
+/**
+ * @brief 산타 알바를 생성
+ * @author 김미성
+ * @date 22-04-18
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -82,6 +88,7 @@ public class Santa : MonoBehaviour
 
     private GameManager gameManager;
     private CameraMovement cameraMovement;
+    private UIManager uiManager;
 
     private ClickObjWindow window;
 
@@ -140,12 +147,12 @@ public class Santa : MonoBehaviour
     // 클릭 오브젝트 창 보여줌
     public void ShowObjWindow()
     {
-        window = GameManager.Instance.clickObjWindow.transform.GetComponent<ClickObjWindow>();
+        window = uiManager.clickObjWindow.transform.GetComponent<ClickObjWindow>();
 
         window.Santa = this;
         window.SetSantaInfo();
 
-        GameManager.Instance.ShowClickObjWindow();
+        uiManager.ShowClickObjWindow();
     }
 
     // 산타 터치 시 카메라의 Target을 해당 산타로 set
@@ -198,6 +205,7 @@ public class Santa : MonoBehaviour
         
         gameManager = GameManager.Instance;
         cameraMovement = CameraMovement.Instance;
+        uiManager = UIManager.Instance;
     }
 
    

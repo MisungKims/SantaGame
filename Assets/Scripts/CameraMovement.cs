@@ -74,6 +74,7 @@ public class CameraMovement : MonoBehaviour
 
 
     private GameManager gameManager;
+    private UIManager uiManager;
 
 
     Vector3 targetPos;
@@ -84,14 +85,13 @@ public class CameraMovement : MonoBehaviour
 
 
     #region 카메라 움직임
-    public void SetCanMove(bool move)
-    {
-        canMove = move;
-    }
+   
 
     // 카메라 움직임
     void CamMove()
     {
+        chaseState = EChaseState.noChase;
+
         Touch touch = Input.GetTouch(0);        // 손가락 터치
         if (touch.phase == TouchPhase.Began)    // 눌렸을 때
         {
@@ -117,6 +117,8 @@ public class CameraMovement : MonoBehaviour
     // 카메라 회전
     void CamRotate()
     {
+        chaseState = EChaseState.noChase;
+
         //// 마우스로 회전
         //if (Input.GetMouseButton(0))
         //{
@@ -162,6 +164,8 @@ public class CameraMovement : MonoBehaviour
     // 카메라 줌 인/줌 아웃
     void Zoom()
     {
+        chaseState = EChaseState.noChase;
+
         Touch touchZero = Input.GetTouch(0); //첫번째 손가락 터치를 저장
         Touch touchOne = Input.GetTouch(1); //두번째 손가락 터치를 저장
 
@@ -237,7 +241,7 @@ public class CameraMovement : MonoBehaviour
     {
         chaseState = EChaseState.noChase;                    // 카메라의 상태 변경 
 
-        gameManager.HideClickObjWindow();             // 클릭 오브젝트 창 없애기
+        uiManager.HideClickObjWindow();             // 클릭 오브젝트 창 없애기
 
         if (chasingTarget)
         {
@@ -331,7 +335,8 @@ public class CameraMovement : MonoBehaviour
 
     private void Start()
     {
-        gameManager = GameManager.Instance;
+        //gameManager = GameManager.Instance;
+        uiManager = UIManager.Instance;
 
         // 카메라의 상태 지정
         chaseState = EChaseState.noChase;            

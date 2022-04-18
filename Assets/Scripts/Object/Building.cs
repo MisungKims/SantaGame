@@ -1,3 +1,9 @@
+/**
+ * @brief 건물을 생성
+ * @author 김미성
+ * @date 22-04-18
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +12,6 @@ using System.Text;
 public class Building : MonoBehaviour
 {
     #region 변수
-    public GameObject clickObjWindow;
 
     private Transform thisTransform;
 
@@ -18,7 +23,8 @@ public class Building : MonoBehaviour
         set { level = value; }
     }
 
-    private float multiplyBuildingPrice;    // 업그레이드 후 건물 가격 증가 배율
+    private float multiplyBuildingPrice;        // 업그레이드 후 건물 가격 증가 배율
+
 
     private string buildingPrice;              // 건물 가격 
     public string BuildingPrice
@@ -26,7 +32,7 @@ public class Building : MonoBehaviour
         get { return buildingPrice; }
     }
 
-    [SerializeField]
+
     private string incrementGold;              // 플레이어의 돈 증가량
     public string IncrementGold
     {
@@ -57,6 +63,7 @@ public class Building : MonoBehaviour
     // 캐싱
     private GameManager gameManager;
     private CameraMovement cameraMovement;
+    private UIManager uiManager;
 
     #endregion
 
@@ -112,7 +119,7 @@ public class Building : MonoBehaviour
     // 오브젝트 정보창 보여줌
     public void ShowObjWindow()
     {
-        window = gameManager.clickObjWindow.transform.GetComponent<ClickObjWindow>();
+        window = uiManager.clickObjWindow.transform.GetComponent<ClickObjWindow>();
 
         sb.Clear();
         sb.Append("+ ");
@@ -121,7 +128,7 @@ public class Building : MonoBehaviour
         window.Builidng = this;
         window.SetBuildingInfo();
 
-        gameManager.ShowClickObjWindow();
+        uiManager.ShowClickObjWindow();
     }
 
     // 건물 터치 시 카메라의 Target을 해당 건물로 set
@@ -152,6 +159,7 @@ public class Building : MonoBehaviour
     {
         gameManager = GameManager.Instance;
         cameraMovement = CameraMovement.Instance;
+        uiManager = UIManager.Instance;
 
         thisTransform = this.transform;
     }

@@ -1,13 +1,14 @@
+/**
+ * @brief 퀘스트 UI 및 완료 시 보상 획득
+ * @author 김미성
+ * @date 22-04-18
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum EQuestObj
-{
-    daily,
-    achivement
-}
 
 public class QuestObject : MonoBehaviour
 {
@@ -20,12 +21,14 @@ public class QuestObject : MonoBehaviour
     [SerializeField]
     private Text countText;
     [SerializeField]
-    private Text goldText;
+    private Text rewardText;
 
-    public bool isSuccess = false;     // 퀘스트를 모두 완료했는지
-    private bool isGetGold = false;     // 보상을 받았는지
+    public bool isSuccess = false;      // 퀘스트를 모두 완료했는지
+    private bool isGetReward = false;     // 보상을 받았는지
 
-    public EQuestObj eQuestObj;
+    public EQuestType questType;
+
+    public ERewardType rewardType;
 
     private string questName;
     public string QuestName
@@ -62,30 +65,29 @@ public class QuestObject : MonoBehaviour
         }
     }
 
-    private string questGold;
-    public string QuestGold
+    private string questRewardAmount;
+    public string QuestRewardAmount
     {
         set
         {
-            questGold = value;
-            goldText.text = questGold;
+            questRewardAmount = value;
+            rewardText.text = questRewardAmount;
         }
     }
 
-    // 업적을 달성하고, 아직 골드를 획득하지 않았을 때 보상 획득
+    /// <summary>
+    /// 퀘스트 완료 버튼 클릭 (인스펙터에서 호출)
+    /// </summary>
     public void ClickSuccessButton()
     {
-        if (isSuccess && !isGetGold)
+        if (isSuccess && !isGetReward)
         {
-            goldText.text = "완료";
+            rewardText.text = "완료";
 
-            GameManager.Instance.MyGold += GoldManager.UnitToBigInteger(questGold); // 보상 획득
+            RewardManager.GetReward(rewardType, questRewardAmount);
 
-            // 일일미션이라면 모두 완료했는지 체크
-            if (eQuestObj == EQuestObj.daily)
-            {
-                DailyQuestWindow.Instance.CheckAllSuccess();
-            }
+            if (questType == EQuestType.daily)                   // 일일미션이라면 
+                DailyQuestWindow.Instance.CheckAllSuccess();    //  모두 완료했는지 체크
         }
     }
 }

@@ -340,7 +340,7 @@ public class StoreObjectSc : MonoBehaviour
     // 새로운 건물 생성
     void NewBuilding()
     {
-        gameManager.HideStorePanel();          // 상점 창 숨기기
+       // gameManager.HideStorePanel();          // 상점 창 숨기기
 
         buildingInstant = BuildingGroup.instance.BuildingList[index].GetComponent<Building>();
       //  buildingInstant = buildingGroup.transform.GetChild(index).GetComponent<Building>();
@@ -380,7 +380,7 @@ public class StoreObjectSc : MonoBehaviour
     // 새로운 산타 생성
     void CreateNewSanta()
     {
-        gameManager.HideStorePanel();          // 상점 창 숨기기
+      //  gameManager.HideStorePanel();          // 상점 창 숨기기
 
 
         santaInstant = buildingInstant.santa;

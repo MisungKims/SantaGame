@@ -1,3 +1,9 @@
+/**
+ * @brief 편지지
+ * @author 김미성
+ * @date 22-04-18
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +16,7 @@ public class WritingPad : MonoBehaviour
     [SerializeField]
     private Text contentText;
 
-    private string postName;
+    private string postName;        // 수신인
     public string PostName
     {
         set
@@ -20,7 +26,7 @@ public class WritingPad : MonoBehaviour
         }
     }
 
-    private string postContent;
+    private string postContent;     // 편지의 내용
     public string PostConent
     {
         set
