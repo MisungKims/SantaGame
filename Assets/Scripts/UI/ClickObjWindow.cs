@@ -1,3 +1,9 @@
+/**
+ * @details 산타 혹은 건물을 클릭했을 때 보이는 UI
+ * @author 김미성
+ * @date 22-04-18
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -85,6 +91,9 @@ public class ClickObjWindow : MonoBehaviour
         set { santa = value; }
     }
 
+    /// <summary>
+    /// 빌딩의 정보를 가져와 UI에 Set
+    /// </summary>
     public void SetBuildingInfo()
     {
         ObjName = building.BuilidingName;
@@ -102,6 +111,9 @@ public class ClickObjWindow : MonoBehaviour
         ObjImg.SetActive(true);
     }
 
+    /// <summary>
+    /// 산타의 정보를 가져와 UI에 Set
+    /// </summary>
     public void SetSantaInfo()
     {
         ObjName = santa.SantaName;
@@ -120,7 +132,9 @@ public class ClickObjWindow : MonoBehaviour
         ObjImg.SetActive(true);
     }
 
-    // 업그레이드 버튼 클릭시
+    /// <summary>
+    /// 업그레이드 버튼 클릭 시 (인스펙터에서 호출)
+    /// </summary>
     public void UpgradeButtonClick()
     {
         if (building)
@@ -137,31 +151,33 @@ public class ClickObjWindow : MonoBehaviour
         }
     }
 
-    // 업그레이드 버튼의 Interactable 설정
+    /// <summary>
+    /// 업그레이드 버튼의 Interactable 설정
+    /// </summary>
     void SetButtonInteractable()
     {
-        //가진 돈이 오브젝트의 가격보다 클 때
-        if (GoldManager.CompareBigintAndUnit(GameManager.Instance.MyGold, objPrice))
-            UpgradeButton.interactable = true;                //  Interactable을 True로 설정
+        if (GoldManager.CompareBigintAndUnit(GameManager.Instance.MyGold, objPrice))        //가진 돈이 오브젝트의 가격보다 클 때
+            UpgradeButton.interactable = true;
         else UpgradeButton.interactable = false;
     }
 
+   
     void Update()
     {
         SetButtonInteractable();
     }
 
-    private void OnDisable()
-    {
-        if (building)
-        {
-            ObjImg.SetActive(false);
-            building = null;
-        }
-        else if (santa)
-        {
-            ObjImg.SetActive(false);
-            santa = null;
-        }
-    }
+    //private void OnDisable()
+    //{
+    //    if (building)
+    //    {
+    //        ObjImg.SetActive(false);
+    //        building = null;
+    //    }
+    //    else if (santa)
+    //    {
+    //        ObjImg.SetActive(false);
+    //        santa = null;
+    //    }
+    //}
 }

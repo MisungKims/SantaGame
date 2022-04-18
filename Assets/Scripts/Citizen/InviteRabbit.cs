@@ -45,7 +45,7 @@ public class InviteRabbit : MonoBehaviour
 
         gameManager.MyCarrots -= GoldManager.UnitToBigInteger(price);  // 초대 비용 지불
 
-        gameManager.SantaCount++;
+        gameManager.CitizenCount++;
 
         gameManager.goldEfficiency *= 1.5f;
 
