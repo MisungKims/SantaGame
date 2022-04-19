@@ -6531,6 +6531,7 @@ GameObject:
   - component: {fileID: 625165369}
   - component: {fileID: 625165370}
   - component: {fileID: 625165371}
+  - component: {fileID: 625165372}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -6624,6 +6625,34 @@ MonoBehaviour:
   questObj: {fileID: 7732777178445379554, guid: 09a3088e712eafb4ea4c622a636d9e8f, type: 3}
   parent: {fileID: 357056375}
   notificationImage: {fileID: 1473427258}
+--- !u!114 &625165372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 625165366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62b31b1f8205ea745ba1f5912e9d35e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rewardObjs:
+  - {fileID: 1441594307705220436, guid: 5e280afc60139a940ad3389b833e6fa7, type: 3}
+  - {fileID: 1441594307705220436, guid: fb70a38114ca8d243b4f7e00f37131a4, type: 3}
+  - {fileID: 1441594307705220436, guid: d3d6af221a4854d45ab4547230f043cf, type: 3}
+  - {fileID: 1441594307705220436, guid: 0524770b3ed423f48b24225946cc0875, type: 3}
+  - {fileID: 1441594307705220436, guid: 374fe6e8c83d13e47aab5a149db19a6f, type: 3}
+  objRectTransforms:
+  - {fileID: 259057168}
+  - {fileID: 582198251}
+  - {fileID: 822068646}
+  - {fileID: 182132493}
+  - {fileID: 1897271131}
+  - {fileID: 219876474}
+  - {fileID: 1217057556}
+  parent: {fileID: 1461877921}
+  notificationImage: {fileID: 1720479817}
 --- !u!1 &625235224
 GameObject:
   m_ObjectHideFlags: 0
@@ -14867,7 +14896,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1461877922}
-  - component: {fileID: 1461877923}
   m_Layer: 5
   m_Name: RewardObjects
   m_TagString: Untagged
@@ -14895,33 +14923,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -34}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1461877923
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1461877921}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6418739697e7114d8ec1931842e0274, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rewardObjs:
-  - {fileID: 1441594307705220436, guid: 5e280afc60139a940ad3389b833e6fa7, type: 3}
-  - {fileID: 1441594307705220436, guid: fb70a38114ca8d243b4f7e00f37131a4, type: 3}
-  - {fileID: 1441594307705220436, guid: d3d6af221a4854d45ab4547230f043cf, type: 3}
-  - {fileID: 1441594307705220436, guid: 0524770b3ed423f48b24225946cc0875, type: 3}
-  - {fileID: 1441594307705220436, guid: 374fe6e8c83d13e47aab5a149db19a6f, type: 3}
-  objRectTransforms:
-  - {fileID: 259057168}
-  - {fileID: 582198251}
-  - {fileID: 822068646}
-  - {fileID: 182132493}
-  - {fileID: 1897271131}
-  - {fileID: 219876474}
-  - {fileID: 1217057556}
-  rewardList: []
 --- !u!1 &1473427258
 GameObject:
   m_ObjectHideFlags: 0

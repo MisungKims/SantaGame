@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
         
     public Text text;   // 나중에 지워야함
 
-    public string getAttendanceRewardDate;              // 마지막으로 출석 보상을 받은 날짜
+   
    // public string getDailyQuestRewardDate;              // 마지막으로 일일미션 보상을 받은 날짜
 
     StringBuilder gaugeSb = new StringBuilder();

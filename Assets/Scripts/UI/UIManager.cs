@@ -25,10 +25,6 @@ public class UIManager : MonoBehaviour
 
     public GameObject store;
 
-    [Header("---------- 출석 보상")]
-    [SerializeField]
-    private GameObject attendanceNotificationImage;     // 출석 보상 알림 이미지      
-
     #endregion
 
     #region 함수
@@ -73,27 +69,6 @@ public class UIManager : MonoBehaviour
     }
 
 
-    /// <summary>
-    /// 받을 출석 보상이 있을 때 알려주는 이미지
-    /// </summary>
-    public void SetNotificationImage()
-    {
-        // 마지막 출석 보상 수령 날짜가 오늘 날짜와 다르면 현재 받을 출석 보상이 있으므로,
-        if (GameManager.Instance.getAttendanceRewardDate != DateTime.Now.ToString("yyyy.MM.dd"))
-        {
-            attendanceNotificationImage.SetActive(true);        // UI로 알려줌
-        }
-    }
-
-    /// <summary>
-    /// 출석 보상 알림 이미지를 숨김
-    /// </summary>
-    public void HideAttendanceNotiImage()
-    {
-        attendanceNotificationImage.SetActive(false);
-    }
-
-
 
     #endregion
 
@@ -105,8 +80,8 @@ public class UIManager : MonoBehaviour
             Destroy(this.gameObject);
     }
 
-    private void Start()
-    {
-        SetNotificationImage();
-    }
+    //private void Start()
+    //{
+    //    SetNotificationImage();
+    //}
 }
