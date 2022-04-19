@@ -108,14 +108,17 @@ public class Building : MonoBehaviour
     /// <param name="iGold">골드 증가량</param>
     public void InitBuilding(int index, string name, float multiplyPrice, string price, string iGold, float second)
     {
-        gameObject.SetActive(true);         // 건물이 보이도록
-
         this.index = index;
         buildingName = name;
         multiplyBuildingPrice = multiplyPrice;
         buildingPrice = price;
         incrementGold = iGold;
         Second = second;
+    }
+
+    public void NewBuilding()
+    {
+        gameObject.SetActive(true);         // 건물이 보이도록
 
         SetCamTargetThis();                 // 카메라가 건물을 바라보도록
 
@@ -134,6 +137,7 @@ public class Building : MonoBehaviour
             return;
         }
 
+       
         gameManager.MyGold -= GoldManager.UnitToBigInteger(buildingPrice);  // 업그레이드 비용 지불
 
         buildingPrice = GoldManager.MultiplyUnit(buildingPrice, multiplyBuildingPrice); // 비용을 배율만큼 증가

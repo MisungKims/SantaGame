@@ -82,9 +82,12 @@ public class Santa : MonoBehaviour
         this.building = building;
 
         this.building.isAuto = true;
+    }
 
+    public void NewSanta()
+    {
         gameObject.SetActive(true);
-        
+
         SetCamTargetThis();                 // 카메라가 산타를 따라다니도록
 
         ShowObjWindow();                    // 클릭 오브젝트창 보여줌

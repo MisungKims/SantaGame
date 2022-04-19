@@ -119,21 +119,21 @@ public class PostOfficeManager : MonoBehaviour
             int randIndex = Random.Range(0, postList.Count);
            
             /// TODO : 오브젝트 풀링으로 
-            PostOfficeInstance(postList[randIndex].name, postList[randIndex].content);
+            PostOfficeInstance(postList[randIndex]);
         }
     }
 
     /// <summary>
     /// 편지 인스턴스 생성
     /// </summary>
-    void PostOfficeInstance(string name, string content)
+    void PostOfficeInstance(PostStruct post)
     {
         PostObject newObj = GameObject.Instantiate(postObj, parent.transform).GetComponent<PostObject>();
 
         newObj.transform.GetComponent<RectTransform>().anchoredPosition = rectTransform.anchoredPosition;
 
-        newObj.PostName = name;
-        newObj.PostConent = content;
+        newObj.PostName = post.name;
+        newObj.PostConent = post.content;
 
         rectTransform.anchoredPosition += new Vector2(0, nextYPos);
 
