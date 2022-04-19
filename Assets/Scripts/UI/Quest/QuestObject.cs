@@ -8,7 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System;
 
 public class QuestObject : MonoBehaviour
 {
@@ -87,7 +87,11 @@ public class QuestObject : MonoBehaviour
             RewardManager.GetReward(rewardType, questRewardAmount);
 
             if (questType == EQuestType.daily)                   // 일일미션이라면 
+            {
                 DailyQuestWindow.Instance.CheckAllSuccess();    //  모두 완료했는지 체크
+                GameManager.Instance.getDailyQuestRewardDate = DateTime.Now.ToString("yyyy.MM.dd");
+            }    
+               
         }
     }
 }

@@ -1,7 +1,7 @@
 /**
  * @brief 산타 알바를 생성
  * @author 김미성
- * @date 22-04-18
+ * @date 22-04-19
  */
 
 using System.Collections;
@@ -13,6 +13,7 @@ using UnityEngine.UI;
 public class Santa : MonoBehaviour
 {
     #region 변수
+    [SerializeField]
     private int level = 1;
     public int Level
     {
@@ -20,46 +21,20 @@ public class Santa : MonoBehaviour
         set { level = value; }
     }
 
-
-    [SerializeField]
-    private Slider getGoldSlider;
-    private int count = 0;
-    public int Count
-    {
-        get { return count; }
-        set
-        {
-            count = value;
-            getGoldSlider.value = count;
-        }
-    }
-
-    private float second;
-    public float Second
-    {
-        set
-        {
-            second = value;
-            getGoldSlider.maxValue = second;
-        }
-    }
-    
-
     private float multiplySantaPrice;       // 업그레이드 후 산타 가격 증가 배율
     public float MultiplySantaPrice
     {
-        //get { return multiplySantaPrice; }
         set { multiplySantaPrice = value; }
     }
 
-    private string santaPrice;                 // 산타 가격 
+    private string santaPrice;               // 산타 가격 
     public string SantaPrice
     {
         get { return santaPrice; }
         set { santaPrice = value; }
     }
 
-    private int santaEfficiency;
+    private int santaEfficiency;             // 알바 효율
     public int SantaEfficiency
     {
         get { return santaEfficiency; }
@@ -84,78 +59,79 @@ public class Santa : MonoBehaviour
     StringBuilder sb = new StringBuilder();
 
     // 캐싱
-    private static WaitForSeconds m_waitForSecond;
-
+   
     private GameManager gameManager;
-    private CameraMovement cameraMovement;
     private UIManager uiManager;
-
     private ClickObjWindow window;
 
     #endregion
 
     #region 함수
 
+    /// <summary>
+    /// 산타 초기 설정
+    /// </summary>
 
-    // 산타 초기 설정
-    public void InitSanta(int index, string santaName, float second, float multiplySantaPrice, string santaPrice, int santaEfficiency, Building building)
+    public void InitSanta(int index, string santaName, float multiplySantaPrice, string santaPrice, int santaEfficiency, Building building)
     {
         this.index = index;
         this.santaName = santaName;
-        Second = second;
         this.multiplySantaPrice = multiplySantaPrice;
         this.santaPrice = santaPrice;
         this.santaEfficiency = santaEfficiency;
         this.building = building;
 
-        gameObject.SetActive(true);         // 산타가 보이도록
-        getGoldSlider.transform.parent.gameObject.SetActive(true);   // 골드 자동 슬라이더가 보이도록
+        this.building.isAuto = true;
 
+        gameObject.SetActive(true);
+        
         SetCamTargetThis();                 // 카메라가 산타를 따라다니도록
 
         ShowObjWindow();                    // 클릭 오브젝트창 보여줌
-
-        StartCoroutine(Increment());        // 골드획득 자동화 시작
-
-        m_waitForSecond = new WaitForSeconds(second);
     }
 
 
-    // 산타 업그레이드
+    /// <summary>
+    /// 산타 업그레이드
+    /// </summary>
     public void Upgrade()
     {
-        if (!GoldManager.CompareBigintAndUnit(gameManager.MyCarrots, santaPrice))
-        {
+        if (!GoldManager.CompareBigintAndUnit(gameManager.MyCarrots, santaPrice))   // 가진 당근으로 산타를 업그레이드 할 수 없다면
             return;
-        }
 
-        gameManager.MyCarrots -= GoldManager.UnitToBigInteger(santaPrice);
+        gameManager.MyCarrots -= GoldManager.UnitToBigInteger(santaPrice);          // 비용 지불
 
-        santaPrice = GoldManager.MultiplyUnit(santaPrice, multiplySantaPrice);
+        santaPrice = GoldManager.MultiplyUnit(santaPrice, multiplySantaPrice);      // 비용을 배율만큼 증가
 
-        building.IncrementGold = GoldManager.MultiplyUnit(building.IncrementGold, 1 + (santaEfficiency * 0.001f));
+        // 산타의 효율만큼 건물의 골드 증가량을 증가
+        building.IncrementGold = GoldManager.MultiplyUnit(building.IncrementGold, 1 + (santaEfficiency * 0.001f));  
 
         level++;
     }
 
-    // 카메라가 해당 산타를 따라다님
+    /// <summary>
+    /// 카메라가 해당 산타를 따라다님
+    /// </summary>
     public void SetCamTargetThis()
     {
         CameraMovement.Instance.ChaseSanta(this.transform);
     }
 
-    // 클릭 오브젝트 창 보여줌
+    /// <summary>
+    /// 클릭 오브젝트 창 보여줌
+    /// </summary>
     public void ShowObjWindow()
     {
-        window = uiManager.clickObjWindow.transform.GetComponent<ClickObjWindow>();
-
         window.Santa = this;
         window.SetSantaInfo();
 
         uiManager.ShowClickObjWindow();
     }
 
-    // 산타 터치 시 카메라의 Target을 해당 산타로 set
+
+    /// <summary>
+    /// 산타 터치 시 카메라의 타깃을 산타로 설정, 클릭 오브젝트창을 보여줌
+    /// </summary>
     void TouchSanta()
     {
         if (Input.GetMouseButtonDown(0))
@@ -165,7 +141,7 @@ public class Santa : MonoBehaviour
 
             if (true == (Physics.Raycast(ray.origin, ray.direction * 10, out hit)))
             {
-                if (hit.collider.CompareTag("Santa"))
+                if (hit.collider.CompareTag("Santa") && hit.collider.name == this.name)
                 {
                     SetCamTargetThis();
                     ShowObjWindow();
@@ -174,38 +150,17 @@ public class Santa : MonoBehaviour
         }
     }
 
-    // 골드 획득 자동화
-    IEnumerator Increment()
-    {
-        while (true)
-        {
-            yield return StartCoroutine(TimeCount());
-           
-            gameManager.MyGold += GoldManager.UnitToBigInteger(building.IncrementGold);
-        }
-    }
-
-    // 정해진 시간만큼 카운트
-    IEnumerator TimeCount()
-    {
-        for (int i = 0; i <= second; i++)
-        {
-            yield return new WaitForSeconds(1f);
-
-            Count++;
-        }
-        Count = 0;
-    }
+    
     #endregion
 
     #region 유니티 메소드
-    void Start()
+    void Awake()
     {
         //anim = GetComponent<Animator>();
         
         gameManager = GameManager.Instance;
-        cameraMovement = CameraMovement.Instance;
         uiManager = UIManager.Instance;
+        window = uiManager.clickObjWindow.transform.GetComponent<ClickObjWindow>();
     }
 
    

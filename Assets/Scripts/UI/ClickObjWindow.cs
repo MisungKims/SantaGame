@@ -1,7 +1,7 @@
 /**
  * @details 산타 혹은 건물을 클릭했을 때 보이는 UI
  * @author 김미성
- * @date 22-04-18
+ * @date 22-04-19
  */
 
 using System.Collections;
@@ -167,17 +167,11 @@ public class ClickObjWindow : MonoBehaviour
         SetButtonInteractable();
     }
 
-    //private void OnDisable()
-    //{
-    //    if (building)
-    //    {
-    //        ObjImg.SetActive(false);
-    //        building = null;
-    //    }
-    //    else if (santa)
-    //    {
-    //        ObjImg.SetActive(false);
-    //        santa = null;
-    //    }
-    //}
+    private void OnDisable()
+    {
+        if (building)
+            building = null;
+        else if (santa)
+            santa = null;
+    }
 }

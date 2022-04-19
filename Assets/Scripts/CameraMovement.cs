@@ -1,3 +1,9 @@
+/**
+ * @details 카메라의 움직임을 제어
+ * @author 김미성
+ * @date 22-04-18
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -85,9 +91,11 @@ public class CameraMovement : MonoBehaviour
 
 
     #region 카메라 움직임
-   
 
-    // 카메라 움직임
+
+    /// <summary>
+    /// 터치로 카메라를 움직임
+    /// </summary>
     void CamMove()
     {
         chaseState = EChaseState.noChase;
@@ -114,7 +122,9 @@ public class CameraMovement : MonoBehaviour
         }
     }
 
-    // 카메라 회전
+    /// <summary>
+    /// 터치로 카메라를 회전
+    /// </summary>
     void CamRotate()
     {
         chaseState = EChaseState.noChase;
@@ -160,8 +170,9 @@ public class CameraMovement : MonoBehaviour
     float touchDeltaMag;
 
     float deltaMagnitudeDiff;
-
-    // 카메라 줌 인/줌 아웃
+    /// <summary>
+    /// 터치로 카메라 줌 인/줌 아웃
+    /// </summary>
     void Zoom()
     {
         chaseState = EChaseState.noChase;
@@ -212,8 +223,11 @@ public class CameraMovement : MonoBehaviour
     #endregion
 
     #region 타깃 추적
-    
-    // 카메라가 산타를 따라다님
+   
+    /// <summary>
+    /// 카메라가 산타를 따라다님
+    /// </summary>
+    /// <param name="obj">타깃의 Transform</param>
     public void ChaseSanta(Transform obj)
     {
         chaseState = EChaseState.chasing;    // 카메라의 상태 변경
@@ -226,7 +240,11 @@ public class CameraMovement : MonoBehaviour
         StartCoroutine(SetCamPos(distance, false, chaseState));
     }
 
-    // 카메라가 빌딩의 카메라 위치로 이동
+    /// <summary>
+    /// 카메라가 빌딩의 카메라 위치로 이동
+    /// </summary>
+    /// <param name="obj">타깃의 Transform</param>
+    /// <param name="distance">카메라와의 거리</param>
     public void ChaseBuilding(Transform obj, Transform distance)
     {
         chaseState = EChaseState.chasing;    // 카메라의 상태 변경
@@ -236,12 +254,14 @@ public class CameraMovement : MonoBehaviour
         StartCoroutine(ChangeAngles(distance.eulerAngles, chaseState));
     }
 
-    // 타깃 추적 종료
+    /// <summary>
+    /// 타깃 추적 종료
+    /// </summary>
     public void EndChaseTarget()
     {
         chaseState = EChaseState.noChase;                    // 카메라의 상태 변경 
 
-        uiManager.HideClickObjWindow();             // 클릭 오브젝트 창 없애기
+        uiManager.HideClickObjWindow();                     // 클릭 오브젝트 창 없애기
 
         if (chasingTarget)
         {
@@ -331,32 +351,24 @@ public class CameraMovement : MonoBehaviour
             if (instance != this)
                 Destroy(this.gameObject);
         }
+
+        uiManager = UIManager.Instance;
     }
 
     private void Start()
     {
-        //gameManager = GameManager.Instance;
-        uiManager = UIManager.Instance;
+        chaseState = EChaseState.noChase;                       // 카메라의 상태 지정   
 
-        // 카메라의 상태 지정
-        chaseState = EChaseState.noChase;            
+        cam.fieldOfView = basicFieldOfView;                     // 카메라의 기본 값 조정
 
-        // 카메라의 기본 값 조정
-        cam.fieldOfView = basicFieldOfView;
-
-        // 카메라의 기본 각도 조정
-        basicCamAngles = new Vector3(basicRotateX, 0, 0);
+        basicCamAngles = new Vector3(basicRotateX, 0, 0);       // 카메라의 기본 각도 조정
         cam.transform.eulerAngles = basicCamAngles;
 
-        // 추적 시 카메라의 각도 설정
-        chasingCamAngles = new Vector3(chasingRotateX, 0, 0);
+        chasingCamAngles = new Vector3(chasingRotateX, 0, 0);   // 추적 시 카메라의 각도 설정
 
-        // 카메라의 기본 위치 조정
-        distance = distanceTransform.localPosition;
-        //distance = this.transform.GetChild(1).localPosition;
+        distance = distanceTransform.localPosition;             // 카메라의 기본 위치 조정
         cam.transform.position = distance;
     }
-
 
     private void LateUpdate()
     {

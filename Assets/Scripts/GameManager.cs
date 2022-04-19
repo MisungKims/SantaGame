@@ -7,7 +7,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
@@ -51,7 +50,8 @@ public class GameManager : MonoBehaviour
     public Text text;   // 나중에 지워야함
 
     public string getAttendanceRewardDate;              // 마지막으로 출석 보상을 받은 날짜
-   
+    public string getDailyQuestRewardDate;              // 마지막으로 일일미션 보상을 받은 날짜
+
     StringBuilder gaugeSb = new StringBuilder();
     private float gauge;
     public float Gauge
@@ -124,13 +124,55 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private int lastDay;
+    private int month = 1, year = 0;
+    private int day = 1;
+    public int Day
+    {
+        get { return day; }
+        set
+        {
+            day = value;
+
+            if (month == 1 && month == 3 && month == 5 && month == 7 && month == 8 && month == 10 && month == 12)
+                lastDay = 32;
+            else
+                lastDay = 31;
+
+            if (day > lastDay)
+            {
+                day = 1;
+                if (month == 12)
+                {
+                    year++;
+                    month = 1;
+                }
+                else month++;
+            }
+
+            dateText.text = String.Format("{0}년 {1}월 {2}일", year, month, day);
+        }
+    }
+
 
     public float goldEfficiency = 1.0f;         // 토끼 주민 초대 시 증가할 효율
 
     public List<QuestObject> dailyQuestList = new List<QuestObject>();
 
-   
+    [SerializeField]
+    private float dayCount = 5f;
+    private WaitForSeconds waitForSeconds;
     #endregion
+
+    IEnumerator DateCounting()
+    {
+        while (true)
+        {
+            yield return waitForSeconds;
+
+            Day++;
+        }
+    }
 
 
     private void Awake()
@@ -145,17 +187,22 @@ public class GameManager : MonoBehaviour
             if (instance != this)
                 Destroy(this.gameObject);
         }
+
+        Level = 1;
+        Gauge = 0;
+        CitizenCount = 0;
+        Day = 1;
+        MyGold = myGold;
+        MyCarrots = myCarrots;
+        MyDia = myDia;
+
+        waitForSeconds = new WaitForSeconds(dayCount);
     }
 
     void Start()
     {
-        Level = 1;
-        Gauge = 0;
-        CitizenCount = 0;
-        MyGold = myGold;
-        MyCarrots = myCarrots;
-        MyDia = myDia;
-     
+        StartCoroutine(DateCounting());
+
         //BigInteger start = 100;
         //string value = start.ToString();
         //float sf = 1.7f;

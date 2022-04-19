@@ -1,3 +1,9 @@
+/**
+ * @details 오브젝트 구입 및 업그레이드
+ * @author 김미성
+ * @date 22-04-19
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -256,7 +262,7 @@ public class StoreObjectSc : MonoBehaviour
 
     void Start()
     {
-        storeInstance = StorePanel.Instance;
+        storeInstance = StorePanel.instance;
         gameManager = GameManager.Instance;
         prerequisitesGb = PrerequisitesText.gameObject;
 
@@ -278,10 +284,12 @@ public class StoreObjectSc : MonoBehaviour
     }
     #endregion
 
-    // 플레이어의 레벨에 따른 오브젝트의 active 설정
+    /// <summary>
+    /// 플레이어의 레벨에 따른 버튼의 active 설정
+    /// </summary>
     void SetObjectActive()
     {
-        if (!isBuyBuilding)                                         // 건물을 사지 않았을 때 (잠금해제 안했을 때)
+        if (!isBuyBuilding)                                         // 건물을 사지 않았고 (잠금해제 안했을 때)
         {
             if (gameManager.Level < unlockLevel)                    // 잠금해제 불가능한 레벨일 때
             {
@@ -304,18 +312,22 @@ public class StoreObjectSc : MonoBehaviour
         }
     }
 
-    public void Unlock()    // 잠금 해제
+    /// <summary>
+    /// 건물의 잠금 해제
+    /// </summary>
+    public void Unlock()
     {
         lockingImage.SetActive(false);
         unlockingObject.SetActive(true);
 
         storeInstance.ObjectList[index + 1].isGetPrerequisites = true;      // 다음 건물의 선행조건을 만족시킴
 
-        if (!isBuyBuilding)
-            BuyNewBuilding();                                   // 사지 않은 건물이면 새로 구매
+        if (!isBuyBuilding) BuyNewBuilding();                  // 사지 않은 건물이면 새로 구매
     }
 
-    // 새로운 건물 생성
+    /// <summary>
+    /// 새로운 건물 생성
+    /// </summary>
     void BuyNewBuilding()
     {
         isBuyBuilding = true;
@@ -325,49 +337,56 @@ public class StoreObjectSc : MonoBehaviour
         NewBuilding();      // 건물 오브젝트 생성
     }
 
-    // 건물 사기 버튼 클릭 시 건물 구매 혹은 업그레이드
+    /// <summary>
+    /// 건물 사기 버튼 클릭 시 건물 구매 혹은 업그레이드 (인스펙터에서 호출)
+    /// </summary>
     public void BuildingButtonClick()
     {
-        if (GoldManager.CompareBigintAndUnit(gameManager.MyGold, buildingPrice))           // 플레이어가 가진 돈이 건물의 가격보다 높을 때
+        if (GoldManager.CompareBigintAndUnit(gameManager.MyGold, buildingPrice))    // 플레이어가 가진 돈으로 업그레이드가 가능할 때
         {
-            //if (!isBuyBuilding)
-            //    BuyNewBuilding();                                   // 사지 않은 건물이면 새로 구매
-            UpgradeBuilding();                                 // 산 건물이면 업그레이드
+            UpgradeBuilding();
         }
     }
 
-   
-    // 새로운 건물 생성
+    /// <summary>
+    /// 새로운 건물을 생성
+    /// </summary>
     void NewBuilding()
     {
-       // gameManager.HideStorePanel();          // 상점 창 숨기기
+        buildingInstant = ObjectManager.instance.BuildingList[index].GetComponent<Building>();
 
-        buildingInstant = BuildingGroup.instance.BuildingList[index].GetComponent<Building>();
-      //  buildingInstant = buildingGroup.transform.GetChild(index).GetComponent<Building>();
-        buildingInstant.InitBuilding(index, buildingName, multiplyBuildingPrice, buildingPrice, incrementGold);
+        Building newBuilding = new Building();
+       
+        buildingInstant.InitBuilding(index, buildingName, multiplyBuildingPrice, buildingPrice, incrementGold, (float)second);
     }
 
-    // 건물을 업그레이드
+    /// <summary>
+    /// 건물을 업그레이드
+    /// </summary>
     void UpgradeBuilding()
     {
         buildingInstant.Upgrade();
 
         BuildingPrice = buildingInstant.BuildingPrice;
         IncrementGold = buildingInstant.IncrementGold;
-        BuildingLevel = buildingLevel + 1;
+        BuildingLevel = buildingInstant.Level;
     }
 
-    // 산타 사기 버튼 클릭 시 산타 구매 혹은 업그레이드
+    /// <summary>
+    /// 산타 사기 버튼 클릭 시 산타 구매 혹은 업그레이드 (인스펙터에서 호출)
+    /// </summary>
     public void SantaButtonClick()
     {
-        if (GoldManager.CompareBigintAndUnit(gameManager.MyGold, santaPrice))            // 플레이어가 가진 돈이 건물의 가격보다 높을 때
+        if (GoldManager.CompareBigintAndUnit(gameManager.MyGold, santaPrice))     // 플레이어가 가진 돈으로 업그레이드가 가능할 때
         {
             if (!isBuySanta) BuyNewSanta();                    // 사지 않은 건물이면 새로 구매
             else UpgradeSanta();                                 // 산 건물이면 업그레이드
         }
     }
 
-    // 새로운 산타 구입
+    /// <summary>
+    /// 새로운 산타 구입
+    /// </summary>
     void BuyNewSanta()
     {
         isBuySanta = true;
@@ -377,26 +396,25 @@ public class StoreObjectSc : MonoBehaviour
         CreateNewSanta();      // 산타 오브젝트 생성
     }
 
-    // 새로운 산타 생성
+    /// <summary>
+    /// 산타를 생성
+    /// </summary>
     void CreateNewSanta()
     {
-      //  gameManager.HideStorePanel();          // 상점 창 숨기기
-
-
         santaInstant = buildingInstant.santa;
 
-        santaInstant.InitSanta(index, santaName, (float)second, multiplySantaPrice, santaPrice, santaEfficiency, buildingInstant);
+        santaInstant.InitSanta(index, santaName, multiplySantaPrice, santaPrice, santaEfficiency, buildingInstant);
     }
 
-    // 산타를 업그레이드
+    /// <summary>
+    /// 산타를 업그레이드
+    /// </summary>
     void UpgradeSanta()
     {
         santaInstant.Upgrade();
 
         SantaPrice = santaInstant.SantaPrice;
         IncrementGold = buildingInstant.IncrementGold;
-        SantaLevel = santaLevel + 1;
+        SantaLevel = santaInstant.Level;
     }
-
-   
 }
