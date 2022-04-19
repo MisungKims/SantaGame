@@ -1176,7 +1176,6 @@ GameObject:
   - component: {fileID: 36421505}
   - component: {fileID: 36421507}
   - component: {fileID: 36421506}
-  - component: {fileID: 36421508}
   m_Layer: 5
   m_Name: StorePanel
   m_TagString: Untagged
@@ -1242,21 +1241,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 36421504}
   m_CullTransparentMesh: 1
---- !u!114 &36421508
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 36421504}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a032057ec49663439cde0a3ce1716b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  storeObject: {fileID: 1955002267146816683, guid: 2e75443f2ebfed44c8b586dc5949320b, type: 3}
-  storeObjectParent: {fileID: 988098877}
-  ObjectList: []
 --- !u!1 &59674242
 GameObject:
   m_ObjectHideFlags: 0
@@ -6532,6 +6516,8 @@ GameObject:
   - component: {fileID: 625165370}
   - component: {fileID: 625165371}
   - component: {fileID: 625165372}
+  - component: {fileID: 625165373}
+  - component: {fileID: 625165374}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -6560,7 +6546,6 @@ MonoBehaviour:
   citizenCountText: {fileID: 1506159350}
   dateText: {fileID: 2053624481}
   text: {fileID: 899453942}
-  getAttendanceRewardDate: 
   goldEfficiency: 1
   dayCount: 5
   questid: 1
@@ -6653,6 +6638,38 @@ MonoBehaviour:
   - {fileID: 1217057556}
   parent: {fileID: 1461877921}
   notificationImage: {fileID: 1720479817}
+  getRewardDate: 
+--- !u!114 &625165373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 625165366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80049c3333d66394fbb9c3c742dcefd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingList:
+  - {fileID: 624878154}
+  santaList:
+  - {fileID: 1855604184}
+--- !u!114 &625165374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 625165366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff7be7ff66ddb504bb48f73e6017da36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  storeObject: {fileID: 1955002267146816683, guid: 2e75443f2ebfed44c8b586dc5949320b, type: 3}
+  storeObjectParent: {fileID: 988098877}
+  ObjectList: []
 --- !u!1 &625235224
 GameObject:
   m_ObjectHideFlags: 0
@@ -11470,7 +11487,6 @@ MonoBehaviour:
   questionWindow: {fileID: 274871131}
   clickObjWindow: {fileID: 2084383718}
   store: {fileID: 36421504}
-  attendanceNotificationImage: {fileID: 1720479817}
 --- !u!114 &1180735486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18455,7 +18471,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1756404357}
-  - component: {fileID: 1756404356}
   m_Layer: 0
   m_Name: BuildingGroup
   m_TagString: Untagged
@@ -18463,20 +18478,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1756404356
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1756404355}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80049c3333d66394fbb9c3c742dcefd2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  BuildingList:
-  - {fileID: 624878154}
 --- !u!4 &1756404357
 Transform:
   m_ObjectHideFlags: 0
