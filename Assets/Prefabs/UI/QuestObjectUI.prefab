@@ -499,7 +499,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -60}
+  m_AnchoredPosition: {x: 0, y: -48}
   m_SizeDelta: {x: 240, y: 51.2672}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &336282184532997510
@@ -519,7 +519,7 @@ MonoBehaviour:
   maxCountText: {fileID: 7817659047409554238}
   countText: {fileID: 3427329900004162938}
   rewardText: {fileID: 7732777178090563106}
-  isSuccess: 0
+  getRewardButton: {fileID: 7732777178470852467}
   questType: 0
   rewardType: 0
 --- !u!1 &7732777178470852477
@@ -535,7 +535,7 @@ GameObject:
   - component: {fileID: 7732777178470852464}
   - component: {fileID: 7732777178470852467}
   m_Layer: 5
-  m_Name: SuccessButton
+  m_Name: GetRewardButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

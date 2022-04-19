@@ -16,6 +16,7 @@ using System.Text;
 public class GameManager : MonoBehaviour
 {
     #region 변수
+    // 싱글톤
     private static GameManager instance = null;
     public static GameManager Instance
     {
@@ -29,7 +30,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    [Header("---------- 메인 오브젝트")]
+    [Header("---------- UI 변수")]
     [SerializeField]
     private Slider gaugeSlider;
     [SerializeField]
@@ -50,7 +51,7 @@ public class GameManager : MonoBehaviour
     public Text text;   // 나중에 지워야함
 
     public string getAttendanceRewardDate;              // 마지막으로 출석 보상을 받은 날짜
-    public string getDailyQuestRewardDate;              // 마지막으로 일일미션 보상을 받은 날짜
+   // public string getDailyQuestRewardDate;              // 마지막으로 일일미션 보상을 받은 날짜
 
     StringBuilder gaugeSb = new StringBuilder();
     private float gauge;
@@ -157,12 +158,20 @@ public class GameManager : MonoBehaviour
 
     public float goldEfficiency = 1.0f;         // 토끼 주민 초대 시 증가할 효율
 
-    public List<QuestObject> dailyQuestList = new List<QuestObject>();
-
     [SerializeField]
     private float dayCount = 5f;
     private WaitForSeconds waitForSeconds;
+
+    public int questid;
+
     #endregion
+
+    /* public void SuccessQuest()
+    {
+        AchivementManager.Instance.Success(questid);
+    }*/
+
+
 
     IEnumerator DateCounting()
     {
@@ -173,7 +182,6 @@ public class GameManager : MonoBehaviour
             Day++;
         }
     }
-
 
     private void Awake()
     {
