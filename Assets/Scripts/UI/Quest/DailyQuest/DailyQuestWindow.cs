@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class DailyQuestWindow : QuestWindow
 {
@@ -45,6 +46,8 @@ public class DailyQuestWindow : QuestWindow
         IsAllSuccess = false;
 
         base.Awake();
+
+        StartCoroutine(Init());
     }
 
     public void Start()
@@ -67,5 +70,28 @@ public class DailyQuestWindow : QuestWindow
         }
 
         IsAllSuccess = true;
+    }
+
+  
+    /// <summary>
+    /// 다음 날이 되면 미션 초기화
+    /// </summary>
+    IEnumerator Init()
+    {
+        while (true)
+        {
+            if (GameManager.Instance.getDailyQuestRewardDate != DateTime.Now.ToString("yyyy.MM.dd"))
+            {
+                for (int i = 0; i < dailyQuestList.Count; i++)
+                {
+                    if (dailyQuestList[i].isSuccess)
+                    {
+                        dailyQuestList[i].isSuccess = false;
+                    }
+                }
+            }
+
+            yield return null;
+        }
     }
 }

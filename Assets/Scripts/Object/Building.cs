@@ -1,12 +1,13 @@
 /**
  * @brief 건물을 생성
  * @author 김미성
- * @date 22-04-18
+ * @date 22-04-19
  */
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Text;
 
 public class Building : MonoBehaviour
@@ -25,15 +26,13 @@ public class Building : MonoBehaviour
 
     private float multiplyBuildingPrice;        // 업그레이드 후 건물 가격 증가 배율
 
-
     private string buildingPrice;              // 건물 가격 
     public string BuildingPrice
     {
         get { return buildingPrice; }
     }
 
-
-    private string incrementGold;              // 플레이어의 돈 증가량
+    private string incrementGold;              // 플레이어의 골드 증가량
     public string IncrementGold
     {
         get { return incrementGold; }
@@ -52,11 +51,39 @@ public class Building : MonoBehaviour
         get { return buildingName; }
     }
 
-    public Santa santa;
+    [SerializeField]
+    private Slider getGoldSlider;       // 골드 획득 슬라이더
+    private int count = 0;
+    public int Count
+    {
+        get { return count; }
+        set
+        {
+            count = value;
+            getGoldSlider.value = count;
+        }
+    }
 
-    private Vector3 distance;
+    [SerializeField]
+    private GameObject getGoldBtn;      // 골드 수동 획득 버튼
 
-    private ClickObjWindow window;
+    private float second;
+    public float Second
+    {
+        set
+        {
+            second = value;
+            getGoldSlider.maxValue = second;
+        }
+    }
+
+    public Santa santa;         // 고용한 알바 (산타)
+
+    public bool isAuto = false;    // 알바를 고용한 건물은 골드 획득 자동화
+
+    private bool isClickGetBtn = false;   // 골드 획득이 수동일 때, 획득 UI를 클릭했으면 true, 아니면 false
+
+    private Vector3 distance;       // 카메라와의 거리
 
     StringBuilder sb = new StringBuilder();
 
@@ -64,6 +91,8 @@ public class Building : MonoBehaviour
     private GameManager gameManager;
     private CameraMovement cameraMovement;
     private UIManager uiManager;
+    private ClickObjWindow window;
+    private static WaitForSeconds waitForSecond1 = new WaitForSeconds(1f);
 
     #endregion
 
@@ -76,9 +105,8 @@ public class Building : MonoBehaviour
     /// <param name="name">건물의 이름</param>
     /// <param name="multiplyPrice">건물의 가격 증가 배수</param>
     /// <param name="price">건물의 가격</param>
-    /// <param name="mGold">골드 증가량 배수</param>
     /// <param name="iGold">골드 증가량</param>
-    public void InitBuilding(int index, string name, float multiplyPrice, string price, string iGold)
+    public void InitBuilding(int index, string name, float multiplyPrice, string price, string iGold, float second)
     {
         gameObject.SetActive(true);         // 건물이 보이도록
 
@@ -87,13 +115,18 @@ public class Building : MonoBehaviour
         multiplyBuildingPrice = multiplyPrice;
         buildingPrice = price;
         incrementGold = iGold;
+        Second = second;
 
-        SetCamTargetThis();                 // 카메라가 산타를 따라다니도록
+        SetCamTargetThis();                 // 카메라가 건물을 바라보도록
 
         ShowObjWindow();                    // 오브젝트 정보 창이 보이도록
+
+        StartCoroutine(Increment());        // 골드획득 시작
     }
 
-    // 건물 업그레이드
+    /// <summary>
+    /// 건물 업그레이드
+    /// </summary>
     public void Upgrade()
     {
         if (!GoldManager.CompareBigintAndUnit(gameManager.MyGold, buildingPrice))
@@ -110,17 +143,21 @@ public class Building : MonoBehaviour
         level++;
     }
 
-    // 카메라가 해당 건물을 따라다님
+
+    /// <summary>
+    /// 카메라가 해당 건물을 따라다님
+    /// </summary>
     public void SetCamTargetThis()
     {
         cameraMovement.ChaseBuilding(thisTransform, thisTransform.GetChild(0).transform);
     }
 
-    // 오브젝트 정보창 보여줌
+   
+    /// <summary>
+    /// 오브젝트 정보창 보여줌
+    /// </summary>
     public void ShowObjWindow()
     {
-        window = uiManager.clickObjWindow.transform.GetComponent<ClickObjWindow>();
-
         sb.Clear();
         sb.Append("+ ");
         sb.Append(incrementGold.ToString());
@@ -131,7 +168,10 @@ public class Building : MonoBehaviour
         uiManager.ShowClickObjWindow();
     }
 
-    // 건물 터치 시 카메라의 Target을 해당 건물로 set
+ 
+    /// <summary>
+    /// 건물을 터치할 때
+    /// </summary>
     void TouchBuilding()
     {
         if (Input.GetMouseButtonDown(0))
@@ -150,7 +190,75 @@ public class Building : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 수동 획득 버튼 클릭 (인스펙터에서 호출)
+    /// </summary>
+    public void ClickGetBtn()
+    {
+        isClickGetBtn = true;
+    }
 
+    #endregion
+
+    #region 코루틴
+    /// <summary>
+    /// 골드 획득 타이머
+    /// </summary>
+    IEnumerator Increment()
+    {
+        getGoldBtn.SetActive(false);
+        while (true)
+        {
+            yield return StartCoroutine(TimeCount());
+
+            if (isAuto)     // 자동화 상태이면 바로 골드 획득
+            {
+                gameManager.MyGold += GoldManager.UnitToBigInteger(incrementGold);
+            }
+            else            // 수동 상태이면 UI 클릭을 기다림
+            {
+                getGoldSlider.gameObject.SetActive(false);
+
+                yield return StartCoroutine(WaitForManualAcquisition());
+
+                getGoldSlider.gameObject.SetActive(true);
+                getGoldBtn.SetActive(false);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 정해진 시간만큼 카운트
+    /// </summary>
+    IEnumerator TimeCount()
+    {
+        for (int i = 0; i <= second; i++)
+        {
+            yield return waitForSecond1;
+
+            Count++;
+        }
+        Count = 0;
+    }
+
+    /// <summary>
+    /// 골드의 수동 획득을 대기 (UI 터치를 기다림)
+    /// </summary>
+    IEnumerator WaitForManualAcquisition()
+    {
+        getGoldBtn.SetActive(true);
+
+        while (!isClickGetBtn)
+        {
+            yield return null;
+
+            if (isAuto)         // 수동 획득 대기 중 알바를 고용할 때
+            {
+                gameManager.MyGold += GoldManager.UnitToBigInteger(incrementGold);
+                break;
+            }
+        }
+    }
     #endregion
 
     #region 유니티 메소드
@@ -160,6 +268,7 @@ public class Building : MonoBehaviour
         gameManager = GameManager.Instance;
         cameraMovement = CameraMovement.Instance;
         uiManager = UIManager.Instance;
+        window = uiManager.clickObjWindow.transform.GetComponent<ClickObjWindow>();
 
         thisTransform = this.transform;
     }
