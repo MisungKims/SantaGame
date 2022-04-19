@@ -15,12 +15,6 @@ public class PostOfficeManager : MonoBehaviour
     {
         public string name;
         public string content;
-
-        //public PostStruct(string name, string content)
-        //{
-        //    this.name = name;
-        //    this.content = content;
-        //}
     }
     #endregion
 
