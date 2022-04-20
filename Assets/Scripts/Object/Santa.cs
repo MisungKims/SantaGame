@@ -76,7 +76,6 @@ public class Santa : MonoBehaviour
     /// </summary>
     public bool Upgrade()
     {
-        Debug.Log(SantaPrice);
         if (!GoldManager.CompareBigintAndUnit(gameManager.MyCarrots, SantaPrice))   // 가진 당근으로 산타를 업그레이드 할 수 없다면
             return false;
 
@@ -105,8 +104,8 @@ public class Santa : MonoBehaviour
     /// </summary>
     public void ShowObjWindow()
     {
+        window.clickedObj = santaObj;
         window.Santa = this;
-        window.SetSantaInfo();
 
         uiManager.ShowClickObjWindow();
     }

@@ -62,6 +62,8 @@ public class PostObject : MonoBehaviour
         }
     }
 
+    public int index;
+
     #endregion
 
     #region 유니티 함수
@@ -88,6 +90,19 @@ public class PostObject : MonoBehaviour
         writingPad.gameObject.SetActive(true);
         writingPad.PostName = postName;
         writingPad.PostConent = postContent;
+    }
+
+    /// <summary>
+    /// 편지를 버림 (인스펙터에서 호출)
+    /// </summary>
+    public void Discard()
+    {
+        PostOfficeManager.Instance.Refresh(index);
+    }
+
+    public void RefreshTransform(Vector2 vector)
+    {
+        this.transform.GetComponent<RectTransform>().anchoredPosition = vector;
     }
     #endregion
 }

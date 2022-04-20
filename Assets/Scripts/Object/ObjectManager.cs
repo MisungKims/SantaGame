@@ -63,7 +63,7 @@ public class ObjectManager : MonoBehaviour
                 (int)data[i]["잠금 해제 레벨"],
                 (int)data[i]["초"],
                 data[i]["이름"].ToString(),
-                1,
+                0,
                 data[i]["건물 가격"].ToString(),
                 (float)data[i]["건물 가격 배수"],
                 data[i]["골드 증가량"].ToString(),
