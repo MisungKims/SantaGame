@@ -1,7 +1,7 @@
 /**
- * @brief 산타 알바를 생성
+ * @brief 산타 알바
  * @author 김미성
- * @date 22-04-19
+ * @date 22-04-20
  */
 
 using System.Collections;
@@ -13,76 +13,53 @@ using UnityEngine.UI;
 public class Santa : MonoBehaviour
 {
     #region 변수
-    [SerializeField]
-    private int level = 1;
+
+    public Object santaObj;
+    public int index;
+
     public int Level
     {
-        get { return level; }
-        set { level = value; }
+        get { return santaObj.santaLevel; }
+        set { santaObj.santaLevel = value; }
     }
 
-    private float multiplySantaPrice;       // 업그레이드 후 산타 가격 증가 배율
-    public float MultiplySantaPrice
+    public float MultiplySantaPrice       // 업그레이드 후 산타 가격 증가 배율
     {
-        set { multiplySantaPrice = value; }
+        get { return santaObj.multiplySantaPrice; }
     }
 
-    private string santaPrice;               // 산타 가격 
-    public string SantaPrice
+    public string SantaPrice               // 산타 가격 
     {
-        get { return santaPrice; }
-        set { santaPrice = value; }
+        get { return santaObj.santaPrice; }
+        set { santaObj.santaPrice = value; }
     }
 
-    private int santaEfficiency;             // 알바 효율
-    public int SantaEfficiency
+    public int SantaEfficiency             // 알바 효율
     {
-        get { return santaEfficiency; }
-        set { santaEfficiency = value; }
+        get { return santaObj.santaEfficiency; }
+        set { santaObj.santaEfficiency = value; }
     }
 
-   
-    string santaName;
     public string SantaName
     {
-        get { return santaName; }
+        get { return santaObj.santaName; }
     }
 
-    private int index;
-    public int Index
+
+    public Building Building
     {
-        get { return index; }
+        get{ return ObjectManager.Instance.buildingList[index].GetComponent<Building>(); }
     }
 
-    private Building building;
-
-    StringBuilder sb = new StringBuilder();
+   
 
     // 캐싱
-   
     private GameManager gameManager;
     private UIManager uiManager;
     private ClickObjWindow window;
-
     #endregion
 
     #region 함수
-
-    /// <summary>
-    /// 산타 초기 설정
-    /// </summary>
-
-    public void InitSanta(int index, string santaName, float multiplySantaPrice, string santaPrice, int santaEfficiency, Building building)
-    {
-        this.index = index;
-        this.santaName = santaName;
-        this.multiplySantaPrice = multiplySantaPrice;
-        this.santaPrice = santaPrice;
-        this.santaEfficiency = santaEfficiency;
-        this.building = building;
-
-        this.building.isAuto = true;
-    }
 
     public void NewSanta()
     {
@@ -97,19 +74,22 @@ public class Santa : MonoBehaviour
     /// <summary>
     /// 산타 업그레이드
     /// </summary>
-    public void Upgrade()
+    public bool Upgrade()
     {
-        if (!GoldManager.CompareBigintAndUnit(gameManager.MyCarrots, santaPrice))   // 가진 당근으로 산타를 업그레이드 할 수 없다면
-            return;
+        Debug.Log(SantaPrice);
+        if (!GoldManager.CompareBigintAndUnit(gameManager.MyCarrots, SantaPrice))   // 가진 당근으로 산타를 업그레이드 할 수 없다면
+            return false;
 
-        gameManager.MyCarrots -= GoldManager.UnitToBigInteger(santaPrice);          // 비용 지불
+        gameManager.MyCarrots -= GoldManager.UnitToBigInteger(SantaPrice);          // 비용 지불
 
-        santaPrice = GoldManager.MultiplyUnit(santaPrice, multiplySantaPrice);      // 비용을 배율만큼 증가
+        SantaPrice = GoldManager.MultiplyUnit(SantaPrice, MultiplySantaPrice);      // 비용을 배율만큼 증가
 
         // 산타의 효율만큼 건물의 골드 증가량을 증가
-        building.IncrementGold = GoldManager.MultiplyUnit(building.IncrementGold, 1 + (santaEfficiency * 0.001f));  
+        Building.IncrementGold = GoldManager.MultiplyUnit(Building.IncrementGold, 1 + (SantaEfficiency * 0.001f));  
 
-        level++;
+        Level++;
+
+        return true;
     }
 
     /// <summary>
@@ -163,7 +143,7 @@ public class Santa : MonoBehaviour
         
         gameManager = GameManager.Instance;
         uiManager = UIManager.Instance;
-        window = uiManager.clickObjWindow.transform.GetComponent<ClickObjWindow>();
+        window = UIManager.Instance.clickObjWindow.transform.GetComponent<ClickObjWindow>();
     }
 
    

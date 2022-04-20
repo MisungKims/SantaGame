@@ -1,7 +1,7 @@
 /**
  * @details CSV 파일을 파싱하여 오브젝트(건물, 산타) 리스트 생성
  * @author 김미성
- * @date 22-04-19
+ * @date 22-04-20
  */
 
 using System.Collections;
@@ -17,11 +17,12 @@ public class ObjectManager : MonoBehaviour
         get { return instance; }
     }
 
+    // 리스트
     public List<Building> buildingList = new List<Building>();
 
     public List<Santa> santaList = new List<Santa>();
 
-    public List<Object> objectList = new List<Object>();    // CSV 파일에서 파싱한 정보를 담은 리스트 (상점 초기 설정 시 사용)
+    public List<Object> objectList = new List<Object>();    // 오브젝트의 모든 정보를 가진 리스트
 
 
     public void Awake()
@@ -67,7 +68,7 @@ public class ObjectManager : MonoBehaviour
                 (float)data[i]["건물 가격 배수"],
                 data[i]["골드 증가량"].ToString(),
                 data[i]["산타 이름"].ToString(),
-                1,
+                0,
                 data[i]["산타 가격"].ToString(),
                 (int)data[i]["산타 가격 배수"],
                 (int)data[i]["알바 효율 증가"],
@@ -75,8 +76,11 @@ public class ObjectManager : MonoBehaviour
                 );
 
             objectList.Add(newObject);
+
+            //buildingList[i].buildingObj = objectList[i];
         }
     }
+    /// TODO : 하이라키에서 다 셋팅 후에 밑에꺼 위로 올리기
 
     /// <summary>
     /// 건물의 값 초기화
@@ -85,13 +89,8 @@ public class ObjectManager : MonoBehaviour
     {
         for (int i = 0; i < buildingList.Count; i++)
         {
-            buildingList[i].InitBuilding(
-                i,
-                objectList[i].buildingName,
-                objectList[i].multiplyBuildingPrice,
-                objectList[i].buildingPrice,
-                objectList[i].incrementGold,
-                objectList[i].second);
+            buildingList[i].buildingObj = objectList[i];
+            buildingList[i].index = i;
         }
     }
 
@@ -102,14 +101,17 @@ public class ObjectManager : MonoBehaviour
     {
         for (int i = 0; i < santaList.Count; i++)
         {
-            santaList[i].InitSanta(
-                i,
-                objectList[i].santaName,
-                objectList[i].multiplySantaPrice,
-                objectList[i].santaPrice,
-                objectList[i].santaEfficiency,
-                buildingList[i].GetComponent<Building>()
-                );
+            santaList[i].santaObj = objectList[i];
+            santaList[i].index = i;
+            
+            //santaList[i].InitSanta(
+            //    i,
+            //    objectList[i].santaName,
+            //    objectList[i].multiplySantaPrice,
+            //    objectList[i].santaPrice,
+            //    objectList[i].santaEfficiency,
+            //    buildingList[i].GetComponent<Building>()
+            //    );
         }
     }
 }

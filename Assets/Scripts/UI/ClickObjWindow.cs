@@ -1,7 +1,7 @@
 /**
  * @details 산타 혹은 건물을 클릭했을 때 보이는 UI
  * @author 김미성
- * @date 22-04-19
+ * @date 22-04-20
  */
 
 using System.Collections;
@@ -107,7 +107,7 @@ public class ClickObjWindow : MonoBehaviour
         
         ObjAmount = goldSb.ToString();
 
-        ObjImg = buildingImages.transform.GetChild(building.Index).gameObject;
+        ObjImg = buildingImages.transform.GetChild(building.index).gameObject;
         ObjImg.SetActive(true);
     }
 
@@ -128,7 +128,7 @@ public class ClickObjWindow : MonoBehaviour
 
         ObjAmount = goldSb.ToString();
 
-        ObjImg = santaImages.transform.GetChild(santa.Index).gameObject;
+        ObjImg = santaImages.transform.GetChild(santa.index).gameObject;
         ObjImg.SetActive(true);
     }
 
@@ -137,10 +137,8 @@ public class ClickObjWindow : MonoBehaviour
     /// </summary>
     public void UpgradeButtonClick()
     {
-        if (building)
+        if (building && building.Upgrade())
         {
-            building.Upgrade();
-
             SetBuildingInfo();
         }
         else if (santa)

@@ -357,7 +357,7 @@ public class StoreObjectSc : MonoBehaviour
 
         Building newBuilding = new Building();
        
-        buildingInstant.InitBuilding(index, buildingName, multiplyBuildingPrice, buildingPrice, incrementGold, (float)second);
+        //buildingInstant.InitBuilding(index, buildingName, multiplyBuildingPrice, buildingPrice, incrementGold, (float)second);
     }
 
     /// <summary>
@@ -401,9 +401,9 @@ public class StoreObjectSc : MonoBehaviour
     /// </summary>
     void CreateNewSanta()
     {
-        santaInstant = buildingInstant.santa;
-
-        santaInstant.InitSanta(index, santaName, multiplySantaPrice, santaPrice, santaEfficiency, buildingInstant);
+       // santaInstant = buildingInstant.santa;
+        santaInstant.NewSanta();
+        //santaInstant.InitSanta(index, santaName, multiplySantaPrice, santaPrice, santaEfficiency, buildingInstant);
     }
 
     /// <summary>

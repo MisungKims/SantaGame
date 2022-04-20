@@ -1,7 +1,7 @@
 /**
  * @details 오브젝트 구입 및 업그레이드
  * @author 김미성
- * @date 22-04-19
+ * @date 22-04-20
  */
 
 using System.Collections;
@@ -41,8 +41,6 @@ public class StoreObject : MonoBehaviour
     Text buildingNameText;                  // 건물의 이름 Text
     [SerializeField]
     Text buildingLevelText;                  // 건물의 이름 Text
-    //[SerializeField]
-    //Button upgradeBuildingButton;                  // 건물의 이름 Text
     [SerializeField]
     Text buildingPriceText;                  // 건물의 이름 Text
     [SerializeField]
@@ -56,8 +54,6 @@ public class StoreObject : MonoBehaviour
     Text santaNameText;                  // 건물의 이름 Text
     [SerializeField]
     Text santaLevelText;                  // 건물의 이름 Text
-    //[SerializeField]
-    //Button upgradeSantaButton;                  // 건물의 이름 Text
     [SerializeField]
     Text santaPriceText;                  // 건물의 이름 Text
     [SerializeField]
@@ -65,142 +61,82 @@ public class StoreObject : MonoBehaviour
     [SerializeField]
     GameObject santaImageGroup;                  // 건물의 이름 Text
 
-
-    Button backgroundButton;
-
     public Object storeObject;
-
-
     public int index;
-
-    private string desc;                    // 건물의 설명
-    public string Desc
+ 
+    public string Desc                  // 건물의 설명
     {
-        get { return desc; }
-        set
-        {
-            desc = value;
-            descText.text = desc;
-        }
+        set { descText.text = value; }
     }
 
-    private int unlockLevel;                // 잠금 해제 가능 레벨
-    public int UnlockLevel
+    public int UnlockLevel          // 잠금 해제 가능 레벨
     {
-        get { return unlockLevel; }
+        get { return storeObject.unlockLevel; }
         set
         {
-            unlockLevel = value;
-
             sb.Clear();
             sb.Append("Lv.");
-            sb.Append(unlockLevel.ToString());
+            sb.Append(value.ToString());
             sb.Append(" 에 잠금 해제 가능");
             lockingLevelText.text = sb.ToString();
         }
     }
 
-    private int second;                     // 몇 초 마다 증가할 것인지
-    public int Second
+    public int Second                    // 몇 초 마다 증가할 것인지
     {
-        get { return second; }
+        set{  secondText.text = $"{value}초"; }
+    }
+
+    public string IncrementGold          // 골드 증가량
+    {
         set
         {
-            second = value;
-            secondText.text = string.Format("{0}초", second);
+            incrementAmountText.text = value;
+            incrementGoldText.text = $"+ {GoldManager.MultiplyUnit(value, 0.1f)}";
+            
         }
     }
 
-    private string incrementGold;              // 돈 증가량
-    public string IncrementGold
-    {
-        get { return incrementGold; }
-        set
-        {
-            incrementGold = value;
-            incrementAmountText.text = incrementGold;
-            incrementGoldText.text = string.Format("+ {0}", GoldManager.MultiplyUnit(incrementGold, 0.1f));
-        }
-    }
-
-    private string buildingName;                 // 건물 이름
     public string BuildingName
     {
         set
         {
-            buildingName = value;
-            buildingNameText.text = buildingName;
-            objectNameText.text = buildingName;
+            buildingNameText.text = value;
+            objectNameText.text = value;
         }
     }
 
-
-    private string buildingPrice;              // 건물 가격 
     public string BuildingPrice
     {
-        get { return buildingPrice; }
-        set
-        {
-            buildingPrice = value;
-            buildingPriceText.text = buildingPrice;
-        }
+        get { return storeObject.buildingPrice; }
+        set {  buildingPriceText.text = value; }
     }
 
-    private int buildingLevel = 1;
     public int BuildingLevel
     {
-        get { return buildingLevel; }
-        set
-        {
-            buildingLevel = value;
-            buildingLevelText.text = string.Format("Lv. {0}", buildingLevel);
-        }
+        set { buildingLevelText.text = $"LV. {value}"; }
     }
 
-    private string santaName;               // 산타 이름
     public string SantaName
     {
-        set
-        {
-            santaName = value;
-            santaNameText.text = santaName;
-        }
+        set { santaNameText.text = value; }
     }
 
-    private string santaPrice;               // 산타 가격 
     public string SantaPrice
     {
-        get { return santaPrice; }
-        set
-        {
-            santaPrice = value;
-            santaPriceText.text = santaPrice.ToString();
-        }
+        get { return storeObject.santaPrice; }
+        set { santaPriceText.text = value.ToString();  }
     }
 
-
-    private int santaLevel;
     public int SantaLevel
     {
-        get { return santaLevel; }
-        set
-        {
-            santaLevel = value;
-            santaLevelText.text = string.Format("Lv. {0}", santaLevel);
-        }
+        set { santaLevelText.text = $"Lv. {value}"; }
     }
 
-    private int santaEfficiency;            // 알바 효율
     public int SantaEfficiency
     {
-        get { return santaEfficiency; }
-        set
-        {
-            santaEfficiency = value;
-            efficiencyText.text = string.Format("{0}%", santaEfficiency.ToString());
-        }
+        set { efficiencyText.text = $"{value}%"; }
     }
-
 
     private string prerequisites;
     public string Prerequisites
@@ -208,90 +144,43 @@ public class StoreObject : MonoBehaviour
         set
         {
             prerequisites = value;
-            PrerequisitesText.text = string.Format("! {0} 필요", prerequisites);
+            PrerequisitesText.text = $"! {prerequisites} 필요";
         }
     }
 
-
     public bool isBuyBuilding = false;       // 건물을 구매했는지 안했는지 (잠금해제를 했는지)
-    public float multiplyBuildingPrice;         // 업그레이드 후 건물 가격 증가 배율
-
+  
     private bool isBuySanta = false;        // 산타를 구매했는지 안했는지
-    public float multiplySantaPrice;       // 업그레이드 후 산타 가격 증가 배율
 
-
-    private bool isGetPrerequisites = false;
+    private bool isGetPrerequisites = false;    // 선행 조건 건물이 잠금해제 되었는지
 
 
     [Header("---------- 오브젝트")]
-    //public GameObject santaObject;        // 복제될 산타 프리팹
+    private GameObject prerequisitesGb;
+
     public GameObject buildingGroup;
 
     private Building buildingInstance;
-    public Building BuildingInstant
-    {
-        get { return buildingInstance; }
-    }
 
     private Santa santaInstance;
 
     // 캐싱
-    private StorePanel storeInstance;
     private GameManager gameManager;
-
-    private GameObject prerequisitesGb;
 
     StringBuilder sb = new StringBuilder();
     #endregion
-
 
     #region 유니티 메소드
 
     private void Awake()
     {
-        // 값 세팅
-
-        BuildingName = storeObject.buildingName;                      // 건물 이름
-        UnlockLevel = storeObject.unlockLevel;                        // 잠금 해제 가능 레벨
-        Second = storeObject.second;                                    // 몇 초 마다 증가할 것인지
-        multiplyBuildingPrice = storeObject.multiplyBuildingPrice;       // 업그레이드 후 건물 가격 증가 배율
-        BuildingPrice = storeObject.buildingPrice;                      // 건물 가격 
-        IncrementGold = storeObject.incrementGold;                    // 플레이어의 돈 증가량
-        SantaName = storeObject.santaName;                    // 산타 이름
-        multiplySantaPrice = storeObject.multiplySantaPrice;          // 업그레이드 후 건물 가격 증가 배율
-        SantaPrice = storeObject.santaPrice;                         // 건물 가격 
-        SantaEfficiency = storeObject.santaEfficiency;
-        Desc = storeObject.desc;                              // 건물의 설명
-        Prerequisites = storeObject.prerequisites;
-    }
-
-    void OnEnable()
-    {
-        if (buildingInstance)
-        {
-            BuildingPrice = buildingInstance.BuildingPrice;
-            IncrementGold = buildingInstance.IncrementGold;
-            BuildingLevel = BuildingInstant.Level;
-        }
-
-        if (santaInstance)
-        {
-            SantaPrice = santaInstance.SantaPrice;
-            SantaLevel = santaInstance.Level;
-        }
-
-    }
-
-    void Start()
-    {
-        storeInstance = StorePanel.instance;
         gameManager = GameManager.Instance;
         prerequisitesGb = PrerequisitesText.gameObject;
 
+        RefreshAll();
+
         if (index == 0)
-        {
             isGetPrerequisites = true;
-        }
 
         if (!isBuyBuilding)      // 건물을 사지 않았을 때 (잠금해제 안했을 때)
         {
@@ -300,20 +189,63 @@ public class StoreObject : MonoBehaviour
         }
     }
 
-    void Update()
+    void OnEnable()
     {
-        SetObjectActive();
+        RefreshBuildingInfo();
+        RefreshSantaInfo();
+    }
+
+    void Start()
+    {
+        Check();
     }
     #endregion
 
+    #region 함수
     /// <summary>
-    /// 플레이어의 레벨에 따른 버튼의 active 설정
+    /// 모든 UI 새로고침
     /// </summary>
-    void SetObjectActive()
+    void RefreshAll()
+    {
+        Desc = storeObject.desc;
+        BuildingName = storeObject.buildingName;
+        SantaName = storeObject.santaName;
+        UnlockLevel = storeObject.unlockLevel;
+        Second = storeObject.second;
+        Prerequisites = storeObject.prerequisites;
+
+        RefreshBuildingInfo();
+        RefreshSantaInfo();
+    }
+
+    /// <summary>
+    /// 건물의 UI 새로 고침
+    /// </summary>
+    void RefreshBuildingInfo()
+    {
+        BuildingPrice = storeObject.buildingPrice;
+        IncrementGold = storeObject.incrementGold;
+        BuildingLevel = storeObject.buildingLevel;
+    }
+
+    /// <summary>
+    /// 산타의 UI 새로 고침
+    /// </summary>
+    void RefreshSantaInfo()
+    {
+        SantaPrice = storeObject.santaPrice;
+        SantaEfficiency = storeObject.santaEfficiency;
+        SantaLevel = storeObject.santaLevel;
+    }
+
+    /// <summary>
+    /// 레벨 업 했을 때 혹은 선행조건 건물이 잠금해제 됐을 때 체크하여 버튼의 active 설정
+    /// </summary>
+    public void Check()
     {
         if (!isBuyBuilding)                                         // 건물을 사지 않았고 (잠금해제 안했을 때)
         {
-            if (gameManager.Level < unlockLevel)                    // 잠금해제 불가능한 레벨일 때
+            if (gameManager.Level < UnlockLevel)                    // 잠금해제 불가능한 레벨일 때
             {
                 unlockButton.SetActive(false);                      // 잠금해제 버튼과 선행조건 텍스트를 숨김
                 prerequisitesGb.SetActive(false);
@@ -334,17 +266,21 @@ public class StoreObject : MonoBehaviour
         }
     }
 
+    #region 건물
     /// <summary>
     /// 건물의 잠금 해제 (인스펙터에서 호출)
     /// </summary>
     public void Unlock()
     {
+        if (gameManager.Level < UnlockLevel)   // 잠금 해제 불가능하다면 return
+        {
+            return;
+        }
+
         lockingImage.SetActive(false);
         unlockingObject.SetActive(true);
 
-        StoreManager.instance.storeObjectList[index + 1].isGetPrerequisites = true;      // 다음 건물의 선행조건을 만족시킴
-
-        if (!isBuyBuilding) BuyNewBuilding();
+        BuyNewBuilding();
     }
 
     /// <summary>
@@ -354,12 +290,15 @@ public class StoreObject : MonoBehaviour
     {
         isBuyBuilding = true;
 
-        gameManager.MyGold -= GoldManager.UnitToBigInteger(buildingPrice);        // 건물 비용 지불
-
-       // 건물 오브젝트 생성
         buildingInstance = ObjectManager.Instance.buildingList[index].GetComponent<Building>();
-
         buildingInstance.NewBuilding();
+
+        StoreObject nextObject = StoreManager.Instance.storeObjectList[index + 1];
+        if (index != StoreManager.Instance.storeObjectList.Count - 1)
+        {
+            nextObject.isGetPrerequisites = true;      // 다음 건물의 선행조건을 만족시킴
+            nextObject.Check();
+        }
     }
 
     /// <summary>
@@ -367,26 +306,23 @@ public class StoreObject : MonoBehaviour
     /// </summary>
     public void BuildingButtonClick()
     {
-        if (GoldManager.CompareBigintAndUnit(gameManager.MyGold, buildingPrice))    // 플레이어가 가진 돈으로 업그레이드가 가능할 때
+        if (buildingInstance.Upgrade())
         {
-            buildingInstance.Upgrade();
-
-            BuildingPrice = buildingInstance.BuildingPrice;
-            IncrementGold = buildingInstance.IncrementGold;
-            BuildingLevel = buildingInstance.Level;
+            RefreshBuildingInfo();
         }
     }
+    #endregion
 
-
+    #region 산타
     /// <summary>
     /// 산타 사기 버튼 클릭 시 산타 구매 혹은 업그레이드 (인스펙터에서 호출)
     /// </summary>
     public void SantaButtonClick()
     {
-        if (GoldManager.CompareBigintAndUnit(gameManager.MyGold, santaPrice))     // 플레이어가 가진 돈으로 업그레이드가 가능할 때
+        if (GoldManager.CompareBigintAndUnit(gameManager.MyGold, SantaPrice))     // 플레이어가 가진 돈으로 업그레이드가 가능할 때
         {
-            if (!isBuySanta) BuyNewSanta();                    // 사지 않은 건물이면 새로 구매
-            else UpgradeSanta();                                 // 산 건물이면 업그레이드
+            if (!isBuySanta) BuyNewSanta();                    // 사지 않은 산타면 새로 구매
+            else UpgradeSanta();                               // 산 건물이면 업그레이드
         }
     }
 
@@ -397,7 +333,7 @@ public class StoreObject : MonoBehaviour
     {
         isBuySanta = true;
 
-        gameManager.MyCarrots -= GoldManager.UnitToBigInteger(santaPrice);      // 산타 비용 지불
+        gameManager.MyCarrots -= GoldManager.UnitToBigInteger(SantaPrice);      // 산타 비용 지불
 
         santaInstance = ObjectManager.Instance.santaList[index].GetComponent<Santa>();
         santaInstance.NewSanta();
@@ -408,12 +344,11 @@ public class StoreObject : MonoBehaviour
     /// </summary>
     void UpgradeSanta()
     {
-        santaInstance.Upgrade();
-
-        SantaPrice = santaInstance.SantaPrice;
-        IncrementGold = buildingInstance.IncrementGold;
-        SantaLevel = santaInstance.Level;
+        if (santaInstance.Upgrade())
+        {
+            RefreshSantaInfo();
+        }
     }
-
-
+    #endregion
+    #endregion
 }

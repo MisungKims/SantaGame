@@ -1,7 +1,7 @@
 /**
- * @brief 건물을 생성
+ * @brief 건물
  * @author 김미성
- * @date 22-04-19
+ * @date 22-04-20
  */
 
 using System.Collections;
@@ -16,41 +16,51 @@ public class Building : MonoBehaviour
 
     private Transform thisTransform;
 
-    [SerializeField]
-    private int level = 1;
-    public int Level
-    {
-        get { return level; }
-        set { level = value; }
-    }
-
-    private float multiplyBuildingPrice;        // 업그레이드 후 건물 가격 증가 배율
-
-    private string buildingPrice;              // 건물 가격 
-    public string BuildingPrice
-    {
-        get { return buildingPrice; }
-    }
-
-    private string incrementGold;              // 플레이어의 골드 증가량
-    public string IncrementGold
-    {
-        get { return incrementGold; }
-        set { incrementGold = value; }
-    }
-
-    private int index;
-    public int Index
-    {
-        get { return index; }
-    }
-
-    private string buildingName;
+    public int index;
+    public Object buildingObj;
     public string BuilidingName
     {
-        get { return buildingName; }
+        get { return buildingObj.buildingName; }
     }
 
+    // 프로퍼티
+    public int Level
+    {
+        get { return buildingObj.buildingLevel; }
+        set { buildingObj.buildingLevel = value;  }
+    }
+
+    public float MultiplyBuildingPrice        // 업그레이드 후 건물 가격 증가 배율
+    {
+        get { return buildingObj.multiplyBuildingPrice; }
+    }
+
+    public string BuildingPrice     // 건물 가격 
+    {
+        get { return buildingObj.buildingPrice; }
+        set { buildingObj.buildingPrice = value; }
+    }
+
+    public string IncrementGold              // 플레이어의 골드 증가량
+    {
+        get { return buildingObj.incrementGold; }
+        set { buildingObj.incrementGold = value; }
+    }
+
+   
+    public float Second
+    {
+        get { return buildingObj.second; }
+        set 
+        {
+            buildingObj.second = (int)value;
+            getGoldSlider.maxValue = (int)value;
+        }
+    }
+
+    //public Santa santa;             // 고용한 알바 (산타)
+
+    // UI 변수
     [SerializeField]
     private Slider getGoldSlider;       // 골드 획득 슬라이더
     private int count = 0;
@@ -67,25 +77,15 @@ public class Building : MonoBehaviour
     [SerializeField]
     private GameObject getGoldBtn;      // 골드 수동 획득 버튼
 
-    private float second;
-    public float Second
-    {
-        set
-        {
-            second = value;
-            getGoldSlider.maxValue = second;
-        }
-    }
+   
+    // 그 외 변수
 
-    public Santa santa;         // 고용한 알바 (산타)
+    public bool isAuto = false;     // 알바를 고용했는지? (알바를 고용했다면 골드 획득 자동화)
 
-    public bool isAuto = false;    // 알바를 고용한 건물은 골드 획득 자동화
-
-    private bool isClickGetBtn = false;   // 골드 획득이 수동일 때, 획득 UI를 클릭했으면 true, 아니면 false
+    private bool isClickGetBtn = false;   // 획득 UI를 클릭했으면 true, 아니면 false (골드 획득 수동일 때)
 
     private Vector3 distance;       // 카메라와의 거리
 
-    StringBuilder sb = new StringBuilder();
 
     // 캐싱
     private GameManager gameManager;
@@ -99,23 +99,8 @@ public class Building : MonoBehaviour
     #region 함수
 
     /// <summary>
-    /// 건물 초기 설정
+    /// 건물 생성 시
     /// </summary>
-    /// <param name="index">건물의 인덱스</param>
-    /// <param name="name">건물의 이름</param>
-    /// <param name="multiplyPrice">건물의 가격 증가 배수</param>
-    /// <param name="price">건물의 가격</param>
-    /// <param name="iGold">골드 증가량</param>
-    public void InitBuilding(int index, string name, float multiplyPrice, string price, string iGold, float second)
-    {
-        this.index = index;
-        buildingName = name;
-        multiplyBuildingPrice = multiplyPrice;
-        buildingPrice = price;
-        incrementGold = iGold;
-        Second = second;
-    }
-
     public void NewBuilding()
     {
         gameObject.SetActive(true);         // 건물이 보이도록
@@ -130,21 +115,22 @@ public class Building : MonoBehaviour
     /// <summary>
     /// 건물 업그레이드
     /// </summary>
-    public void Upgrade()
+    public bool Upgrade()
     {
-        if (!GoldManager.CompareBigintAndUnit(gameManager.MyGold, buildingPrice))
+        if (!GoldManager.CompareBigintAndUnit(gameManager.MyGold, BuildingPrice))
         {
-            return;
+            return false;
         }
 
-       
-        gameManager.MyGold -= GoldManager.UnitToBigInteger(buildingPrice);  // 업그레이드 비용 지불
+        gameManager.MyGold -= GoldManager.UnitToBigInteger(BuildingPrice);  // 업그레이드 비용 지불
 
-        buildingPrice = GoldManager.MultiplyUnit(buildingPrice, multiplyBuildingPrice); // 비용을 배율만큼 증가
+        BuildingPrice = GoldManager.MultiplyUnit(BuildingPrice, MultiplyBuildingPrice); // 비용을 배율만큼 증가
 
-        incrementGold = GoldManager.MultiplyUnit(incrementGold, 1.1f * gameManager.goldEfficiency);  // 골드 증가량을 배율만큼 증가
+        IncrementGold = GoldManager.MultiplyUnit(IncrementGold, 1.1f * gameManager.goldEfficiency);  // 골드 증가량을 배율만큼 증가
 
-        level++;
+        Level++;
+
+        return true;
     }
 
 
@@ -162,10 +148,6 @@ public class Building : MonoBehaviour
     /// </summary>
     public void ShowObjWindow()
     {
-        sb.Clear();
-        sb.Append("+ ");
-        sb.Append(incrementGold.ToString());
-
         window.Builidng = this;
         window.SetBuildingInfo();
 
@@ -205,6 +187,21 @@ public class Building : MonoBehaviour
     #endregion
 
     #region 코루틴
+
+    /// <summary>
+    /// 정해진 시간만큼 카운트
+    /// </summary>
+    IEnumerator TimeCount()
+    {
+        for (int i = 0; i <= Second; i++)
+        {
+            yield return waitForSecond1;
+
+            Count++;
+        }
+        Count = 0;
+    }
+
     /// <summary>
     /// 골드 획득 타이머
     /// </summary>
@@ -217,7 +214,7 @@ public class Building : MonoBehaviour
 
             if (isAuto)     // 자동화 상태이면 바로 골드 획득
             {
-                gameManager.MyGold += GoldManager.UnitToBigInteger(incrementGold);
+                gameManager.MyGold += GoldManager.UnitToBigInteger(IncrementGold);
             }
             else            // 수동 상태이면 UI 클릭을 기다림
             {
@@ -231,19 +228,6 @@ public class Building : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 정해진 시간만큼 카운트
-    /// </summary>
-    IEnumerator TimeCount()
-    {
-        for (int i = 0; i <= second; i++)
-        {
-            yield return waitForSecond1;
-
-            Count++;
-        }
-        Count = 0;
-    }
 
     /// <summary>
     /// 골드의 수동 획득을 대기 (UI 터치를 기다림)
@@ -256,9 +240,9 @@ public class Building : MonoBehaviour
         {
             yield return null;
 
-            if (isAuto)         // 수동 획득 대기 중 알바를 고용할 때
+            if (isAuto)         // 수동 획득 대기 중에 알바를 고용할 때
             {
-                gameManager.MyGold += GoldManager.UnitToBigInteger(incrementGold);
+                gameManager.MyGold += GoldManager.UnitToBigInteger(IncrementGold);
                 break;
             }
         }
@@ -275,6 +259,7 @@ public class Building : MonoBehaviour
         window = uiManager.clickObjWindow.transform.GetComponent<ClickObjWindow>();
 
         thisTransform = this.transform;
+
     }
    
     void Update()
