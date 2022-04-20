@@ -12,13 +12,8 @@ using System.Text;
 
 public class ClickObjWindow : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject buildingImages;
-    [SerializeField]
-    private GameObject santaImages;
-
-    private GameObject ObjImg;
-
+    #region 변수
+    // UI 변수
     [SerializeField]
     private Text NameText;
     [SerializeField]
@@ -27,55 +22,55 @@ public class ClickObjWindow : MonoBehaviour
     private Text DescText;
     [SerializeField]
     private Text PriceText;
-
     [SerializeField]
     private Button UpgradeButton;
 
+    [Header("----------- 오브젝트 이미지")]
+    [SerializeField]
+    private GameObject[] buildingImages;
+    [SerializeField]
+    private GameObject[] santaImages;
 
+    private GameObject ObjImg;
+
+    // 스트링 빌더
     StringBuilder levelSb = new StringBuilder();
     StringBuilder goldSb = new StringBuilder();
 
-    private string objName;
+    // 프로퍼티 
     public string ObjName
     {
-        set 
+        set
         {
-            objName = value;
-            NameText.text = objName;
+            NameText.text = value;
         }
     }
 
-    private int objLevel;
     public int ObjLevel
     {
         set
         {
-            objLevel = value;
-
             levelSb.Clear();
             levelSb.Append("Lv.");
-            levelSb.Append(objLevel.ToString());
+            levelSb.Append(value.ToString());
             LevelText.text = levelSb.ToString();
         }
     }
 
-    private string objAmount;
     public string ObjAmount
     {
         set
         {
-            objAmount = value;
-            DescText.text = objAmount;
+            DescText.text = value;
         }
     }
 
-    private string objPrice;
     public string ObjPrice
     {
+        get { return PriceText.text; }
         set
         {
-            objPrice = value;
-            PriceText.text = objPrice;
+            PriceText.text = value;
         }
     }
 
@@ -91,23 +86,26 @@ public class ClickObjWindow : MonoBehaviour
         set { santa = value; }
     }
 
+    public Object clickedObj;
+    #endregion
+
+    #region 함수
+
     /// <summary>
     /// 빌딩의 정보를 가져와 UI에 Set
     /// </summary>
     public void SetBuildingInfo()
     {
-        ObjName = building.BuilidingName;
-
-        ObjLevel = building.Level;
-        ObjPrice = building.BuildingPrice;
+        ObjName = clickedObj.buildingName;
+        ObjLevel = clickedObj.buildingLevel;
+        ObjPrice = clickedObj.buildingPrice;
 
         goldSb.Clear();
         goldSb.Append("+ ");
-        goldSb.Append(building.IncrementGold);
-        
+        goldSb.Append(clickedObj.incrementGold);
         ObjAmount = goldSb.ToString();
 
-        ObjImg = buildingImages.transform.GetChild(building.index).gameObject;
+        ObjImg = buildingImages[building.index].gameObject;
         ObjImg.SetActive(true);
     }
 
@@ -116,20 +114,36 @@ public class ClickObjWindow : MonoBehaviour
     /// </summary>
     public void SetSantaInfo()
     {
-        ObjName = santa.SantaName;
+        ObjName = clickedObj.santaName;
 
-        ObjLevel = santa.Level;
-        ObjPrice = santa.SantaPrice;
+        ObjLevel = clickedObj.santaLevel;
+        ObjPrice = clickedObj.santaPrice;
 
         goldSb.Clear();
         goldSb.Append("알바 효율 ");
-        goldSb.Append(santa.SantaEfficiency.ToString());
+        goldSb.Append(clickedObj.santaEfficiency.ToString());
         goldSb.Append("% 증가");
-
         ObjAmount = goldSb.ToString();
 
-        ObjImg = santaImages.transform.GetChild(santa.index).gameObject;
+        ObjImg = santaImages[santa.index].gameObject;
         ObjImg.SetActive(true);
+    }
+
+    /// <summary>
+    /// UI 새로고침
+    /// </summary>
+    void Refresh()
+    {
+        if (building && building.Upgrade())
+        {
+            SetBuildingInfo();
+        }
+        else if (santa && santa.Upgrade())
+        {
+            SetSantaInfo();
+        }
+
+        SetButtonInteractable();
     }
 
     /// <summary>
@@ -137,16 +151,7 @@ public class ClickObjWindow : MonoBehaviour
     /// </summary>
     public void UpgradeButtonClick()
     {
-        if (building && building.Upgrade())
-        {
-            SetBuildingInfo();
-        }
-        else if (santa)
-        {
-            santa.Upgrade();
-
-            SetSantaInfo();
-        }
+        Refresh();
     }
 
     /// <summary>
@@ -154,22 +159,29 @@ public class ClickObjWindow : MonoBehaviour
     /// </summary>
     void SetButtonInteractable()
     {
-        if (GoldManager.CompareBigintAndUnit(GameManager.Instance.MyGold, objPrice))        //가진 돈이 오브젝트의 가격보다 클 때
+        if (GoldManager.CompareBigintAndUnit(GameManager.Instance.MyGold, ObjPrice))        //가진 돈이 오브젝트의 가격보다 클 때
             UpgradeButton.interactable = true;
         else UpgradeButton.interactable = false;
     }
 
-   
-    void Update()
+
+    #endregion
+
+    #region 유니티 함수
+    private void OnEnable()
     {
-        SetButtonInteractable();
+        Refresh();
     }
 
     private void OnDisable()
     {
-        if (building)
-            building = null;
-        else if (santa)
-            santa = null;
+        if (building) building = null;
+        if (santa) santa = null;
+
+        if (ObjImg)
+        {
+            ObjImg.SetActive(false);
+        }
     }
+    #endregion
 }

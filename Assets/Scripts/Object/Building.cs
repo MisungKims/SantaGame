@@ -148,8 +148,8 @@ public class Building : MonoBehaviour
     /// </summary>
     public void ShowObjWindow()
     {
+        window.clickedObj = buildingObj;
         window.Builidng = this;
-        window.SetBuildingInfo();
 
         uiManager.ShowClickObjWindow();
     }

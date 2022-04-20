@@ -35,7 +35,7 @@ public class StoreObject : MonoBehaviour
     [SerializeField]
     GameObject unlockButton;                 // 자물쇠 이미지
 
-    [Header("----------------- 빌딩")]
+    [Header("----------------- 건물")]
 
     [SerializeField]
     Text buildingNameText;                  // 건물의 이름 Text
@@ -45,8 +45,9 @@ public class StoreObject : MonoBehaviour
     Text buildingPriceText;                  // 건물의 이름 Text
     [SerializeField]
     Text incrementGoldText;                  // 건물의 이름 Text
-    [SerializeField]
-    GameObject buildingImageGroup;                  // 건물의 이름 Text
+
+    public Image buildingImage;
+
 
     [Header("----------------- 산타")]
 
@@ -58,9 +59,11 @@ public class StoreObject : MonoBehaviour
     Text santaPriceText;                  // 건물의 이름 Text
     [SerializeField]
     Text efficiencyText;                  // 건물의 이름 Text
-    [SerializeField]
-    GameObject santaImageGroup;                  // 건물의 이름 Text
 
+    public Image santaImage;
+
+
+    // 그 외 변수
     public Object storeObject;
     public int index;
  
@@ -158,8 +161,6 @@ public class StoreObject : MonoBehaviour
     [Header("---------- 오브젝트")]
     private GameObject prerequisitesGb;
 
-    public GameObject buildingGroup;
-
     private Building buildingInstance;
 
     private Santa santaInstance;
@@ -213,9 +214,6 @@ public class StoreObject : MonoBehaviour
         UnlockLevel = storeObject.unlockLevel;
         Second = storeObject.second;
         Prerequisites = storeObject.prerequisites;
-
-        RefreshBuildingInfo();
-        RefreshSantaInfo();
     }
 
     /// <summary>

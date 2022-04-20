@@ -7,6 +7,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StoreManager : MonoBehaviour
 {
@@ -21,6 +22,11 @@ public class StoreManager : MonoBehaviour
     [Header("---------- 상점 오브젝트")]
     public GameObject storeObj;           // 복제가 될 상점의 UI 오브젝트 (프리팹)
     public GameObject storeObjParent;     // UI 오브젝트의 부모
+
+    [SerializeField]
+    Image[] buildingImages;    // 건물 이미지 배열
+    [SerializeField]
+    Image[] santaImages;    // 산타 이미지 배열
 
     [HideInInspector]
     public List<StoreObject> storeObjectList = new List<StoreObject>();
@@ -89,6 +95,20 @@ public class StoreManager : MonoBehaviour
 
         copiedStoreObject.index = i;
         copiedStoreObject.storeObject = newObject;
+
+        // 상점 오브젝트의 이미지 설정
+        copiedStoreObject.buildingImage.sprite = buildingImages[i].sprite;
+
+        RectTransform objRect = copiedStoreObject.buildingImage.transform.GetComponent<RectTransform>();
+        RectTransform ImgRect = buildingImages[i].transform.GetComponent<RectTransform>();
+        objRect.sizeDelta = ImgRect.sizeDelta;
+
+        copiedStoreObject.santaImage.sprite = santaImages[i].sprite;
+
+        objRect = copiedStoreObject.santaImage.transform.GetComponent<RectTransform>();
+        ImgRect = santaImages[i].transform.GetComponent<RectTransform>();
+        objRect.sizeDelta = ImgRect.sizeDelta;
+
 
         storeObjectList.Add(copiedStoreObject);
     }

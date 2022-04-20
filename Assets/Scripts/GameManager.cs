@@ -159,7 +159,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private float dayCount = 5f;        // 게임 속 에서 몇초마다 다음 날이 될 지
+    public float dayCount = 5f;        // 게임 속 에서 몇초마다 다음 날이 될 지
 
     public float goldEfficiency = 1.0f;         // 토끼 주민 초대 시 증가할 효율
 
@@ -266,7 +266,7 @@ public class GameManager : MonoBehaviour
                 Destroy(this.gameObject);
         }
 
-        Level = 1;
+        Level = 10;
         Gauge = 10;
         CitizenCount = 0;
         Day = 1;
