@@ -1,7 +1,7 @@
 /**
  * @brief 플레이어의 전반적인 것을 관리
  * @author 김미성
- * @date 22-04-18
+ * @date 22-04-20
  */
 
 using System.Collections;
@@ -47,12 +47,15 @@ public class GameManager : MonoBehaviour
     private Text citizenCountText;
     [SerializeField]
     private Text dateText;
-        
+    [SerializeField]
+    private GameObject gaugeBellImage;
+
+    private Animator gaugeAnim;
+
     public Text text;   // 나중에 지워야함
 
-   
-   // public string getDailyQuestRewardDate;              // 마지막으로 일일미션 보상을 받은 날짜
 
+    // 플레이어의 값
     StringBuilder gaugeSb = new StringBuilder();
     private float gauge;
     public float Gauge
@@ -62,10 +65,11 @@ public class GameManager : MonoBehaviour
         {
             gauge = value;
             gaugeSlider.value = gauge;
-
+            
             gaugeSb.Clear();
-            gaugeSb.Append(gauge.ToString());
+            gaugeSb.Append(gauge.ToString("N0"));
             gaugeSb.Append("%");
+
             gaugeText.text = gaugeSb.ToString();
         }
     }
@@ -155,15 +159,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private float dayCount = 5f;        // 게임 속 에서 몇초마다 다음 날이 될 지
 
     public float goldEfficiency = 1.0f;         // 토끼 주민 초대 시 증가할 효율
 
-    [SerializeField]
-    private float dayCount = 5f;
-    private WaitForSeconds waitForSeconds;
+    
+    private WaitForSeconds waitForSeconds;      // 캐싱
 
-    public int questid;
+    public int questid;     // 나중에 지워야 할 것
 
+  
     #endregion
 
     /* public void SuccessQuest()
@@ -171,8 +176,39 @@ public class GameManager : MonoBehaviour
         AchivementManager.Instance.Success(questid);
     }*/
 
+    #region 함수
+    /// <summary>
+    /// 레벨 업
+    /// </summary>
+    private void LevelUp()
+    {
+        Level++;
 
+        float remain = gauge - 100.0f;
+        Gauge = remain;
 
+        for (int i = 0; i < StoreManager.Instance.storeObjectList.Count; i++)
+        {
+            StoreManager.Instance.storeObjectList[i].Check();
+        }
+    }
+
+    /// <summary>
+    /// 게이지 상승 실행
+    /// </summary>
+    /// <param name="amount">획득할 게이지</param>
+    public void IncreaseGauge(float amount)
+    {
+        StartCoroutine(IncreaseGaugeCorou(amount));
+    }
+
+    #endregion
+
+    #region 코루틴
+    /// <summary>
+    /// 날짜 세기
+    /// </summary>
+    /// <returns></returns>
     IEnumerator DateCounting()
     {
         while (true)
@@ -183,6 +219,40 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 게이지 상승
+    /// </summary>
+    /// <param name="amount">획득할 게이지</param>
+    IEnumerator IncreaseGaugeCorou(float amount)
+    {
+        /// TODO : 효과음 실행
+
+        gaugeAnim.SetBool("isIncrease", true);      // 게이지 상승 애니메이션 실행
+
+        float goalGuage = gauge + amount;
+
+        while (gauge < goalGuage)
+        {
+            Gauge += 0.1f;
+
+            yield return new WaitForSeconds(0.001f);
+        }
+
+        Gauge = goalGuage;
+
+        gaugeAnim.SetBool("isIncrease", false);
+
+        if (gauge >= 100.0f)
+            LevelUp();
+    }
+
+    #endregion
+
+
+
+    #region 유니티 함수
+
+    #endregion
     private void Awake()
     {
         if (instance == null)
@@ -196,8 +266,8 @@ public class GameManager : MonoBehaviour
                 Destroy(this.gameObject);
         }
 
-        Level = 10;
-        Gauge = 0;
+        Level = 1;
+        Gauge = 10;
         CitizenCount = 0;
         Day = 1;
         MyGold = myGold;
@@ -205,11 +275,15 @@ public class GameManager : MonoBehaviour
         MyDia = myDia;
 
         waitForSeconds = new WaitForSeconds(dayCount);
+
+        gaugeAnim = gaugeBellImage.GetComponent<Animator>();
     }
 
     void Start()
     {
         StartCoroutine(DateCounting());
+
+        StartCoroutine(IncreaseGaugeCorou(20f));
 
         //BigInteger start = 100;
         //string value = start.ToString();
