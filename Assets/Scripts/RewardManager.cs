@@ -1,12 +1,13 @@
 /**
  * @brief 보상을 관리
  * @author 김미성
- * @date 22-04-18
+ * @date 22-04-21
  */
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// 보상의 종류
@@ -22,6 +23,23 @@ public enum ERewardType
 
 public class RewardManager : MonoBehaviour
 {
+    // 싱글톤
+    private static RewardManager instance;
+    public static RewardManager Instance
+    {
+        get { return instance; }
+    }
+
+    public Image[] rewardImages;                   // 보상 이미지
+
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(this.gameObject);
+    }
+
     /// <summary>
     /// 보상의 종류에 따라 보상 획득
     /// </summary>

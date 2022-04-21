@@ -520,6 +520,7 @@ MonoBehaviour:
   countText: {fileID: 3427329900004162938}
   rewardText: {fileID: 7732777178090563106}
   getRewardButton: {fileID: 7732777178470852467}
+  rewardImage: {fileID: 7732777178759350213}
   questType: 0
   rewardType: 0
 --- !u!1 &7732777178470852477
@@ -560,7 +561,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -15, y: 0}
-  m_SizeDelta: {x: 58.415, y: 32.7594}
+  m_SizeDelta: {x: 71.6975, y: 32.7594}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &7732777178470852465
 CanvasRenderer:
@@ -668,7 +669,7 @@ GameObject:
   - component: {fileID: 7732777178759350266}
   - component: {fileID: 7732777178759350213}
   m_Layer: 5
-  m_Name: Image
+  m_Name: RewardImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -681,16 +682,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7732777178759350215}
-  m_LocalRotation: {x: 0, y: -0, z: 0.98559403, w: -0.16912843}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7732777178470852466}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -3400.526}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 19.4, y: 7.5}
+  m_AnchoredPosition: {x: 5.06, y: 2.5005}
   m_SizeDelta: {x: 15, y: 15}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &7732777178759350266

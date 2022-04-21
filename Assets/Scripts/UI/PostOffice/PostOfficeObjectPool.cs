@@ -1,7 +1,7 @@
 /**
  * @brief 편지 UI 오브젝트 풀링
  * @author 김미성
- * @date 22-04-20
+ * @date 22-04-21
  */
 
 using System.Collections;
@@ -10,14 +10,40 @@ using UnityEngine;
 
 public class PostOfficeObjectPool : MonoBehaviour
 {
-    public static PostOfficeObjectPool Instance;
+    #region 변수
+    // 싱글톤
+    private static PostOfficeObjectPool instance;
+    public static PostOfficeObjectPool Instance
+    {
+        get { return instance; }
+    }
 
-    public GameObject cpyPostObject;     // 복제할 오브젝트
+    public GameObject cpyPostObject;     // 복제할 오브젝트 (프리팹)
     public Queue<PostObject> que = new Queue<PostObject>(); // 담을 큐
 
     private Transform parent;
+    #endregion
 
-    private void init(int count)
+    #region 유니티 함수
+    void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+
+        parent = PostOfficeManager.Instance.parent.transform;
+
+        Init(PostOfficeManager.Instance.maximum);
+    }
+    #endregion
+
+    #region 함수
+    /// <summary>
+    /// 초기에 Maximum만큼 생성
+    /// </summary>
+    /// <param name="count">편지함 Maximum</param>
+    private void Init(int count)
     {
         for (int i = 0; i < count; i++)
         {
@@ -28,21 +54,17 @@ public class PostOfficeObjectPool : MonoBehaviour
         }
     }
 
-    void Awake()
-    {
-        Instance = this;
-        parent = PostOfficeManager.Instance.parent.transform;
-
-        init(20);
-    }
-
+    /// <summary>
+    /// 큐에서 쓸 수 있는 오브젝트가 있으면 그것을 반환
+    /// </summary>
+    /// <param name="postStruct">반환할 것</param>
     public PostObject Get(PostStruct postStruct)
     {
         PostObject tempGb;
 
-        if (que.Count > 0) // 해당하는 큐에 게임 오브젝트가 남아 있으면 그것을 반환
+        if (que.Count > 0)
         {
-            tempGb = que.Dequeue(); //디큐를 통해서 실질적으로 반환
+            tempGb = que.Dequeue();
 
             tempGb.PostName = postStruct.name;
             tempGb.PostConent = postStruct.content;
@@ -51,18 +73,17 @@ public class PostOfficeObjectPool : MonoBehaviour
             return tempGb;
         }
 
-        //else // 큐에 더이상 없으면 새로 생성
-        //{
-        //    //Set(que.)
-        //    tempGb = GameObject.Instantiate(cpyPostObject, parent).GetComponent<PostObject>();
-        //}
-
         return null;
     }
 
-    public void Set(PostObject gb) // 나 다썼어 큐에 돌려줄게
+    /// <summary>
+    /// 다 쓴 오브젝트를 큐에 돌려줌
+    /// </summary>
+    /// <param name="post">돌려줄 것</param>
+    public void Set(PostObject post)
     {
-        gb.gameObject.SetActive(false);
-        que.Enqueue(gb);
+        post.gameObject.SetActive(false);
+        que.Enqueue(post);
     }
+    #endregion
 }

@@ -1,7 +1,7 @@
 /**
  * @details Ãâ¼® º¸»ó UI
  * @author ±è¹Ì¼º
- * @date 22-04-19
+ * @date 22-04-21
  */
 
 using System.Collections;
@@ -16,6 +16,8 @@ public class AttendanceObject : MonoBehaviour
     private Text RewardAmountText;
     [SerializeField]
     private Text DayText;
+    [SerializeField]
+    public Image RewardImage;
 
     private string rewardAmount;
     public string RewardAmount
@@ -39,8 +41,6 @@ public class AttendanceObject : MonoBehaviour
 
 
     public ERewardType rewardType;
-
-    //private bool isGet; 
 
     // Ä³½Ì
     private AttendanceManager attendanceManager;
