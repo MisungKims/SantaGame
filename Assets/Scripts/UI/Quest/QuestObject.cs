@@ -1,14 +1,13 @@
 /**
  * @brief Äù½ºÆ® UI, ¿Ï·á ½Ã º¸»ó È¹µæ
  * @author ±è¹Ì¼º
- * @date 22-04-18
+ * @date 22-04-21
  */
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
 
 public class QuestObject : MonoBehaviour
 {
@@ -26,6 +25,8 @@ public class QuestObject : MonoBehaviour
     private Text rewardText;
     [SerializeField]
     private Button getRewardButton;
+    [SerializeField]
+    private Image rewardImage;
 
     private int questMaxCount;
     public int QuestMaxCount
@@ -96,7 +97,8 @@ public class QuestObject : MonoBehaviour
         QuestMaxCount = quest.maxCount;
         QuestCount = 0;
 
-        this.rewardType = RewardManager.StringToRewardType(quest.rewardType);
+        rewardType = RewardManager.StringToRewardType(quest.rewardType);
+        rewardImage.sprite = RewardManager.Instance.rewardImages[(int)rewardType].sprite;
 
         QuestRewardAmount = quest.amount;
     }

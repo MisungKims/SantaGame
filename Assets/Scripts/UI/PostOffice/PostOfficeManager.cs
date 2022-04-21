@@ -1,7 +1,7 @@
 /**
  * @details CSV 파일을 가져와 편지 발송
  * @author 김미성
- * @date 22-04-20
+ * @date 22-04-21
  */
 
 using System.Collections;
@@ -52,10 +52,7 @@ public class PostOfficeManager : MonoBehaviour
     public WritingPad writingPad;
 
     // 그 외 변수
-    [SerializeField]
-    float second = 10f;             // 편지를 언제마다 발송할지
-
-    int maximum = 20;        // 편지함 맥시멈
+    public int maximum = 20;        // 편지함 맥시멈
 
     #endregion
 
@@ -67,7 +64,7 @@ public class PostOfficeManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        waitForSeconds = new WaitForSeconds(GameManager.Instance.dayCount);     // 다음 날이 될 때마다 편지 전송
+        waitForSeconds = new WaitForSeconds(GameManager.Instance.dayCount);     // 다음 날이 될 때마다 편지를 전송하기 위함
 
         SetTransform();
 
@@ -144,15 +141,20 @@ public class PostOfficeManager : MonoBehaviour
     /// </summary>
     void PostOfficeInstance(PostStruct post)
     {
-        PostObject newObj = PostOfficeObjectPool.Instance.Get(post);
+        PostObject newObj = PostOfficeObjectPool.Instance.Get(post);           // 오브젝트 풀에서 꺼냄
 
-        if (newObj == null)     // 편지함이 꽉 찼을 때
+        if (newObj == null)     // 편지함이 꽉 찼을 때에는 생성하지 않음
         {
             return;
         }
 
-        newObj.transform.GetComponent<RectTransform>().anchoredPosition = UITransformList[postUIList.Count];
+        newObj.transform.GetComponent<RectTransform>().anchoredPosition = UITransformList[0];       // 새로온 편지는 맨 상단으로 가도록
         newObj.index = postUIList.Count;
+
+        for (int i = 0; i < postUIList.Count; i++)          // 오래된 편지가 밑으로 가도록 UI를 다시 배치
+        {
+            postUIList[i].RefreshTransform(UITransformList[postUIList.Count - i]);
+        }
 
         parentRectTransform.sizeDelta = parentSizeList[postUIList.Count];
 
@@ -165,23 +167,20 @@ public class PostOfficeManager : MonoBehaviour
     /// <param name="index"></param>
     public void Refresh(int index)
     {
-        PostOfficeObjectPool.Instance.Set(postUIList[index]);
-        
-        // 리스트 재정렬
-        for (int i = index; i < postUIList.Count - 1; i++)
-        {
-            postUIList[i] = postUIList[i + 1];
-        }
-       
-        postUIList.RemoveAt(postUIList.Count - 1);
+        PostOfficeObjectPool.Instance.Set(postUIList[index]);           // 오브젝트 풀에 돌려줌
+        postUIList.RemoveAt(index);
 
-        // UI 배치 다시
+        // UI 배치를 다시
         for (int i = 0; i < postUIList.Count; i++)
         {
-            postUIList[i].RefreshTransform(UITransformList[i]);
+            postUIList[i].index = i;
+            postUIList[i].RefreshTransform(UITransformList[postUIList.Count - 1 - i]);
         }
 
-        parentRectTransform.sizeDelta = parentSizeList[postUIList.Count];
+        if (postUIList.Count != 0)
+        {
+            parentRectTransform.sizeDelta = parentSizeList[postUIList.Count - 1];
+        }
     }
     #endregion
 }

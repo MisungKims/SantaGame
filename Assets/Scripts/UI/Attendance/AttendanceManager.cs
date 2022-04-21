@@ -1,12 +1,13 @@
 /**
  * @brief 출석 보상을 관리
  * @author 김미성
- * @date 22-04-19
+ * @date 22-04-21
  */
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System;
 
 #region 구조체
@@ -24,7 +25,9 @@ public class AttendanceManager : MonoBehaviour
 
     // UI 변수
     [SerializeField]
-    private GameObject[] rewardObjs;                    // 생성될 오브젝트(프리팹)
+    private GameObject rewardObj;                    // 생성될 오브젝트(프리팹)
+    //[SerializeField]
+    //private Image[] rewardImages;                   // 보상 이미지
     [SerializeField]
     private RectTransform[] objRectTransforms;          // 각 인스턴스의 위치를 담은 배열
     [SerializeField]
@@ -90,13 +93,14 @@ public class AttendanceManager : MonoBehaviour
 
         int index = (int)rewardType;
 
-        AttendanceObject attendanceObject = GameObject.Instantiate(rewardObjs[index], parent.transform).GetComponent<AttendanceObject>();
+        AttendanceObject attendanceObject = GameObject.Instantiate(rewardObj, parent.transform).GetComponent<AttendanceObject>();
 
         attendanceObject.transform.GetComponent<RectTransform>().anchoredPosition = objRectTransforms[i].anchoredPosition;
 
         attendanceObject.rewardType = rewardType;
         attendanceObject.RewardAmount = attendance.amount;
         attendanceObject.Day = (i + 1).ToString();
+        attendanceObject.RewardImage.sprite = RewardManager.Instance.rewardImages[index].sprite;
     }
 
     /// <summary>

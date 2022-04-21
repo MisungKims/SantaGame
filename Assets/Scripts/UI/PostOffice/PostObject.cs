@@ -1,7 +1,7 @@
 /**
  * @details 편지의 내용을 가진 오브젝트
  * @author 김미성
- * @date 22-04-19
+ * @date 22-04-21
  */
 
 using System.Collections;
@@ -100,6 +100,10 @@ public class PostObject : MonoBehaviour
         PostOfficeManager.Instance.Refresh(index);
     }
 
+    /// <summary>
+    /// 해당 UI의 위치를 새로 고침
+    /// </summary>
+    /// <param name="vector">변경할 위치</param>
     public void RefreshTransform(Vector2 vector)
     {
         this.transform.GetComponent<RectTransform>().anchoredPosition = vector;
