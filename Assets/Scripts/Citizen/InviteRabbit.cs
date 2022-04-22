@@ -1,7 +1,7 @@
 /**
  * @details 토끼를 초대
  * @author 김미성
- * @date 22-04-18
+ * @date 22-04-23
  */
 
 using System.Collections;
@@ -15,6 +15,8 @@ public class InviteRabbit : MonoBehaviour
     // UI 변수
     [SerializeField]
     private Text priceText;
+    [SerializeField]
+    private Text citizenCountText;
     [SerializeField]
     private GameObject rabbit;
     [SerializeField]
@@ -31,6 +33,7 @@ public class InviteRabbit : MonoBehaviour
         }
     }
 
+
     // 토끼 초대 비용 증가 시 필요
     private float magnification = 1.7f;
 
@@ -43,6 +46,11 @@ public class InviteRabbit : MonoBehaviour
     {
         gameManager = GameManager.Instance;
         priceText.text = price;
+    }
+
+    private void OnEnable()
+    {
+        citizenCountText.text = (gameManager.CitizenCount + 1).ToString();
     }
     #endregion
 
