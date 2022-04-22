@@ -16,6 +16,9 @@ public class Background : MonoBehaviour
 
     Material mat;
 
+    [SerializeField]
+    bool isCross;
+
     private void Start()
     {
         mat = GetComponent<Image>().material;
@@ -24,9 +27,17 @@ public class Background : MonoBehaviour
 
     void Update()
     {
-        // Material의 Offset의 y값을 조정하여 위에서 아래로 움직이는 것 처럼 보이게 함
-
-        mat.SetTextureOffset("_MainTex", new Vector2(0, Time.time * speed));
+        if (isCross)
+        {
+            // Material의 Offset의 x, y값을 조정하여 대각선으로 움직이는 것 처럼 보이게 함
+            mat.SetTextureOffset("_MainTex", new Vector2(Time.time * speed, Time.time * -speed));
+        }
+        else
+        {
+            // Material의 Offset의 y값을 조정하여 위에서 아래로 움직이는 것 처럼 보이게 함
+            mat.SetTextureOffset("_MainTex", new Vector2(0, Time.time * speed));
+        }
+        
     }
 }
 

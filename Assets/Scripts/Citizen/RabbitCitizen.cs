@@ -72,7 +72,7 @@ public class RabbitCitizen : MonoBehaviour
         waitForSecond = new WaitForSeconds(waitSecond);
 
         StartCoroutine(GetCarrotTimer());                   // 당근 획득 타이머 실행
-        StartCoroutine(Action());
+        StartCoroutine(Action());       /// TODO : 초대 시 문제발생
     }
     #endregion
 
