@@ -171,6 +171,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1915813081382522873}
+  - component: {fileID: 5007123920030333928}
+  - component: {fileID: 6071016469029466722}
   m_Layer: 0
   m_Name: DreamExplorer
   m_TagString: Untagged
@@ -197,6 +199,33 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 128.172, z: 0}
+--- !u!114 &5007123920030333928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287331802858018115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b84d03505fa4dd498af01931532ef18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: "\uAFC8 \uD0D0\uD5D8\uAD00"
+  content: "\uAFC8 \uD0D0\uD5D8\uAD00\uC5D0 \uC785\uC7A5\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
+--- !u!65 &6071016469029466722
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287331802858018115}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.9879227, y: 7.3838215, z: 2.418188}
+  m_Center: {x: 0.061901644, y: 3.1919107, z: 0.70909697}
 --- !u!1 &1994614731191162506
 GameObject:
   m_ObjectHideFlags: 0

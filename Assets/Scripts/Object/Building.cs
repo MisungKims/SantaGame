@@ -110,6 +110,8 @@ public class Building : MonoBehaviour
         ShowObjWindow();                    // 오브젝트 정보 창이 보이도록
 
         StartCoroutine(Increment());        // 골드획득 시작
+
+        ObjectManager.Instance.unlockCount++;
     }
 
     /// <summary>

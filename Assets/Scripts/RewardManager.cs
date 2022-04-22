@@ -32,12 +32,15 @@ public class RewardManager : MonoBehaviour
 
     public Image[] rewardImages;                   // 보상 이미지
 
+    // 캐싱
+   
     private void Awake()
     {
         if (instance == null)
             instance = this;
         else
             Destroy(this.gameObject);
+
     }
 
     /// <summary>
@@ -57,6 +60,7 @@ public class RewardManager : MonoBehaviour
                 break;
 
             case ERewardType.puzzle:
+                PuzzleManager.Instance.GetPiece(EPuzzle.rcCar, 1);      /// TODO: 추후 변경
                 break;
 
             case ERewardType.clothesBox:

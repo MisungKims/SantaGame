@@ -107,7 +107,7 @@ public class AttendanceManager : MonoBehaviour
     /// º¸»ó È¹µæ
     /// </summary>
     /// <param name="day">¹ÞÀ» ³¯Â¥</param>
-    public void GetReward(string day)
+    public bool GetReward(string day)
     {
         if (CheckCanGetReward(day))
         {
@@ -121,10 +121,11 @@ public class AttendanceManager : MonoBehaviour
             AttendanceStruct newAttandance = attendance;
             newAttandance.isGet = true;
 
-            attendance = newAttandance;
+            attendanceList[int.Parse(day) - 1] = newAttandance;
 
-            /// TODO : º¸»ó È¹µæ ¿Ï·á µµÀå »ý¼º
+            return true;
         }
+        else return false;
     }
 
     /// <summary>

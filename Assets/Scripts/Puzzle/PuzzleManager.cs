@@ -23,6 +23,7 @@ public class PuzzleManager : MonoBehaviour
     //UI변수
     public Image[] PuzzleImages;    // 퍼즐 배경 이미지 배열
 
+    
     public List<Puzzle> puzzleList = new List<Puzzle>();    // 퍼즐의 모든 정보를 담고 있는 리스트
 
     private List<Image[]> puzzlePieceList = new List<Image[]>();         // 각 퍼즐의 조각들을 담고 있는 리스트
@@ -35,6 +36,7 @@ public class PuzzleManager : MonoBehaviour
 
     // 캐싱
     private PuzzleUI puzzleUI;
+    private GetRewardWindow getRewardWindow;
 
 
     // 싱글톤
@@ -54,7 +56,9 @@ public class PuzzleManager : MonoBehaviour
         else
             Destroy(this.gameObject);
 
-        puzzleUI = PuzzleUI.Instance;
+        puzzleUI = UIManager.Instance.puzzlePanel;
+
+        getRewardWindow = UIManager.Instance.getRewardWindow;
 
         InitPuzzlePieceList();
 
@@ -99,10 +103,33 @@ public class PuzzleManager : MonoBehaviour
     // 테스트 용
     public void get()
     {
-        GetPiece(EPuzzle.rcCar, 0);
-        GetPiece(EPuzzle.rcCar, 1);
-        GetPiece(EPuzzle.rcCar, 2);
+        //GetPiece(EPuzzle.rcCar, 0);
+        //GetPiece(EPuzzle.rcCar, 1);
+        //GetPiece(EPuzzle.rcCar, 2);
+
+        StartCoroutine(getCoru());
     }
+
+    IEnumerator getCoru()
+    {
+        GetPiece(EPuzzle.rcCar, 0);
+
+        while (!getRewardWindow.isTouch)
+        {
+            yield return null;
+        }
+
+        GetPiece(EPuzzle.rcCar, 1);
+
+        while (!getRewardWindow.isTouch)
+        {
+            yield return null;
+        }
+
+        GetPiece(EPuzzle.rcCar, 2);
+    }    
+
+    
 
     /// <summary>
     /// 퍼즐 조각 획득
@@ -121,10 +148,12 @@ public class PuzzleManager : MonoBehaviour
         IsSuccess(ePuzzle);     // 퍼즐을 다 완성했는지 확인
 
         // 퍼즐 UI가 열려있고 얻은 퍼즐을 보여주고 있다면 새로고침
-        if (PuzzleUI.Instance.gameObject.activeSelf && PuzzleUI.Instance.ePuzzle == ePuzzle)
+        if (puzzleUI.gameObject.activeSelf && puzzleUI.ePuzzle == ePuzzle)
         {
-            PuzzleUI.Instance.RefreshPieceImage(pieceIndex);
+            puzzleUI.RefreshPieceImage(pieceIndex);
         }
+
+        getRewardWindow.OpenWindow(puzzlePiece.pieceImage.sprite);      // 보상 획득창 보여줌
     }
 
     /// <summary>
@@ -136,6 +165,24 @@ public class PuzzleManager : MonoBehaviour
         int RandomPieceIndex = Random.Range(0, 13);
 
         GetPiece((EPuzzle)RandomPuzzleIndex, RandomPieceIndex);
+    }
+
+    /// <summary>
+    /// 다수의 랜덤 퍼즐 조각 획득
+    /// </summary>
+    /// <param name="count">획득할 조각의 개수</param>
+    /// <returns></returns>
+    IEnumerator GetManyRandomPiece(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            GetRandomPuzzle();
+
+            while (!getRewardWindow.isTouch)        // 보상 획득 창이 닫힐 때까지 대기
+            {
+                yield return null;
+            }
+        }
     }
 
     /// <summary>

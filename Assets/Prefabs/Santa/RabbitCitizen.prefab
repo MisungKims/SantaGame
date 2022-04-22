@@ -382,7 +382,9 @@ GameObject:
   - component: {fileID: 7791495445768499683}
   - component: {fileID: -7271785132494898796}
   - component: {fileID: 7882312169074711633}
-  - component: {fileID: 7795823280174412244}
+  - component: {fileID: 7941762316778675134}
+  - component: {fileID: 892857013391077404}
+  - component: {fileID: -8659168409574597642}
   m_Layer: 0
   m_Name: RabbitCitizen
   m_TagString: Santa
@@ -420,6 +422,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c070a4f3b220854ca9a0ca5d242ac78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  carrot: 100.0A
+  moveSpeed: 2
+  citizenBehavior: 0
+  nav: {fileID: -8659168409574597642}
+  rabbitMat: {fileID: 7914683007052765767}
+  materials:
+  - {fileID: 2100000, guid: 85e1d4e0bef11c44993f6bd97d160f78, type: 2}
+  - {fileID: 2100000, guid: b1f405594d254064baf0a153d52850c1, type: 2}
+  - {fileID: 2100000, guid: 9edd23eed4189454587a5d6b6092a185, type: 2}
+  - {fileID: 2100000, guid: d4fc16eb0238c4041b81d5a13ddcfef2, type: 2}
+  - {fileID: 2100000, guid: bd1269658db2b5344be14a334492c28a, type: 2}
+  - {fileID: 2100000, guid: 216c56202c691fb4796142205d46ac31, type: 2}
+  - {fileID: 2100000, guid: 68516bc38731ffd4aa4b06ac12131e2e, type: 2}
+  - {fileID: 2100000, guid: 0e2adbba9bfb82148865ccd4e19b34f0, type: 2}
+  - {fileID: 2100000, guid: 43bf47c888f70144ab301be0160be48d, type: 2}
+  - {fileID: 2100000, guid: 2e21923c9ac0a56429a2992570bf32d4, type: 2}
+  - {fileID: 2100000, guid: a27adfefe87144c4fa38ffa708e3f911, type: 2}
+  - {fileID: 2100000, guid: 2a5fd24aa4a80634789891ff64feb45e, type: 2}
 --- !u!95 &7882312169074711633
 Animator:
   serializedVersion: 3
@@ -430,7 +450,7 @@ Animator:
   m_GameObject: {fileID: 7797250450615995639}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 49afdd6a5de3005468e28c1ebef7f43c, type: 3}
-  m_Controller: {fileID: 9100000, guid: a28d4a83542e9634586dc37b903e99e1, type: 2}
+  m_Controller: {fileID: 9100000, guid: 62cad47184f75014093366aa06fe8626, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -439,8 +459,24 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!64 &7795823280174412244
-MeshCollider:
+--- !u!54 &7941762316778675134
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7797250450615995639}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!65 &892857013391077404
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -449,10 +485,31 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  serializedVersion: 2
+  m_Size: {x: 0.27518037, y: 0.574158, z: 0.33069786}
+  m_Center: {x: 0.0042525535, y: 0.27546927, z: -0.0033029316}
+--- !u!195 &-8659168409574597642
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7797250450615995639}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &7797259337699422533
 GameObject:
   m_ObjectHideFlags: 0
