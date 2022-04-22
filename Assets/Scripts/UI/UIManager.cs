@@ -18,10 +18,12 @@ public class UIManager : MonoBehaviour
         get { return instance; }
     }
 
-    [Header("---------- 패널")]
+    [Header("---------- UI 변수")]
     public GameObject mainPanel;
-    public GameObject questionWindow;
+    public QuestionWindow questionWindow;
     public GameObject clickObjWindow;
+    public GetRewardWindow getRewardWindow;
+    public PuzzleUI puzzlePanel;
 
     public GameObject store;
 
@@ -49,24 +51,24 @@ public class UIManager : MonoBehaviour
         clickObjWindow.SetActive(false);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public void ShowQuestionWindow()
-    {
-        if (!clickObjWindow.activeSelf)
-        {
-            questionWindow.SetActive(true);
-        }
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    //public void ShowQuestionWindow()
+    //{
+    //    if (!clickObjWindow.activeSelf)
+    //    {
+    //        questionWindow.SetActive(true);
+    //    }
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public void HideQuestionWindow()
-    {
-        questionWindow.SetActive(false);
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    //public void HideQuestionWindow()
+    //{
+    //    questionWindow.SetActive(false);
+    //}
 
 
 

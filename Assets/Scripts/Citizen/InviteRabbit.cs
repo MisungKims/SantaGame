@@ -11,6 +11,8 @@ using UnityEngine.UI;
 
 public class InviteRabbit : MonoBehaviour
 {
+    #region 변수
+    // UI 변수
     [SerializeField]
     private Text priceText;
     [SerializeField]
@@ -18,6 +20,7 @@ public class InviteRabbit : MonoBehaviour
     [SerializeField]
     private GameObject rabbitGroup;
 
+    // 프로퍼티
     private string price = "100";
     public string Price
     {
@@ -28,16 +31,22 @@ public class InviteRabbit : MonoBehaviour
         }
     }
 
+    // 토끼 초대 비용 증가 시 필요
     private float magnification = 1.7f;
 
+    // 캐싱
     private GameManager gameManager;
+    #endregion
 
+    #region 유니티 함수
     private void Awake()
     {
         gameManager = GameManager.Instance;
         priceText.text = price;
     }
+    #endregion
 
+    #region 함수
     /// <summary>
     /// 토끼를 초대 (인스펙터에서 호출)
     /// </summary>
@@ -59,4 +68,5 @@ public class InviteRabbit : MonoBehaviour
         Price = GoldManager.MultiplyUnit(price, magnification);
         magnification += 0.5f;
     }
+    #endregion
 }

@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &5565026202624633616
 Transform:
@@ -59,7 +59,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &5565026202735535618
 Transform:
@@ -89,7 +89,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &5565026203557704794
 Transform:
@@ -187,9 +187,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 7.768
       objectReference: {fileID: 0}
+    - target: {fileID: 1334092343017269524, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
       propertyPath: m_Name
       value: Bush_3 (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
@@ -261,9 +269,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 26.432
       objectReference: {fileID: 0}
+    - target: {fileID: 1334092343017269524, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
       propertyPath: m_Name
       value: Bush_3 (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
@@ -279,9 +295,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5565026203557704794}
     m_Modifications:
+    - target: {fileID: 5897495450521498201, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6113940924785846591, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
       propertyPath: m_Name
       value: Bush_1 (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6113940924785846591, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6298499446544955876, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
       propertyPath: m_RootOrder
@@ -401,6 +425,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WinterFell_Grass_01 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 9031210707047396285, guid: 3a77ec10722edab40946a27d27d7c28b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a77ec10722edab40946a27d27d7c28b, type: 3}
 --- !u!4 &4261653459436028530 stripped
@@ -418,6 +446,10 @@ PrefabInstance:
     - target: {fileID: 6049463744567080049, guid: 13b4ca34ccc043848907fec66b463acb, type: 3}
       propertyPath: m_Name
       value: WinterFell_Barrel_03
+      objectReference: {fileID: 0}
+    - target: {fileID: 6049463744567080049, guid: 13b4ca34ccc043848907fec66b463acb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6395062636856618699, guid: 13b4ca34ccc043848907fec66b463acb, type: 3}
       propertyPath: m_RootOrder
@@ -545,9 +577,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -34.452
       objectReference: {fileID: 0}
+    - target: {fileID: 1334092343017269524, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
       propertyPath: m_Name
       value: Bush_3 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
@@ -563,6 +603,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5565026202624633616}
     m_Modifications:
+    - target: {fileID: 135881980683749265, guid: c1fc1975678f205408cde228ec6ec1c4, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2282226050167343858, guid: c1fc1975678f205408cde228ec6ec1c4, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 2839624031272590541, guid: c1fc1975678f205408cde228ec6ec1c4, type: 3}
       propertyPath: m_RootOrder
       value: 11
@@ -623,6 +671,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: WinterFell_Stones_01
       objectReference: {fileID: 0}
+    - target: {fileID: 3180543741305423479, guid: c1fc1975678f205408cde228ec6ec1c4, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4399987873770859725, guid: c1fc1975678f205408cde228ec6ec1c4, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c1fc1975678f205408cde228ec6ec1c4, type: 3}
 --- !u!4 &7661378169179154974 stripped
@@ -640,6 +696,10 @@ PrefabInstance:
     - target: {fileID: 3604206504073228549, guid: f3ed6c1b464eed04dae00af40864289d, type: 3}
       propertyPath: m_Name
       value: WinterFell_Snow_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 3604206504073228549, guid: f3ed6c1b464eed04dae00af40864289d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4129631622341307327, guid: f3ed6c1b464eed04dae00af40864289d, type: 3}
       propertyPath: m_RootOrder
@@ -747,6 +807,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WinterFell_Grass_01
       objectReference: {fileID: 0}
+    - target: {fileID: 9031210707047396285, guid: 3a77ec10722edab40946a27d27d7c28b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a77ec10722edab40946a27d27d7c28b, type: 3}
 --- !u!4 &4261653459251413304 stripped
@@ -817,9 +881,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 33.228
       objectReference: {fileID: 0}
+    - target: {fileID: 1334092343017269524, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
       propertyPath: m_Name
       value: Bush_3 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
@@ -891,9 +963,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -34.452
       objectReference: {fileID: 0}
+    - target: {fileID: 1334092343017269524, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
       propertyPath: m_Name
       value: Bush_3 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
@@ -912,6 +992,10 @@ PrefabInstance:
     - target: {fileID: 4771342284947033253, guid: fbbea8de8b8208d4bae7bca2c71e9721, type: 3}
       propertyPath: m_Name
       value: Fir_1 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4771342284947033253, guid: fbbea8de8b8208d4bae7bca2c71e9721, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4988239271742635766, guid: fbbea8de8b8208d4bae7bca2c71e9721, type: 3}
       propertyPath: m_RootOrder
@@ -969,6 +1053,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 178.259
       objectReference: {fileID: 0}
+    - target: {fileID: 5165013032873620925, guid: fbbea8de8b8208d4bae7bca2c71e9721, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5759867151927951288, guid: fbbea8de8b8208d4bae7bca2c71e9721, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fbbea8de8b8208d4bae7bca2c71e9721, type: 3}
 --- !u!4 &577367750602545034 stripped
@@ -986,6 +1078,10 @@ PrefabInstance:
     - target: {fileID: 4771342284947033253, guid: fbbea8de8b8208d4bae7bca2c71e9721, type: 3}
       propertyPath: m_Name
       value: Fir_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4771342284947033253, guid: fbbea8de8b8208d4bae7bca2c71e9721, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4988239271742635766, guid: fbbea8de8b8208d4bae7bca2c71e9721, type: 3}
       propertyPath: m_RootOrder
@@ -1043,6 +1139,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 113.087
       objectReference: {fileID: 0}
+    - target: {fileID: 5165013032873620925, guid: fbbea8de8b8208d4bae7bca2c71e9721, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5759867151927951288, guid: fbbea8de8b8208d4bae7bca2c71e9721, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fbbea8de8b8208d4bae7bca2c71e9721, type: 3}
 --- !u!4 &577367750537797658 stripped
@@ -1057,9 +1161,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5565026203557704794}
     m_Modifications:
+    - target: {fileID: 5897495450521498201, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6113940924785846591, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
       propertyPath: m_Name
       value: Bush_1 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6113940924785846591, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6298499446544955876, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
       propertyPath: m_RootOrder
@@ -1131,6 +1243,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5565026203557704794}
     m_Modifications:
+    - target: {fileID: 470603304235781801, guid: 5086d61fe7073fb488d548aff13445ef, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 2563745301025777068, guid: 5086d61fe7073fb488d548aff13445ef, type: 3}
       propertyPath: m_RootOrder
       value: 9
@@ -1191,6 +1307,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bush_2 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8130269659112542208, guid: 5086d61fe7073fb488d548aff13445ef, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5086d61fe7073fb488d548aff13445ef, type: 3}
 --- !u!4 &7975506724513389238 stripped
@@ -1205,9 +1325,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5565026202624633616}
     m_Modifications:
+    - target: {fileID: 7514093238976838, guid: 9c5dd6ff05b29f14f8ba07a51b09dd4d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 1270787189090958449, guid: 9c5dd6ff05b29f14f8ba07a51b09dd4d, type: 3}
       propertyPath: m_Name
       value: Fir_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1270787189090958449, guid: 9c5dd6ff05b29f14f8ba07a51b09dd4d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1298775306164118985, guid: 9c5dd6ff05b29f14f8ba07a51b09dd4d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3853999397007527952, guid: 9c5dd6ff05b29f14f8ba07a51b09dd4d, type: 3}
       propertyPath: m_RootOrder
@@ -1335,9 +1467,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 113.087
       objectReference: {fileID: 0}
+    - target: {fileID: 5304155662761627300, guid: c2be05b2f7c6c3643969e47f37b1aeb7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7877229417551319716, guid: c2be05b2f7c6c3643969e47f37b1aeb7, type: 3}
       propertyPath: m_Name
       value: Tree_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7877229417551319716, guid: c2be05b2f7c6c3643969e47f37b1aeb7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2be05b2f7c6c3643969e47f37b1aeb7, type: 3}
@@ -1353,9 +1493,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5565026203557704794}
     m_Modifications:
+    - target: {fileID: 5897495450521498201, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6113940924785846591, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
       propertyPath: m_Name
       value: Bush_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6113940924785846591, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6298499446544955876, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
       propertyPath: m_RootOrder
@@ -1430,6 +1578,10 @@ PrefabInstance:
     - target: {fileID: 3604206504073228549, guid: f3ed6c1b464eed04dae00af40864289d, type: 3}
       propertyPath: m_Name
       value: WinterFell_Snow_01 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3604206504073228549, guid: f3ed6c1b464eed04dae00af40864289d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4129631622341307327, guid: f3ed6c1b464eed04dae00af40864289d, type: 3}
       propertyPath: m_RootOrder
@@ -1545,9 +1697,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 151.232
       objectReference: {fileID: 0}
+    - target: {fileID: 1334092343017269524, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
       propertyPath: m_Name
       value: Bush_3 (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
@@ -1614,6 +1774,10 @@ PrefabInstance:
     - target: {fileID: 9031210707047396285, guid: 3a77ec10722edab40946a27d27d7c28b, type: 3}
       propertyPath: m_Name
       value: WinterFell_Grass_01 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 9031210707047396285, guid: 3a77ec10722edab40946a27d27d7c28b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a77ec10722edab40946a27d27d7c28b, type: 3}
@@ -1685,9 +1849,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 47.819
       objectReference: {fileID: 0}
+    - target: {fileID: 1334092343017269524, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
       propertyPath: m_Name
       value: Bush_3 (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
@@ -1703,9 +1875,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5565026203557704794}
     m_Modifications:
+    - target: {fileID: 5897495450521498201, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6113940924785846591, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
       propertyPath: m_Name
       value: Bush_1 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6113940924785846591, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6298499446544955876, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
       propertyPath: m_RootOrder
@@ -1833,9 +2013,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -61.079
       objectReference: {fileID: 0}
+    - target: {fileID: 1334092343017269524, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
       propertyPath: m_Name
       value: Bush_3 (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
@@ -1851,9 +2039,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5565026203557704794}
     m_Modifications:
+    - target: {fileID: 5897495450521498201, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6113940924785846591, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
       propertyPath: m_Name
       value: Bush_1 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6113940924785846591, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6298499446544955876, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
       propertyPath: m_RootOrder
@@ -1925,6 +2121,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5565026203557704794}
     m_Modifications:
+    - target: {fileID: 470603304235781801, guid: 5086d61fe7073fb488d548aff13445ef, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 2563745301025777068, guid: 5086d61fe7073fb488d548aff13445ef, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -1985,6 +2185,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bush_2
       objectReference: {fileID: 0}
+    - target: {fileID: 8130269659112542208, guid: 5086d61fe7073fb488d548aff13445ef, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5086d61fe7073fb488d548aff13445ef, type: 3}
 --- !u!4 &7975506726084185346 stripped
@@ -1999,6 +2203,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5565026203557704794}
     m_Modifications:
+    - target: {fileID: 470603304235781801, guid: 5086d61fe7073fb488d548aff13445ef, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 2563745301025777068, guid: 5086d61fe7073fb488d548aff13445ef, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -2058,6 +2266,10 @@ PrefabInstance:
     - target: {fileID: 8130269659112542208, guid: 5086d61fe7073fb488d548aff13445ef, type: 3}
       propertyPath: m_Name
       value: Bush_2 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8130269659112542208, guid: 5086d61fe7073fb488d548aff13445ef, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5086d61fe7073fb488d548aff13445ef, type: 3}
@@ -2132,6 +2344,10 @@ PrefabInstance:
     - target: {fileID: 3105019348358508096, guid: 05447865c55bbac4ea06b64eb4edcdc6, type: 3}
       propertyPath: m_Name
       value: WinterFell_Trunk_0_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3105019348358508096, guid: 05447865c55bbac4ea06b64eb4edcdc6, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 05447865c55bbac4ea06b64eb4edcdc6, type: 3}
@@ -2211,6 +2427,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HotSpring
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 90375cc67f5b3714c84765ce5db79b7b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 90375cc67f5b3714c84765ce5db79b7b, type: 3}
 --- !u!4 &5381881430583754466 stripped
@@ -2281,9 +2501,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -34.452
       objectReference: {fileID: 0}
+    - target: {fileID: 1334092343017269524, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
       propertyPath: m_Name
       value: Bush_3 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
@@ -2299,9 +2527,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5565026203557704794}
     m_Modifications:
+    - target: {fileID: 5897495450521498201, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6113940924785846591, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
       propertyPath: m_Name
       value: Bush_1 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6113940924785846591, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6298499446544955876, guid: cc803ff0f0b7c2b4b9fd20f8b77757c0, type: 3}
       propertyPath: m_RootOrder
@@ -2429,9 +2665,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 120.399
       objectReference: {fileID: 0}
+    - target: {fileID: 1334092343017269524, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
       propertyPath: m_Name
       value: Bush_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3093450959663468634, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c0e54b556d7c624589336b98eec8ce9, type: 3}

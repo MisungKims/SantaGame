@@ -1,7 +1,7 @@
 /**
  * @details CSV 파일을 파싱하여 오브젝트(건물, 산타) 리스트 생성
  * @author 김미성
- * @date 22-04-20
+ * @date 22-04-22
  */
 
 using System.Collections;
@@ -10,19 +10,24 @@ using UnityEngine;
 
 public class ObjectManager : MonoBehaviour
 {
-    // 싱글톤
-    private static ObjectManager instance;
-    public static ObjectManager Instance
-    {
-        get { return instance; }
-    }
+    #region 변수
 
+    public int unlockCount = 1;     // 잠금해제된 건물의 수
+    
     // 리스트
     public List<Building> buildingList = new List<Building>();
 
     public List<Santa> santaList = new List<Santa>();
 
     public List<Object> objectList = new List<Object>();    // 오브젝트의 모든 정보를 가진 리스트
+
+    // 싱글톤
+    private static ObjectManager instance;
+    public static ObjectManager Instance
+    {
+        get { return instance; }
+    }
+    #endregion
 
 
     public void Awake()
