@@ -17,7 +17,7 @@ public class Background : MonoBehaviour
     Material mat;
 
     [SerializeField]
-    bool isCross;
+    bool isCross;       // 대각선으로 움직일 것인지?
 
     private void Start()
     {
@@ -37,7 +37,7 @@ public class Background : MonoBehaviour
             // Material의 Offset의 y값을 조정하여 위에서 아래로 움직이는 것 처럼 보이게 함
             mat.SetTextureOffset("_MainTex", new Vector2(0, Time.time * speed));
         }
-        
+
     }
 }
 

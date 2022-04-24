@@ -8,10 +8,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class GetRewardWindow : MonoBehaviour
 {
-    public Image RewardImg;
+    [SerializeField]
+    private Text RewardName;
+    [SerializeField]
+    private Text RewardGrade;
+    [SerializeField]
+    private Image RewardImg;
+    
+
     public bool isTouch;
 
     private void OnEnable()
@@ -20,12 +28,26 @@ public class GetRewardWindow : MonoBehaviour
     }
 
     /// <summary>
+    /// 선물 획득 창을 열 때 초기 설정
+    /// </summary>
+    /// <param name="sprite">보여줄 이미지</param>
+    public void OpenWindow(Gift gift)
+    {
+        this.gameObject.SetActive(true);
+        RewardName.text = gift.giftName;
+        RewardGrade.text = Enum.GetName(typeof(EGiftGrade), (int)gift.giftGrade);
+        RewardImg.sprite = gift.giftImage;
+    }
+
+    /// <summary>
     /// 보상 획득 창을 열 때 초기 설정
     /// </summary>
     /// <param name="sprite">보여줄 이미지</param>
-    public void OpenWindow(Sprite sprite)
+    public void OpenWindow(string name, Sprite sprite)
     {
         this.gameObject.SetActive(true);
+        RewardName.text = name;
+        RewardGrade.text = "";
         RewardImg.sprite = sprite;
     }
 

@@ -9,21 +9,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// 퍼즐 그림 종류
-/// </summary>
-public enum EPuzzle
-{
-    rcCar
-}
 
 public class PuzzleManager : MonoBehaviour
 {
     #region 변수
     //UI변수
-    public Image[] PuzzleImages;    // 퍼즐 배경 이미지 배열
+    public Sprite[] PuzzleImages;    // 퍼즐 배경 이미지 배열
 
-    
     public List<Puzzle> puzzleList = new List<Puzzle>();    // 퍼즐의 모든 정보를 담고 있는 리스트
 
     private List<Image[]> puzzlePieceList = new List<Image[]>();         // 각 퍼즐의 조각들을 담고 있는 리스트
@@ -95,7 +87,7 @@ public class PuzzleManager : MonoBehaviour
                 pieceList.Add(puzzlePiece);
             }
 
-            Puzzle puzzle = new Puzzle((EPuzzle)i, PuzzleImages[i], pieceList, buttons[i], false);
+            Puzzle puzzle = new Puzzle(PuzzleImages[i], pieceList, buttons[i], false);
             puzzleList.Add(puzzle);
         }
     }
@@ -112,21 +104,21 @@ public class PuzzleManager : MonoBehaviour
 
     IEnumerator getCoru()
     {
-        GetPiece(EPuzzle.rcCar, 0);
+        GetPiece(EGiftType.RCcar, 0);
 
         while (!getRewardWindow.isTouch)
         {
             yield return null;
         }
 
-        GetPiece(EPuzzle.rcCar, 1);
+        GetPiece(EGiftType.RCcar, 1);
 
         while (!getRewardWindow.isTouch)
         {
             yield return null;
         }
 
-        GetPiece(EPuzzle.rcCar, 2);
+        GetPiece(EGiftType.RCcar, 2);
     }    
 
     
@@ -136,7 +128,7 @@ public class PuzzleManager : MonoBehaviour
     /// </summary>
     /// <param name="ePuzzle">획득한 퍼즐의 종류</param>
     /// <param name="pieceIndex">퍼즐 조각 인덱스</param>
-    public void GetPiece(EPuzzle ePuzzle, int pieceIndex)
+    public void GetPiece(EGiftType ePuzzle, int pieceIndex)
     {
         PuzzlePiece puzzlePiece = puzzleList[(int)ePuzzle].puzzlePieceList[pieceIndex];
         puzzlePiece.isGet = true;
@@ -148,12 +140,12 @@ public class PuzzleManager : MonoBehaviour
         IsSuccess(ePuzzle);     // 퍼즐을 다 완성했는지 확인
 
         // 퍼즐 UI가 열려있고 얻은 퍼즐을 보여주고 있다면 새로고침
-        if (puzzleUI.gameObject.activeSelf && puzzleUI.ePuzzle == ePuzzle)
+        if (puzzleUI.gameObject.activeSelf && puzzleUI.puzzleType == ePuzzle)
         {
             puzzleUI.RefreshPieceImage(pieceIndex);
         }
 
-        getRewardWindow.OpenWindow(puzzlePiece.pieceImage.sprite);      // 보상 획득창 보여줌
+        getRewardWindow.OpenWindow("퍼즐 조각", puzzlePiece.pieceImage.sprite);      // 보상 획득창 보여줌
     }
 
     /// <summary>
@@ -161,10 +153,12 @@ public class PuzzleManager : MonoBehaviour
     /// </summary>
     public void GetRandomPuzzle()
     {
-        int RandomPuzzleIndex = Random.Range(0, (int)EPuzzle.rcCar + 1);        // rcCar를 맨 마지막껄로 바꾸기
-        int RandomPieceIndex = Random.Range(0, 13);
+        EGiftType RandomPuzzleIndex = GiftManager.Instance.RandomGift().giftType;        // 확률에 따라 랜덤으로 퍼즐 그림 정하기
+        
+        int RandomPieceIndex = Random.Range(0, 13);         // 그 퍼즐의 어떤 조각을 가져올지
 
-        GetPiece((EPuzzle)RandomPuzzleIndex, RandomPieceIndex);
+        //GetPiece(RandomPuzzleIndex, RandomPieceIndex);
+        Debug.Log(RandomPuzzleIndex + " " + RandomPieceIndex);
     }
 
     /// <summary>
@@ -189,7 +183,7 @@ public class PuzzleManager : MonoBehaviour
     /// 퍼즐을 다 완성했는지 체크
     /// </summary>
     /// <param name="ePuzzle">체크할 퍼즐</param>
-    public void IsSuccess(EPuzzle ePuzzle)
+    public void IsSuccess(EGiftType ePuzzle)
     {
         for (int i = 0; i < puzzleList[(int)ePuzzle].puzzlePieceList.Count; i++)
         {

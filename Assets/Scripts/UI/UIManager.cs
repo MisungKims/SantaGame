@@ -24,6 +24,7 @@ public class UIManager : MonoBehaviour
     public GameObject clickObjWindow;
     public GetRewardWindow getRewardWindow;
     public PuzzleUI puzzlePanel;
+    public GameObject snowPanel;
 
     public GameObject store;
 
@@ -51,28 +52,12 @@ public class UIManager : MonoBehaviour
         clickObjWindow.SetActive(false);
     }
 
-    ///// <summary>
-    ///// 
-    ///// </summary>
-    //public void ShowQuestionWindow()
-    //{
-    //    if (!clickObjWindow.activeSelf)
-    //    {
-    //        questionWindow.SetActive(true);
-    //    }
-    //}
-
-    ///// <summary>
-    ///// 
-    ///// </summary>
-    //public void HideQuestionWindow()
-    //{
-    //    questionWindow.SetActive(false);
-    //}
+    
 
 
 
     #endregion
+
 
     private void Awake()
     {
