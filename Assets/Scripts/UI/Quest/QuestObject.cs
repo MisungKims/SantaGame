@@ -95,10 +95,10 @@ public class QuestObject : MonoBehaviour
         questNameText.text = name;
 
         QuestMaxCount = quest.maxCount;
-        QuestCount = 0;
-
+        QuestCount = quest.count;
+       
         rewardType = RewardManager.StringToRewardType(quest.rewardType);
-        rewardImage.sprite = RewardManager.Instance.rewardImages[(int)rewardType].sprite;
+        rewardImage.sprite = RewardManager.Instance.rewardImages[(int)rewardType].sprite;   // 보상의 종류에 따라 이미지 set
 
         QuestRewardAmount = quest.amount;
     }
