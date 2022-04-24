@@ -30,7 +30,7 @@ public class RewardManager : MonoBehaviour
         get { return instance; }
     }
 
-    public Image[] rewardImages;                   // 보상 이미지
+    public Sprite[] rewardImages;                   // 보상 이미지
 
     // 캐싱
    
@@ -60,7 +60,7 @@ public class RewardManager : MonoBehaviour
                 break;
 
             case ERewardType.puzzle:
-                PuzzleManager.Instance.GetPiece(EPuzzle.rcCar, 1);      /// TODO: 추후 변경
+                PuzzleManager.Instance.GetRandomPuzzle();
                 break;
 
             case ERewardType.clothesBox:

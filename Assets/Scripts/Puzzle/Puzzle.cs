@@ -11,15 +11,13 @@ using UnityEngine.UI;
 
 public class Puzzle
 {
-    public EPuzzle ePuzzle;     // 필요하지 않은 거 같음
-    public Image puzzleImage;
+    public Sprite puzzleImage;
     public List<PuzzlePiece> puzzlePieceList = new List<PuzzlePiece>();
     public PuzzleButton button;
     public bool isSuccess;
 
-    public Puzzle(EPuzzle ePuzzle, Image puzzleImage, List<PuzzlePiece> puzzlePieceList, PuzzleButton button, bool isSuccess)
+    public Puzzle(Sprite puzzleImage, List<PuzzlePiece> puzzlePieceList, PuzzleButton button, bool isSuccess)
     {
-        this.ePuzzle = ePuzzle;
         this.puzzleImage = puzzleImage;
         this.puzzlePieceList = puzzlePieceList;
         this.button = button;

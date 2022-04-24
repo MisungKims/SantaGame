@@ -28,11 +28,11 @@ public class GiftShop : MonoBehaviour
     private Animator anim;
 
     // 캐싱
-    private GetRewardWindow getRewardWindow;
+    private GiftManager giftManager;
 
     private void Awake()
     {
-        getRewardWindow = UIManager.Instance.getRewardWindow;
+        giftManager = GiftManager.Instance;
     }
 
     private void OnEnable()
@@ -56,6 +56,7 @@ public class GiftShop : MonoBehaviour
     /// </summary>
     public void ClickLever()
     {
+        Debug.Log("click");
         count++;
         anim.SetInteger("Animation", count);
 
@@ -64,6 +65,10 @@ public class GiftShop : MonoBehaviour
         RandBall();
     }
 
+    /// <summary>
+    /// 애니메이션이 끝났으면 선물 받기
+    /// </summary>
+    /// <returns></returns>
     IEnumerator IsEndAnim()
     {
         while (true)
@@ -82,13 +87,16 @@ public class GiftShop : MonoBehaviour
         }
 
         anim.SetInteger("Animation", -1);
-        OpenGetRewardUI();
+        GetRandomGift();
     }
 
-    void OpenGetRewardUI()
+    /// <summary>
+    /// 랜덤 선물을 인벤토리에 넣기
+    /// </summary>
+    void GetRandomGift()
     {
-
-        Debug.Log("open");
-        //UIManager.Instance.getRewardWindow.OpenWindow();      // 보상 획득창 보여줌
-    }    
+        Gift randomGift = giftManager.RandomGift();
+        
+        giftManager.ReceiveGift(randomGift);        // 인벤토리에 넣기
+    }
 }

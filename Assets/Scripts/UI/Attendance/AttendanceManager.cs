@@ -99,7 +99,7 @@ public class AttendanceManager : MonoBehaviour
         attendanceObject.rewardType = rewardType;
         attendanceObject.RewardAmount = attendance.amount;
         attendanceObject.Day = (i + 1).ToString();
-        attendanceObject.RewardImage.sprite = RewardManager.Instance.rewardImages[(int)rewardType].sprite;
+        attendanceObject.RewardImage.sprite = RewardManager.Instance.rewardImages[(int)rewardType];
     }
 
     /// <summary>

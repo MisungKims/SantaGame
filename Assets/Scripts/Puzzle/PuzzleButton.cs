@@ -13,7 +13,7 @@ public class PuzzleButton : MonoBehaviour
 {
     #region 변수
     [SerializeField]
-    private EPuzzle ePuzzle;
+    private EGiftType puzzleType;       // 퍼즐 그림의 종류
 
     [SerializeField]
     private Text countText;
@@ -34,7 +34,7 @@ public class PuzzleButton : MonoBehaviour
     // 버튼을 누르면 퍼즐 UI가 해당 퍼즐로 변경
     public void SetPuzzleEnum()
     {
-        PuzzleUI.Instance.ePuzzle = ePuzzle;
+        PuzzleUI.Instance.puzzleType = puzzleType;
     }
     #endregion
 }
