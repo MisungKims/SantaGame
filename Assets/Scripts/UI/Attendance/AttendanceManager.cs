@@ -91,16 +91,15 @@ public class AttendanceManager : MonoBehaviour
     {
         ERewardType rewardType = RewardManager.StringToRewardType(attendance.rewardType);
 
-        int index = (int)rewardType;
-
         AttendanceObject attendanceObject = GameObject.Instantiate(rewardObj, parent.transform).GetComponent<AttendanceObject>();
 
+        // 위치 설정
         attendanceObject.transform.GetComponent<RectTransform>().anchoredPosition = objRectTransforms[i].anchoredPosition;
 
         attendanceObject.rewardType = rewardType;
         attendanceObject.RewardAmount = attendance.amount;
         attendanceObject.Day = (i + 1).ToString();
-        attendanceObject.RewardImage.sprite = RewardManager.Instance.rewardImages[index].sprite;
+        attendanceObject.RewardImage.sprite = RewardManager.Instance.rewardImages[(int)rewardType].sprite;
     }
 
     /// <summary>
