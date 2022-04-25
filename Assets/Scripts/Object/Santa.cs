@@ -65,6 +65,8 @@ public class Santa : MonoBehaviour
     {
         gameObject.SetActive(true);
 
+        Building.isAuto = true;     // 골드 자동화 시작
+
         SetCamTargetThis();                 // 카메라가 산타를 따라다니도록
 
         ShowObjWindow();                    // 클릭 오브젝트창 보여줌

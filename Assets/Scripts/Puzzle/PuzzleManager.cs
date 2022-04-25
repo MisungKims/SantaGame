@@ -61,6 +61,13 @@ public class PuzzleManager : MonoBehaviour
 
     #region 함수
 
+    [SerializeField]
+    GameObject PuzzlePanel;
+    public void OpenPuzzlePanel()
+    {
+        PuzzlePanel.SetActive(true);
+    }
+
     /// <summary>
     /// 퍼즐 조각 리스트에 각 퍼즐의 조각 이미지를 넣어줌
     /// </summary>
@@ -119,10 +126,10 @@ public class PuzzleManager : MonoBehaviour
         }
 
         GetPiece(EGiftType.RCcar, 2);
-    }    
+    }
 
-    
 
+  
     /// <summary>
     /// 퍼즐 조각 획득
     /// </summary>

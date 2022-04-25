@@ -8,6 +8,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// TODO : 인스펙터에서 우체국으로 이동하기
+
 #region 구조체
 public struct PostStruct
 {

@@ -44,18 +44,17 @@ public class Building : MonoBehaviour
     public string IncrementGold              // 플레이어의 골드 증가량
     {
         get { return buildingObj.incrementGold; }
-        set { buildingObj.incrementGold = value; }
+        set 
+        { 
+            buildingObj.incrementGold = value;
+            getGoldAmountText.text = $"+ {IncrementGold}";
+        }
     }
 
    
     public float Second
     {
         get { return buildingObj.second; }
-        set 
-        {
-            buildingObj.second = (int)value;
-            getGoldSlider.maxValue = (int)value;
-        }
     }
 
     //public Santa santa;             // 고용한 알바 (산타)
@@ -73,6 +72,9 @@ public class Building : MonoBehaviour
             getGoldSlider.value = count;
         }
     }
+
+    [SerializeField]
+    private Text getGoldAmountText;       // 골드 획득 슬라이더의 텍스트
 
     [SerializeField]
     private GameObject getGoldBtn;      // 골드 수동 획득 버튼
@@ -109,6 +111,7 @@ public class Building : MonoBehaviour
 
         ShowObjWindow();                    // 오브젝트 정보 창이 보이도록
 
+        getGoldSlider.maxValue = (int)Second;
         StartCoroutine(Increment());        // 골드획득 시작
 
         ObjectManager.Instance.unlockCount++;
@@ -191,20 +194,6 @@ public class Building : MonoBehaviour
     #region 코루틴
 
     /// <summary>
-    /// 정해진 시간만큼 카운트
-    /// </summary>
-    IEnumerator TimeCount()
-    {
-        for (int i = 0; i <= Second; i++)
-        {
-            yield return waitForSecond1;
-
-            Count++;
-        }
-        Count = 0;
-    }
-
-    /// <summary>
     /// 골드 획득 타이머
     /// </summary>
     IEnumerator Increment()
@@ -230,6 +219,20 @@ public class Building : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 정해진 시간만큼 카운트
+    /// </summary>
+    IEnumerator TimeCount()
+    {
+        Count = 0;
+
+        for (int i = 0; i <= Second; i++)
+        {
+            yield return waitForSecond1;
+
+            Count++;
+        }
+    }
 
     /// <summary>
     /// 골드의 수동 획득을 대기 (UI 터치를 기다림)

@@ -448,12 +448,12 @@ GameObject:
   - component: {fileID: 6850625229824540885}
   - component: {fileID: 1084291597713348944}
   m_Layer: 5
-  m_Name: Check
+  m_Name: Stamp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1375203512743524814
 RectTransform:
   m_ObjectHideFlags: 0
@@ -468,10 +468,10 @@ RectTransform:
   m_Father: {fileID: 1441594307705220439}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 29.0961, y: 26.439}
+  m_SizeDelta: {x: -10, y: -10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6850625229824540885
 CanvasRenderer:
@@ -501,7 +501,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 88969cf74d6d27f4095a6a455c73dbed, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cfa1c82639536a44ea82521971bad35a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
