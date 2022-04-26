@@ -18,6 +18,8 @@ public class UIManager : MonoBehaviour
         get { return instance; }
     }
 
+    public bool isOpenPanel;
+
     [Header("---------- UI º¯¼ö")]
     public GameObject mainPanel;
     public QuestionWindow questionWindow;
@@ -25,6 +27,7 @@ public class UIManager : MonoBehaviour
     public GetRewardWindow getRewardWindow;
     public PuzzleUI puzzlePanel;
     public GameObject snowPanel;
+    public GameObject citizenPanel;
 
     public GameObject store;
 
@@ -52,10 +55,10 @@ public class UIManager : MonoBehaviour
         clickObjWindow.SetActive(false);
     }
 
-    
-
-
-
+    public void SetisOpenPanel(bool value)
+    {
+        isOpenPanel = value;
+    }
     #endregion
 
 

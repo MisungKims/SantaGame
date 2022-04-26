@@ -116,6 +116,8 @@ public class Building : MonoBehaviour
         StartCoroutine(Increment());        // 골드획득 시작
 
         ObjectManager.Instance.unlockCount++;
+
+        getGoldSlider.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -166,7 +168,7 @@ public class Building : MonoBehaviour
     /// </summary>
     void TouchBuilding()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !uiManager.isOpenPanel)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit = new RaycastHit();
@@ -183,7 +185,7 @@ public class Building : MonoBehaviour
     }
 
     /// <summary>
-    /// 수동 획득 버튼 클릭 (인스펙터에서 호출)
+    /// 수동 획득 버튼 클릭
     /// </summary>
     public void ClickGetBtn()
     {
@@ -204,11 +206,7 @@ public class Building : MonoBehaviour
         {
             yield return StartCoroutine(TimeCount());
 
-            if (isAuto)     // 자동화 상태이면 바로 골드 획득
-            {
-                gameManager.MyGold += GoldManager.UnitToBigInteger(IncrementGold);
-            }
-            else            // 수동 상태이면 UI 클릭을 기다림
+            if(!isAuto)            // 수동 상태이면 UI 클릭을 기다림
             {
                 getGoldSlider.gameObject.SetActive(false);
 
@@ -217,6 +215,8 @@ public class Building : MonoBehaviour
                 getGoldSlider.gameObject.SetActive(true);
                 getGoldBtn.SetActive(false);
             }
+
+            gameManager.MyGold += GoldManager.UnitToBigInteger(IncrementGold);      // 골드 획득
         }
     }
 
@@ -248,10 +248,11 @@ public class Building : MonoBehaviour
 
             if (isAuto)         // 수동 획득 대기 중에 알바를 고용할 때
             {
-                gameManager.MyGold += GoldManager.UnitToBigInteger(IncrementGold);
                 break;
             }
         }
+
+        isClickGetBtn = false;
     }
     #endregion
 
