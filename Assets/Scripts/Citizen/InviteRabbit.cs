@@ -33,6 +33,15 @@ public class InviteRabbit : MonoBehaviour
         }
     }
 
+    private int count;
+    public int Count
+    {
+        set
+        {
+            citizenCountText.text = value.ToString();
+        }
+    }
+
 
     // 토끼 초대 비용 증가 시 필요
     private float magnification = 1.7f;
@@ -50,7 +59,7 @@ public class InviteRabbit : MonoBehaviour
 
     private void OnEnable()
     {
-        citizenCountText.text = (gameManager.CitizenCount + 1).ToString();
+        Count = (gameManager.CitizenCount + 1);
     }
     #endregion
 
@@ -66,6 +75,8 @@ public class InviteRabbit : MonoBehaviour
         }
 
         GameObject.Instantiate(rabbit, rabbitGroup.transform);          // 토끼 주민 생성
+
+        Count = (gameManager.CitizenCount + 1);
 
         gameManager.MyCarrots -= GoldManager.UnitToBigInteger(price);  // 초대 비용 지불
 
