@@ -27,7 +27,7 @@ public class QuestManager : MonoBehaviour
     // UI 배치에 필요한 변수
     protected Vector3 startPos = new Vector3(0, 102, 0);
     protected Vector2 startParentSize = new Vector2(0, 52);
-    protected float nextYPos = -50;
+    protected float nextYPos;
     protected float increaseParentYSize = 20;
     private RectTransform rectTransform;
     private RectTransform parentRectTransform;

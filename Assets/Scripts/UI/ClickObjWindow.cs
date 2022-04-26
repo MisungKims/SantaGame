@@ -1,7 +1,7 @@
 /**
  * @details 산타 혹은 건물을 클릭했을 때 보이는 UI
  * @author 김미성
- * @date 22-04-20
+ * @date 22-04-26
  */
 
 using System.Collections;
@@ -24,14 +24,13 @@ public class ClickObjWindow : MonoBehaviour
     private Text PriceText;
     [SerializeField]
     private Button UpgradeButton;
-
-    [Header("----------- 오브젝트 이미지")]
     [SerializeField]
-    private GameObject[] buildingImages;
+    private Image buildingImg;
     [SerializeField]
-    private GameObject[] santaImages;
+    private Image santaImg;
 
-    private GameObject ObjImg;
+    [SerializeField]
+    private Sprite santasprite;
 
     // 스트링 빌더
     StringBuilder levelSb = new StringBuilder();
@@ -105,8 +104,8 @@ public class ClickObjWindow : MonoBehaviour
         goldSb.Append(clickedObj.incrementGold);
         ObjAmount = goldSb.ToString();
 
-        ObjImg = buildingImages[building.index].gameObject;
-        ObjImg.SetActive(true);
+        buildingImg.sprite = clickedObj.buildingSprite;
+        buildingImg.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -125,25 +124,8 @@ public class ClickObjWindow : MonoBehaviour
         goldSb.Append("% 증가");
         ObjAmount = goldSb.ToString();
 
-        ObjImg = santaImages[santa.index].gameObject;
-        ObjImg.SetActive(true);
-    }
-
-    /// <summary>
-    /// UI 새로고침
-    /// </summary>
-    void Refresh()
-    {
-        if (building && building.Upgrade())
-        {
-            SetBuildingInfo();
-        }
-        else if (santa && santa.Upgrade())
-        {
-            SetSantaInfo();
-        }
-
-        SetButtonInteractable();
+        santaImg.sprite = clickedObj.santaSprite;
+        santaImg.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -154,6 +136,24 @@ public class ClickObjWindow : MonoBehaviour
         Refresh();
     }
 
+    /// <summary>
+    /// UI 새로고침
+    /// </summary>
+    void Refresh()
+    {
+        if (building && building.Upgrade())     // 빌딩 업그레이드
+        {
+            SetBuildingInfo();
+        }
+        else if (santa && santa.Upgrade())      // 산타 업그레이드
+        {
+            SetSantaInfo();
+        }
+
+        SetButtonInteractable();
+    }
+
+  
     /// <summary>
     /// 업그레이드 버튼의 Interactable 설정
     /// </summary>
@@ -175,12 +175,15 @@ public class ClickObjWindow : MonoBehaviour
 
     private void OnDisable()
     {
-        if (building) building = null;
-        if (santa) santa = null;
-
-        if (ObjImg)
+        if (building)
         {
-            ObjImg.SetActive(false);
+            building = null;
+            buildingImg.gameObject.SetActive(false);
+        }
+        if (santa)
+        {
+            santa = null;
+            santaImg.gameObject.SetActive(false);
         }
     }
     #endregion

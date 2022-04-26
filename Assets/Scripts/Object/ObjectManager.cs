@@ -1,7 +1,7 @@
 /**
  * @details CSV 파일을 파싱하여 오브젝트(건물, 산타) 리스트 생성
  * @author 김미성
- * @date 22-04-22
+ * @date 22-04-26
  */
 
 using System.Collections;
@@ -16,10 +16,14 @@ public class ObjectManager : MonoBehaviour
     
     // 리스트
     public List<Building> buildingList = new List<Building>();
-
+    
     public List<Santa> santaList = new List<Santa>();
-
+    
     public List<Object> objectList = new List<Object>();    // 오브젝트의 모든 정보를 가진 리스트
+
+    public Sprite[] buildingSprites;
+    public Sprite[] santaSprites;
+
 
     // 싱글톤
     private static ObjectManager instance;
@@ -63,6 +67,8 @@ public class ObjectManager : MonoBehaviour
                 prerequisites = null;
             else prerequisites = data[i-1]["이름"].ToString();
 
+
+
             Object newObject = new Object(
                 data[i]["Desc"].ToString(),
                 (int)data[i]["잠금 해제 레벨"],
@@ -72,11 +78,13 @@ public class ObjectManager : MonoBehaviour
                 data[i]["건물 가격"].ToString(),
                 (float)data[i]["건물 가격 배수"],
                 data[i]["골드 증가량"].ToString(),
+                buildingSprites[i],
                 data[i]["산타 이름"].ToString(),
                 0,
                 data[i]["산타 가격"].ToString(),
                 (int)data[i]["산타 가격 배수"],
                 (int)data[i]["알바 효율 증가"],
+                santaSprites[i],
                 prerequisites
                 );
 
