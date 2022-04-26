@@ -118,7 +118,7 @@ public class Santa : MonoBehaviour
     /// </summary>
     void TouchSanta()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !uiManager.isOpenPanel)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit = new RaycastHit();

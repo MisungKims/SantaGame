@@ -127,9 +127,13 @@ public class GoldManager : MonoBehaviour
             BigInteger decimalPoint = BigInteger.Parse((Regex.Replace(strArr[1], "[^0-9]", "")));   // 소수점 한자리
             string unitStr = Regex.Replace(strArr[1], "[^A-Z]", "");                                // 단위
 
+            if (unitStr == "")
+            {
+                return value;
+            }
+
             if (decimalPoint == 0)
             {
-
                 return (unitsMap[unitStr] * value);
             }
             else

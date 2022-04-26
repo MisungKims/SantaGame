@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CitizenButtonRay : ButtonRaycast
+public class GetGoldButtonRay : ButtonRaycast
 {
-    public RabbitCitizen citizen;
+    [SerializeField]
+    private Building building;
 
     protected override void Touched()
     {
-        citizen.isTouch = true;
+        building.ClickGetBtn();
     }
 }

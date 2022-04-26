@@ -269,6 +269,35 @@ public class RabbitCitizen : MonoBehaviour
         result = Vector3.zero;
         return false;
     }
+
+    /// <summary>
+    /// 카메라가 해당 산타를 따라다님
+    /// </summary>
+    public void SetCamTargetThis()
+    {
+        UIManager.Instance.citizenPanel.SetActive(true);
+        CameraMovement.Instance.ChaseSanta(this.transform);
+    }
+
+    /// <summary>
+    /// 산타 터치 시 카메라의 타깃을 산타로 설정
+    /// </summary>
+    void TouchSanta()
+    {
+        if (Input.GetMouseButtonDown(0) && !UIManager.Instance.isOpenPanel)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit = new RaycastHit();
+
+            if (true == (Physics.Raycast(ray.origin, ray.direction * 10, out hit)))
+            {
+                if (hit.collider.CompareTag("Santa") && hit.collider.name == this.name)
+                {
+                    SetCamTargetThis();
+                }
+            }
+        }
+    }
     #endregion
 
     private void Update()
@@ -280,6 +309,7 @@ public class RabbitCitizen : MonoBehaviour
             //Vector3 ButtonPos = Camera.main.WorldToScreenPoint(newPos);
             getCarrotButton.transform.position = newPos;
         }
-        
+
+        TouchSanta();
     }
 }
