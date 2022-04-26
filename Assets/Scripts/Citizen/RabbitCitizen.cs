@@ -2,7 +2,7 @@
  * @brief 토끼 주민
  * @details 토끼 주민 (랜덤한 시간마다 당근 Get, AI)
  * @author 김미성
- * @date 22-04-22
+ * @date 22-04-26
  */
 
 using System.Collections;
@@ -31,7 +31,7 @@ public class RabbitCitizen : MonoBehaviour
 
     private float waitSecond;           // 당근을 몇 초마다 얻을건지
 
-    private bool isTouch = false;       // 당근 획득 UI를 클릭했는지
+    
 
     private goal goal;      // 사용 중인 건물의 위치
     private int usingIndex; // 사용 중인 건물 위치의 인덱스
@@ -42,6 +42,10 @@ public class RabbitCitizen : MonoBehaviour
     private Animator anim;
     [SerializeField]
     private NavMeshAgent nav;
+
+
+    private CitizenButtonRay getCarrotButton;      // 당근 획득 UI
+    public bool isTouch = false;       // 당근 획득 UI를 클릭했는지
 
     // 머터리얼
     [SerializeField]
@@ -61,16 +65,17 @@ public class RabbitCitizen : MonoBehaviour
         gameManager = GameManager.Instance;
         anim = GetComponent<Animator>();
 
-    }
+        GetButton();
 
-    private void Start()
-    {
         int rand = Random.Range(0, 12);
         rabbitMat.material = materials[rand];       // 토끼의 Material을 랜덤으로 설정
 
         waitSecond = Random.Range(20.0f, 70.0f);            // 당근을 몇 초마다 얻을건지 랜덤한 시간을 정함
         waitForSecond = new WaitForSeconds(waitSecond);
+    }
 
+    private void Start()
+    {
         StartCoroutine(GetCarrotTimer());                   // 당근 획득 타이머 실행
         StartCoroutine(Action());       /// TODO : 초대 시 문제발생
     }
@@ -86,9 +91,9 @@ public class RabbitCitizen : MonoBehaviour
         {
             yield return waitForSecond;
 
-            /// TODO: 당근 받기 UI 생성
+            getCarrotButton.gameObject.SetActive(true);     // 당근 획득 버튼을 보여줌
 
-            yield return IsGetCarrot();         // UI 터치를 기다림
+            yield return IsGetCarrot();         // 버튼 터치를 기다림
         }
     }
 
@@ -105,6 +110,7 @@ public class RabbitCitizen : MonoBehaviour
         }
 
         gameManager.MyCarrots += GoldManager.UnitToBigInteger(carrot);
+        getCarrotButton.gameObject.SetActive(false);
         isTouch = false;
 
         yield return null;
@@ -118,8 +124,7 @@ public class RabbitCitizen : MonoBehaviour
     {
         while (true)
         {
-            int randBehavior = 4;
-            //int randBehavior = Random.Range(0, 4);    // 랜덤 행동을 정함
+            int randBehavior = Random.Range(0, 4);    // 랜덤 행동을 정함
             citizenBehavior = (ECitizenBehavior)randBehavior;
 
             Vector3 goalPoint;
@@ -161,6 +166,8 @@ public class RabbitCitizen : MonoBehaviour
 
                 yield return StartCoroutine(Behavior());
             }
+
+            yield return null;
         }
     }
 
@@ -193,6 +200,26 @@ public class RabbitCitizen : MonoBehaviour
 
     /// TODO : 건물 배치 후 각 건물 위치 리스트에 넣기
     #region 함수
+
+    /// <summary>
+    /// 당근 획득 버튼 클릭 시(인스펙터에서 호출)
+    /// </summary>
+    public void TouchButton()
+    {
+        Debug.Log("TOUCH");
+        isTouch = true;
+    }
+
+    /// <summary>
+    /// 오브젝트 풀에서 당근 획득 UI를 가져옴
+    /// </summary>
+    void GetButton()
+    {
+        getCarrotButton = ObjectPool.Instance.Get(EObjectFlag.getCarrotButton).GetComponent<CitizenButtonRay>();
+        getCarrotButton.citizen = this;
+        getCarrotButton.gameObject.SetActive(false);
+    }
+
     /// <summary>
     /// 랜덤 목적지 생성
     /// </summary>
@@ -243,46 +270,16 @@ public class RabbitCitizen : MonoBehaviour
         return false;
     }
     #endregion
+
+    private void Update()
+    {
+        if (getCarrotButton.gameObject.activeSelf)
+        {
+            Vector3 newPos = transform.position;
+            newPos.y += 5f;
+            //Vector3 ButtonPos = Camera.main.WorldToScreenPoint(newPos);
+            getCarrotButton.transform.position = newPos;
+        }
+        
+    }
 }
-
-// 고 빌딩
-//float distance = Vector3.Distance(this.transform.position, targetPos);
-
-//while (distance > 0.05f)
-//{
-//    distance = Vector3.Distance(this.transform.position, targetPos);
-//    Debug.Log(distance);
-//    this.transform.position = Vector3.Lerp(this.transform.position, targetPos, Time.deltaTime * moveSpeed);
-//    yield return null;
-//}
-
-
-// 아이들
-//while (distance > 2f)
-//{
-//    distance = Vector3.Distance(this.transform.position, targetPos);
-
-//    this.transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed);
-
-//    yield return null;
-//}
-
-//Vector3 targetPos = this.transform.position;
-//targetPos.x += 10;
-
-//this.transform.LookAt(targetPos);
-
-//anim.SetBool("isWalking", true);
-
-//nav.SetDestination(targetPos);
-
-//float distance = Vector3.Distance(this.transform.position, targetPos);
-
-//while (distance > 0.1f)
-//{
-//    distance = Vector3.Distance(this.transform.position, targetPos);
-//    Debug.Log(distance);
-//    yield return null;
-//}
-
-//anim.SetBool("isWalking", false);

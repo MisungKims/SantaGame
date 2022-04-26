@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum EObjectFlag // 배열이나 리스트의 순서
 {
-    post
+    getCarrotButton
 }
 public class ObjectPool : MonoBehaviour
 {
@@ -45,7 +45,7 @@ public class ObjectPool : MonoBehaviour
         {
             tempGb = queList[index].Dequeue(); //디큐를 통해서 실질적으로 반환
 
-            tempGb.transform.SetParent(null);
+            //tempGb.transform.SetParent(null);
             tempGb.SetActive(true);
 
         }
@@ -53,6 +53,8 @@ public class ObjectPool : MonoBehaviour
         {
             tempGb = GameObject.Instantiate(cpyObject[index]);
         }
+
+        Debug.Log("get");
 
         return tempGb;
     }
@@ -66,7 +68,7 @@ public class ObjectPool : MonoBehaviour
         {
             tempGb = queList[index].Dequeue(); //디큐를 통해서 실질적으로 반환
 
-            tempGb.transform.SetParent(null);
+            //tempGb.transform.SetParent(null);
             tempGb.SetActive(true);
 
         }
