@@ -14,8 +14,6 @@ public class Building : MonoBehaviour
 {
     #region 변수
 
-    private Transform thisTransform;
-
     public int index;
     public Object buildingObj;
     public string BuilidingName
@@ -79,7 +77,10 @@ public class Building : MonoBehaviour
     [SerializeField]
     private GameObject getGoldBtn;      // 골드 수동 획득 버튼
 
-   
+    [SerializeField]
+    private Transform cameraPos;      // 카메라의 위치
+
+
     // 그 외 변수
 
     public bool isAuto = false;     // 알바를 고용했는지? (알바를 고용했다면 골드 획득 자동화)
@@ -144,7 +145,7 @@ public class Building : MonoBehaviour
     /// </summary>
     public void SetCamTargetThis()
     {
-        cameraMovement.ChaseBuilding(thisTransform, thisTransform.GetChild(0).transform);
+        cameraMovement.ChaseBuilding(transform, cameraPos);
     }
 
    
@@ -262,8 +263,6 @@ public class Building : MonoBehaviour
         cameraMovement = CameraMovement.Instance;
         uiManager = UIManager.Instance;
         window = uiManager.clickObjWindow.transform.GetComponent<ClickObjWindow>();
-
-        thisTransform = this.transform;
 
     }
    

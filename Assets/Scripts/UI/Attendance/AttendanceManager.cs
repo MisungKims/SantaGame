@@ -25,15 +25,10 @@ public class AttendanceManager : MonoBehaviour
 
     // UI 변수
     [SerializeField]
-    private GameObject rewardObj;                    // 생성될 오브젝트(프리팹)
-    //[SerializeField]
-    //private Image[] rewardImages;                   // 보상 이미지
-    [SerializeField]
-    private RectTransform[] objRectTransforms;          // 각 인스턴스의 위치를 담은 배열
-    [SerializeField]
-    private GameObject parent;                          // 오브젝트의 부모
-    [SerializeField]
     private GameObject notificationImage;     // 출석 보상 알림 이미지      
+
+    [SerializeField]
+    private AttendanceObject[] attendanceObjects;       // UI 오브젝트를 담은 배열
 
     // 그 외 변수
     public string getRewardDate;              // 마지막으로 출석 보상을 받은 날짜
@@ -85,21 +80,16 @@ public class AttendanceManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 출석 보상 인스턴스 생성
+    /// 출석 보상 UI에 csv 파일의 값을 넣어줌
     /// </summary>
     void AttendanceInstance(int i, AttendanceStruct attendance)
     {
         ERewardType rewardType = RewardManager.StringToRewardType(attendance.rewardType);
 
-        AttendanceObject attendanceObject = GameObject.Instantiate(rewardObj, parent.transform).GetComponent<AttendanceObject>();
-
-        // 위치 설정
-        attendanceObject.transform.GetComponent<RectTransform>().anchoredPosition = objRectTransforms[i].anchoredPosition;
-
-        attendanceObject.rewardType = rewardType;
-        attendanceObject.RewardAmount = attendance.amount;
-        attendanceObject.Day = (i + 1).ToString();
-        attendanceObject.RewardImage.sprite = RewardManager.Instance.rewardImages[(int)rewardType];
+        attendanceObjects[i].rewardType = rewardType;
+        attendanceObjects[i].RewardAmount = attendance.amount;
+        attendanceObjects[i].Day = (i + 1).ToString();
+        attendanceObjects[i].RewardImage.sprite = RewardManager.Instance.rewardImages[(int)rewardType];
     }
 
     /// <summary>

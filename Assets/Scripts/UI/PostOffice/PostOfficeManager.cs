@@ -45,7 +45,7 @@ public class PostOfficeManager : MonoBehaviour
     // UI ¹èÄ¡
     private RectTransform rectTransform;
     private RectTransform parentRectTransform;
-    private float nextYPos = -75;
+    private float nextYPos = -90;
 
     // Ä³½Ì
     WaitForSeconds waitForSeconds;

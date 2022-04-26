@@ -38,7 +38,7 @@ public class AchivementManager : QuestManager
         // UI 배치 시 필요
         startPos = new Vector3(0, 120, 0);
         startParentSize = new Vector2(0, 52);
-        nextYPos = -60;
+        nextYPos = -85;
         increaseParentYSize = 10;
 
         base.Awake();

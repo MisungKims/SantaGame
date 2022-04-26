@@ -55,7 +55,7 @@ public class DailyQuestManager : QuestManager
         // UI 배치 시 필요
         startPos = new Vector3(0, 102, 0);
         startParentSize = new Vector2(0, 52);
-        nextYPos = -50;
+        nextYPos = -75;
         increaseParentYSize = 20;
 
         base.Awake();

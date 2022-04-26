@@ -165,6 +165,8 @@ public class StoreObject : MonoBehaviour
 
     private Santa santaInstance;
 
+    private int questID = 0;    /// TODO : 추후에 아이디 설정
+
     // 캐싱
     private GameManager gameManager;
 
@@ -194,12 +196,14 @@ public class StoreObject : MonoBehaviour
     {
         RefreshBuildingInfo();
         RefreshSantaInfo();
-    }
 
-    void Start()
-    {
         Check();
     }
+
+    //void Start()
+    //{
+    //    Check();
+    //}
     #endregion
 
     #region 함수
@@ -279,6 +283,7 @@ public class StoreObject : MonoBehaviour
         unlockingObject.SetActive(true);
 
         BuyNewBuilding();
+
     }
 
     /// <summary>

@@ -26,7 +26,8 @@ public class CameraMovement : MonoBehaviour
     private Vector3 distance;                // 항상 떨어져있어야 할 거리
 
     [Header("---------- Chase")]
-    private Transform chasingTarget = null;          // 추적할 타겟
+    private Transform chasingTarget = null;          // 추적할 타겟+
+    private Transform buildingDistance;
 
     [SerializeField]
     private float basicFieldOfView = 60f;            // 카메라의 기본  field of view
@@ -40,7 +41,7 @@ public class CameraMovement : MonoBehaviour
     Vector3 chasingCamAngles;
     Vector3 basicCamAngles;
 
-    enum EChaseState { chasing, noChase };         // 카메라의 상태
+    enum EChaseState { chasing, noChase, chaseSanta, chaseBuilding };         // 카메라의 상태
     EChaseState chaseState = EChaseState.noChase;
 
     [Header("---------- Move")]
@@ -230,15 +231,11 @@ public class CameraMovement : MonoBehaviour
     /// <param name="obj">타깃의 Transform</param>
     public void ChaseSanta(Transform obj)
     {
-        chaseState = EChaseState.chasing;    // 카메라의 상태 변경
+        chaseState = EChaseState.chaseSanta;    // 카메라의 상태 변경
 
         chasingTarget = obj;
-
-        // 카메라 조정
-        StartCoroutine(ChangeFieldOfView(chasingSantaFieldOfView, chaseState));
-        StartCoroutine(ChangeAngles(chasingCamAngles, chaseState));
-        StartCoroutine(SetCamPos(distance, false, chaseState));
     }
+
 
     /// <summary>
     /// 카메라가 빌딩의 카메라 위치로 이동
@@ -247,59 +244,61 @@ public class CameraMovement : MonoBehaviour
     /// <param name="distance">카메라와의 거리</param>
     public void ChaseBuilding(Transform obj, Transform distance)
     {
-        chaseState = EChaseState.chasing;    // 카메라의 상태 변경
+        chaseState = EChaseState.chaseBuilding;    // 카메라의 상태 변경
 
-        // 카메라 조정
-        StartCoroutine(SetCamPos(obj.position + distance.localPosition, true, chaseState));
-        StartCoroutine(ChangeAngles(distance.eulerAngles, chaseState));
+        chasingTarget = obj;
+        buildingDistance = distance;
     }
 
+   
+
     /// <summary>
-    /// 타깃 추적 종료
+    /// 타깃 추적 종료 (인스펙터에서 호출)
     /// </summary>
     public void EndChaseTarget()
     {
         chaseState = EChaseState.noChase;                    // 카메라의 상태 변경 
 
         uiManager.HideClickObjWindow();                     // 클릭 오브젝트 창 없애기
-
-        if (chasingTarget)
-        {
-            chasingTarget = null;
-            StartCoroutine(ChangeFieldOfView(basicFieldOfView, chaseState));
-        }
-       
-        // 카메라를 기본값으로 세팅
-        StartCoroutine(ChangeAngles(basicCamAngles, chaseState));
-        StartCoroutine(SetCamPos(distance, true, chaseState));
-    }
-
-
-    /// <summary>
-    /// 카메라의 FieldOfView를 조절하여 타겟을 향해 줌 인/줌 아웃
-    /// </summary>
-    /// <param name="fieldOfView">조절할 Field Of View</param>
-    /// <returns></returns>
-    IEnumerator ChangeFieldOfView(float fieldOfView, EChaseState state)
-    {
-        while (Mathf.Abs(cam.fieldOfView - fieldOfView) > 0.05f && chaseState == state)
-        {
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, fieldOfView, Time.deltaTime * 1.6f);          // 타겟을 향해 줌인
-
-            yield return null;
-        }
     }
 
     /// <summary>
     /// 카메라의 앵글을 조절
     /// </summary>
-    /// <param name="angle">조절할 각도</param>
     /// <returns></returns>
-    IEnumerator ChangeAngles(Vector3 angle, EChaseState state)
+    IEnumerator Angles()
     {
-        while (Vector3.Distance(cam.transform.eulerAngles, angle) > 0.05f && chaseState == state)
+        while (true)
         {
-            cam.transform.eulerAngles = Vector3.Lerp(cam.transform.eulerAngles, angle, Time.deltaTime);
+            if (chaseState == EChaseState.chaseSanta)       // 산타 추적 시 
+            {
+                while (Vector3.Distance(cam.transform.eulerAngles, chasingCamAngles) > 0.05f && chaseState == EChaseState.chaseSanta)
+                {
+                    cam.transform.eulerAngles = Vector3.Lerp(cam.transform.eulerAngles, chasingCamAngles, Time.deltaTime);
+
+                    yield return null;
+                }
+            }
+
+            else if (chaseState == EChaseState.chaseBuilding)       // 건물 추적 시
+            {
+                while (Vector3.Distance(cam.transform.eulerAngles, buildingDistance.eulerAngles) > 0.05f && chaseState == EChaseState.chaseBuilding)
+                {
+                    cam.transform.eulerAngles = Vector3.Lerp(cam.transform.eulerAngles, buildingDistance.eulerAngles, Time.deltaTime);
+
+                    yield return null;
+                }
+            }
+
+            else if (chaseState == EChaseState.noChase)     // 추적 종료 시 기본 카메라 앵글로 이동
+            {
+                while (Vector3.Distance(cam.transform.eulerAngles, basicCamAngles) > 0.05f && chaseState == EChaseState.noChase)
+                {
+                    cam.transform.eulerAngles = Vector3.Lerp(cam.transform.eulerAngles, basicCamAngles, Time.deltaTime);
+
+                    yield return null;
+                }
+            }
 
             yield return null;
         }
@@ -309,29 +308,134 @@ public class CameraMovement : MonoBehaviour
     /// 카메라의 위치를 조정
     /// </summary>
     /// <returns></returns>
-    IEnumerator SetCamPos(Vector3 targetPos, bool isFix, EChaseState state)
+    IEnumerator Position()
     {
-        // 카메라가 타깃을 따라 움직이지 않을 때
-        if(isFix)
+        Vector3 targetPos;
+        while (true)
         {
-            while (Vector3.Distance(cam.transform.position, targetPos) > 0.05f && chaseState == state)
+            if (chaseState == EChaseState.chaseSanta)       // 산타를 추적할 때 카메라가 산타를 따라다님
             {
-                cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos, Time.deltaTime * 1.6f);
+                while (chaseState == EChaseState.chaseSanta)
+                {
+                    targetPos = distance + chasingTarget.position;
+                    cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos, Time.deltaTime);
 
-                yield return null;
+                    yield return null;
+                }
             }
-        }
-        // 카메라가 타깃을 따라 움직일 때
-        else
-        {
-            while (chaseState == EChaseState.chasing)
+            else if (chaseState == EChaseState.chaseBuilding)       // 건물을 추적할 때 건물의 cameraPos 위치로 이동
             {
-                cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos + chasingTarget.position, Time.deltaTime);
+                targetPos = chasingTarget.position + buildingDistance.localPosition;
+                while (Vector3.Distance(cam.transform.position, targetPos) > 0.05f && chaseState == EChaseState.chaseBuilding)
+                {
+                    targetPos = chasingTarget.position + buildingDistance.localPosition;
+                    cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos, Time.deltaTime * 1.6f);
 
-                yield return null;
+                    yield return null;
+                }
             }
+
+            else if (chaseState == EChaseState.noChase)         // 추적 종료 시 기본 카메라 위치로 이동
+            {
+                while (Vector3.Distance(cam.transform.position, distance) > 0.05f && chaseState == EChaseState.noChase)
+                {
+                    cam.transform.position = Vector3.Lerp(cam.transform.position, distance, Time.deltaTime * 1.6f);
+
+                    yield return null;
+                }
+            }
+
+            yield return null;
         }
     }
+
+    /// <summary>
+    /// 카메라의 FieldOfView를 조정
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator FieldOfView()
+    {
+        while (true)
+        {
+            if (chaseState == EChaseState.chaseSanta)           // 산타 추적 시 산타를 향해 Zoom In
+            {
+                while (Mathf.Abs(cam.fieldOfView - chasingSantaFieldOfView) > 0.05f && chaseState == EChaseState.chaseSanta)
+                {
+                    cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, chasingSantaFieldOfView, Time.deltaTime * 1.6f);
+
+                    yield return null;
+                }
+            }
+            else if (chaseState == EChaseState.noChase)         // 추적 종료 시 Zoom Out
+            {
+                while (Mathf.Abs(cam.fieldOfView - basicFieldOfView) > 0.05f && chaseState == EChaseState.noChase)
+                {
+                    cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, basicFieldOfView, Time.deltaTime * 1.6f);
+
+                    yield return null;
+                }
+            }
+            yield return null;
+        }
+    }
+
+    /// <summary>
+    /// 카메라의 FieldOfView를 조절하여 타겟을 향해 줌 인/줌 아웃
+    /// </summary>
+    /// <param name="fieldOfView">조절할 Field Of View</param>
+    /// <returns></returns>
+    //IEnumerator ChangeFieldOfView(float fieldOfView, EChaseState state)
+    //{
+    //    while (Mathf.Abs(cam.fieldOfView - fieldOfView) > 0.05f && chaseState == state)
+    //    {
+    //        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, fieldOfView, Time.deltaTime * 1.6f);          // 타겟을 향해 줌인
+
+    //        yield return null;
+    //    }
+    //}
+
+    ///// <summary>
+    ///// 카메라의 앵글을 조절
+    ///// </summary>
+    ///// <param name="angle">조절할 각도</param>
+    ///// <returns></returns>
+    //IEnumerator ChangeAngles(Vector3 angle, EChaseState state)
+    //{
+    //    while (Vector3.Distance(cam.transform.eulerAngles, angle) > 0.05f && chaseState == state)
+    //    {
+    //        cam.transform.eulerAngles = Vector3.Lerp(cam.transform.eulerAngles, angle, Time.deltaTime);
+
+    //        yield return null;
+    //    }
+    //}
+
+    ///// <summary>
+    ///// 카메라의 위치를 조정
+    ///// </summary>
+    ///// <returns></returns>
+    //IEnumerator SetCamPos(Vector3 targetPos, bool isFix, EChaseState state)
+    //{
+    //    // 카메라가 타깃을 따라 움직이지 않을 때
+    //    if(isFix)
+    //    {
+    //        while (Vector3.Distance(cam.transform.position, targetPos) > 0.05f && chaseState == state)
+    //        {
+    //            cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos, Time.deltaTime * 1.6f);
+
+    //            yield return null;
+    //        }
+    //    }
+    //    // 카메라가 타깃을 따라 움직일 때
+    //    else
+    //    {
+    //        while (chaseState == EChaseState.chasing)
+    //        {
+    //            cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos + chasingTarget.position, Time.deltaTime);
+
+    //            yield return null;
+    //        }
+    //    }
+    //}
 
     #endregion
 
@@ -368,6 +472,11 @@ public class CameraMovement : MonoBehaviour
 
         distance = distanceTransform.localPosition;             // 카메라의 기본 위치 조정
         cam.transform.position = distance;
+
+
+        StartCoroutine(Angles());
+        StartCoroutine(Position());
+        StartCoroutine(FieldOfView());
     }
 
     private void LateUpdate()
