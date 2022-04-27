@@ -1,7 +1,7 @@
 /**
  * @brief 건물
  * @author 김미성
- * @date 22-04-20
+ * @date 22-04-27
  */
 
 using System.Collections;
@@ -110,7 +110,7 @@ public class Building : MonoBehaviour
 
         SetCamTargetThis();                 // 카메라가 건물을 바라보도록
 
-        ShowObjWindow();                    // 오브젝트 정보 창이 보이도록
+        Level = 1;
 
         getGoldSlider.maxValue = (int)Second;
         StartCoroutine(Increment());        // 골드획득 시작
@@ -143,46 +143,48 @@ public class Building : MonoBehaviour
 
 
     /// <summary>
-    /// 카메라가 해당 건물을 따라다님
+    /// 카메라가 해당 건물을 바라봄
     /// </summary>
     public void SetCamTargetThis()
     {
+        if (uiManager.storePanel.activeSelf) uiManager.storePanel.SetActive(false);
+
         cameraMovement.ChaseBuilding(transform, cameraPos);
     }
 
    
-    /// <summary>
-    /// 오브젝트 정보창 보여줌
-    /// </summary>
-    public void ShowObjWindow()
-    {
-        window.clickedObj = buildingObj;
-        window.Builidng = this;
+    ///// <summary>
+    ///// 오브젝트 정보창 보여줌
+    ///// </summary>
+    //public void ShowObjWindow()
+    //{
+    //    window.clickedObj = buildingObj;
+    //    window.Builidng = this;
 
-        uiManager.ShowClickObjWindow();
-    }
+    //    uiManager.ShowClickObjWindow();
+    //}
 
  
-    /// <summary>
-    /// 건물을 터치할 때
-    /// </summary>
-    void TouchBuilding()
-    {
-        if (Input.GetMouseButtonDown(0) && !uiManager.isOpenPanel)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit = new RaycastHit();
+    ///// <summary>
+    ///// 건물을 터치할 때
+    ///// </summary>
+    //void TouchBuilding()
+    //{
+    //    if (Input.GetMouseButtonDown(0) && !uiManager.isOpenPanel)
+    //    {
+    //        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    //        RaycastHit hit = new RaycastHit();
 
-            if (true == (Physics.Raycast(ray.origin, ray.direction * 10, out hit)))
-            {
-                if (hit.collider.CompareTag("Building") && hit.collider.name == this.name)
-                {
-                    SetCamTargetThis();
-                    ShowObjWindow();
-                }
-            }
-        }
-    }
+    //        if (true == (Physics.Raycast(ray.origin, ray.direction * 10, out hit)))
+    //        {
+    //            if (hit.collider.CompareTag("Building") && hit.collider.name == this.name)
+    //            {
+    //                SetCamTargetThis();
+    //                ShowObjWindow();
+    //            }
+    //        }
+    //    }
+    //}
 
     /// <summary>
     /// 수동 획득 버튼 클릭
@@ -252,6 +254,8 @@ public class Building : MonoBehaviour
             }
         }
 
+        yield return new WaitForSeconds(0.13f);
+
         isClickGetBtn = false;
     }
     #endregion
@@ -267,9 +271,9 @@ public class Building : MonoBehaviour
 
     }
    
-    void Update()
-    {
-        TouchBuilding();
-    }
+    //void Update()
+    //{
+    //    TouchBuilding();
+    //}
     #endregion
 }

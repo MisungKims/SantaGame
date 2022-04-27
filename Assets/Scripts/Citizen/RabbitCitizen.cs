@@ -2,7 +2,7 @@
  * @brief 토끼 주민
  * @details 토끼 주민 (랜덤한 시간마다 당근 Get, AI)
  * @author 김미성
- * @date 22-04-26
+ * @date 22-04-27
  */
 
 using System.Collections;
@@ -31,12 +31,9 @@ public class RabbitCitizen : MonoBehaviour
 
     private float waitSecond;           // 당근을 몇 초마다 얻을건지
 
-    
-
     private goal goal;      // 사용 중인 건물의 위치
     private int usingIndex; // 사용 중인 건물 위치의 인덱스
 
-   
     private ECitizenBehavior citizenBehavior;
 
     private Animator anim;
@@ -46,6 +43,7 @@ public class RabbitCitizen : MonoBehaviour
 
     private CitizenButtonRay getCarrotButton;      // 당근 획득 UI
     public bool isTouch = false;       // 당근 획득 UI를 클릭했는지
+    bool isAutoGet = false;         // 당근을 자동으로 받을지
 
     // 머터리얼
     [SerializeField]
@@ -77,7 +75,7 @@ public class RabbitCitizen : MonoBehaviour
     private void Start()
     {
         StartCoroutine(GetCarrotTimer());                   // 당근 획득 타이머 실행
-        StartCoroutine(Action());       /// TODO : 초대 시 문제발생
+        StartCoroutine(Action());
     }
     #endregion
 
@@ -93,26 +91,57 @@ public class RabbitCitizen : MonoBehaviour
 
             getCarrotButton.gameObject.SetActive(true);     // 당근 획득 버튼을 보여줌
 
-            yield return IsGetCarrot();         // 버튼 터치를 기다림
+            yield return StartCoroutine(IsGetCarrot());         // 당근 획득을 기다림
         }
     }
 
     /// <summary>
-    /// 10초 동안 수동으로 획득하지 않으면 자동으로 획득
+    /// 버튼 터치 혹은 10초 카운트 뒤에 당근 획득
     /// </summary>
     IEnumerator IsGetCarrot()
     {
+        StartCoroutine(TimerCount());      // 10초 카운트도 시작
+
+        while (true)
+        {
+            if (isTouch)                     // UI 터치 시 바로 당근 획득
+            {
+                isTouch = false;
+                break;
+            }
+            if (isAutoGet)                  // 10초 카운트 동안 터치하지 않았을 때
+            {
+                isAutoGet = false;
+                break;
+            }
+
+            yield return null;
+        }
+
+        gameManager.MyCarrots += GoldManager.UnitToBigInteger(carrot);
+
+        yield return new WaitForSeconds(0.13f);
+        ObjectPoolingManager.Instance.Set(getCarrotButton.gameObject, EObjectFlag.getCarrotButton);
+    }
+
+    
+    /// <summary>
+    /// 10초 동안 수동으로 획득하지 않으면 자동으로 획득
+    /// </summary>
+    IEnumerator TimerCount()
+    {
         for (int i = 0; i < 10; i++)
         {
-            if (isTouch) break;                     // UI 터치 시 바로 당근 획득
+            if (isTouch) break;                     // UI 터치 시 카운트 종료
 
             yield return new WaitForSeconds(1f);
         }
 
-        gameManager.MyCarrots += GoldManager.UnitToBigInteger(carrot);
-        getCarrotButton.gameObject.SetActive(false);
-        isTouch = false;
-
+        if (!isTouch)
+        {
+            isAutoGet = true;
+        }
+        
         yield return null;
     }
 
@@ -201,21 +230,13 @@ public class RabbitCitizen : MonoBehaviour
     /// TODO : 건물 배치 후 각 건물 위치 리스트에 넣기
     #region 함수
 
-    /// <summary>
-    /// 당근 획득 버튼 클릭 시(인스펙터에서 호출)
-    /// </summary>
-    public void TouchButton()
-    {
-        Debug.Log("TOUCH");
-        isTouch = true;
-    }
 
     /// <summary>
     /// 오브젝트 풀에서 당근 획득 UI를 가져옴
     /// </summary>
     void GetButton()
     {
-        getCarrotButton = ObjectPool.Instance.Get(EObjectFlag.getCarrotButton).GetComponent<CitizenButtonRay>();
+        getCarrotButton = ObjectPoolingManager.Instance.Get(EObjectFlag.getCarrotButton).GetComponent<CitizenButtonRay>();
         getCarrotButton.citizen = this;
         getCarrotButton.gameObject.SetActive(false);
     }
@@ -275,7 +296,7 @@ public class RabbitCitizen : MonoBehaviour
     /// </summary>
     public void SetCamTargetThis()
     {
-        UIManager.Instance.citizenPanel.SetActive(true);
+        UIManager.Instance.ShowCitizenPanel();
         CameraMovement.Instance.ChaseSanta(this.transform);
     }
 

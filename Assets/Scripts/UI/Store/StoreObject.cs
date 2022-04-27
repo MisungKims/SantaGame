@@ -237,6 +237,7 @@ public class StoreObject : MonoBehaviour
     {
         SantaPrice = storeObject.santaPrice;
         SantaEfficiency = storeObject.santaEfficiency;
+        IncrementGold = storeObject.incrementGold;
         SantaLevel = storeObject.santaLevel;
     }
 
