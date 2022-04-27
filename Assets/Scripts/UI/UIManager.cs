@@ -18,19 +18,22 @@ public class UIManager : MonoBehaviour
         get { return instance; }
     }
 
-    public bool isOpenPanel;
+    public bool isOpenPanel;        // 패널 혹은 창이 열려있는지
 
     [Header("---------- UI 변수")]
     public GameObject mainPanel;
+    public GameObject alwaysVisiblePanel;
+    public GameObject snowPanel;            // 눈 패널
+    public GameObject cameraPanel;          // 카메라 패널
+    public GameObject citizenPanel;         // 주민 패널
+    public GameObject storePanel;        // 상점 패널
+    public PuzzleUI puzzlePanel;            // 퍼즐 패널
+
+    public GameObject clickObjWindow;       // 클릭 오브젝트 창
+    public GameObject InviteRabbitWindow;  // 토끼 초대 창
     public QuestionWindow questionWindow;
-    public GameObject clickObjWindow;
-    public GetRewardWindow getRewardWindow;
-    public PuzzleUI puzzlePanel;
-    public GameObject snowPanel;
-    public GameObject citizenPanel;
-
-    public GameObject store;
-
+    public GetRewardWindow getRewardWindow; // 보상 획득 창
+   
     #endregion
 
     #region 함수
@@ -43,7 +46,8 @@ public class UIManager : MonoBehaviour
         {
             clickObjWindow.SetActive(true);
 
-            if (store.activeSelf) store.SetActive(false);
+            if (storePanel.activeSelf) storePanel.SetActive(false);
+            if (InviteRabbitWindow.activeSelf) InviteRabbitWindow.SetActive(false);
         }
     }
 
@@ -53,6 +57,49 @@ public class UIManager : MonoBehaviour
     public void HideClickObjWindow()
     {
         clickObjWindow.SetActive(false);
+    }
+
+    /// <summary>
+    /// 주민 패널 보여줌
+    /// </summary>
+    public void ShowCitizenPanel()
+    {
+        mainPanel.SetActive(false);
+        citizenPanel.SetActive(true);
+
+        if (InviteRabbitWindow.activeSelf) InviteRabbitWindow.SetActive(false);
+    }
+
+    /// <summary>
+    /// 주민 패널을 숨김
+    /// </summary>
+    public void HideCitizenPanel()
+    {
+        mainPanel.SetActive(true);
+        citizenPanel.SetActive(false);
+    }
+
+    /// <summary>
+    /// 카메라 패널을 보여줌
+    /// </summary>
+    public void ShowCameraPanel()
+    {
+        cameraPanel.SetActive(true);
+        mainPanel.SetActive(false);
+        alwaysVisiblePanel.SetActive(false);
+
+        if (InviteRabbitWindow.activeSelf) InviteRabbitWindow.SetActive(false);
+        if (citizenPanel.activeSelf) citizenPanel.SetActive(false);
+    }
+
+    /// <summary>
+    /// 카메라 패널을 숨김
+    /// </summary>
+    public void HideCameraPanel()
+    {
+        cameraPanel.SetActive(false);
+        mainPanel.SetActive(true);
+        alwaysVisiblePanel.SetActive(true);
     }
 
     public void SetisOpenPanel(bool value)

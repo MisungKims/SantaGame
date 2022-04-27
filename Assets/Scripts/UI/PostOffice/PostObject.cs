@@ -1,13 +1,14 @@
 /**
  * @details 편지의 내용을 가진 오브젝트
  * @author 김미성
- * @date 22-04-21
+ * @date 22-04-27
  */
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Text;
 
 public class PostObject : MonoBehaviour
 {
@@ -20,15 +21,23 @@ public class PostObject : MonoBehaviour
     [SerializeField]
     private GameObject notificationImage;   // 새로온 편지가 있음을 알려주는 이미지
 
+    StringBuilder nameSb = new StringBuilder();
+
     private string postName;
     public string PostName
     {
         set
         {
             postName = value;
-            nameText.text = postName;
+
+            nameSb.Clear();
+            nameSb.Append("To. ");
+            nameSb.Append(postName);
+            nameText.text = nameSb.ToString();
         }
     }
+
+    StringBuilder postSb = new StringBuilder();
 
     private string postContent;
     public string PostConent
@@ -39,7 +48,10 @@ public class PostObject : MonoBehaviour
 
             if (postContent.Length > 17)    // 편지의 내용이 길다면 18자 까지만 보여줌
             {
-                contentPreviewText.text = string.Format("{0}...", postContent.Substring(0, 18));    /// TODO : 포맷 말고 스트링 빌더로
+                postSb.Clear();
+                postSb.Append(postContent.Substring(0, 18));
+                postSb.Append("...");
+                contentPreviewText.text = postSb.ToString();
             }
             else
             {

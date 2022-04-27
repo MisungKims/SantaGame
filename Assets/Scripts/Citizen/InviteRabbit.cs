@@ -74,13 +74,13 @@ public class InviteRabbit : MonoBehaviour
             return;
         }
 
-        GameObject.Instantiate(rabbit, rabbitGroup.transform);          // 토끼 주민 생성
+        this.gameObject.SetActive(false);   // 토끼 초대창 닫기
 
-        Count = (gameManager.CitizenCount + 1);
+        GameObject.Instantiate(rabbit, rabbitGroup.transform).GetComponent<RabbitCitizen>().SetCamTargetThis();    // 토끼 주민 생성 후 카메라의 타깃 설정
 
         gameManager.MyCarrots -= GoldManager.UnitToBigInteger(price);  // 초대 비용 지불
 
-        gameManager.CitizenCount++;
+        Count = ++gameManager.CitizenCount + 1;
 
         gameManager.goldEfficiency *= 1.5f;     // 효율 증가
 

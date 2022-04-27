@@ -51,6 +51,10 @@ public class Santa : MonoBehaviour
         get{ return ObjectManager.Instance.buildingList[index].GetComponent<Building>(); }
     }
 
+    public Sprite SantaSprite
+    {
+        get { return santaObj.santaSprite; }
+    }
    
 
     // 캐싱
@@ -66,6 +70,8 @@ public class Santa : MonoBehaviour
         gameObject.SetActive(true);
 
         Building.isAuto = true;     // 골드 자동화 시작
+
+        Upgrade();
 
         SetCamTargetThis();                 // 카메라가 산타를 따라다니도록
 
@@ -106,7 +112,6 @@ public class Santa : MonoBehaviour
     /// </summary>
     public void ShowObjWindow()
     {
-        window.clickedObj = santaObj;
         window.Santa = this;
 
         uiManager.ShowClickObjWindow();

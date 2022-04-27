@@ -1,7 +1,7 @@
 /**
- * @details 산타 혹은 건물을 클릭했을 때 보이는 UI
+ * @details 산타를 클릭했을 때 보이는 UI
  * @author 김미성
- * @date 22-04-26
+ * @date 22-04-27
  */
 
 using System.Collections;
@@ -24,13 +24,11 @@ public class ClickObjWindow : MonoBehaviour
     private Text PriceText;
     [SerializeField]
     private Button UpgradeButton;
+    //[SerializeField]
+    //private Image buildingImg;
     [SerializeField]
-    private Image buildingImg;
-    [SerializeField]
-    private Image santaImg;
+    private Image objImg;
 
-    [SerializeField]
-    private Sprite santasprite;
 
     // 스트링 빌더
     StringBuilder levelSb = new StringBuilder();
@@ -73,11 +71,11 @@ public class ClickObjWindow : MonoBehaviour
         }
     }
 
-    private Building building;
-    public Building Builidng
-    {
-        set { building = value; }
-    }
+    //private Building building;
+    //public Building Builidng
+    //{
+    //    set { building = value; }
+    //}
 
     private Santa santa;
     public Santa Santa
@@ -85,47 +83,45 @@ public class ClickObjWindow : MonoBehaviour
         set { santa = value; }
     }
 
-    public Object clickedObj;
+    //public Object clickedObj;
     #endregion
 
     #region 함수
 
-    /// <summary>
-    /// 빌딩의 정보를 가져와 UI에 Set
-    /// </summary>
-    public void SetBuildingInfo()
-    {
-        ObjName = clickedObj.buildingName;
-        ObjLevel = clickedObj.buildingLevel;
-        ObjPrice = clickedObj.buildingPrice;
+    ///// <summary>
+    ///// 빌딩의 정보를 가져와 UI에 Set
+    ///// </summary>
+    //public void SetBuildingInfo()
+    //{
+    //    ObjName = clickedObj.buildingName;
+    //    ObjLevel = clickedObj.buildingLevel;
+    //    ObjPrice = clickedObj.buildingPrice;
 
-        goldSb.Clear();
-        goldSb.Append("+ ");
-        goldSb.Append(clickedObj.incrementGold);
-        ObjAmount = goldSb.ToString();
+    //    goldSb.Clear();
+    //    goldSb.Append("+ ");
+    //    goldSb.Append(clickedObj.incrementGold);
+    //    ObjAmount = goldSb.ToString();
 
-        buildingImg.sprite = clickedObj.buildingSprite;
-        buildingImg.gameObject.SetActive(true);
-    }
+    //    buildingImg.sprite = clickedObj.buildingSprite;
+    //    buildingImg.gameObject.SetActive(true);
+    //}
 
     /// <summary>
     /// 산타의 정보를 가져와 UI에 Set
     /// </summary>
     public void SetSantaInfo()
     {
-        ObjName = clickedObj.santaName;
+        ObjName = santa.SantaName;
+        objImg.sprite = santa.SantaSprite;
 
-        ObjLevel = clickedObj.santaLevel;
-        ObjPrice = clickedObj.santaPrice;
+        ObjLevel = santa.Level;
+        ObjPrice = santa.SantaPrice;
 
         goldSb.Clear();
         goldSb.Append("알바 효율 ");
-        goldSb.Append(clickedObj.santaEfficiency.ToString());
+        goldSb.Append(santa.SantaEfficiency.ToString());
         goldSb.Append("% 증가");
         ObjAmount = goldSb.ToString();
-
-        santaImg.sprite = clickedObj.santaSprite;
-        santaImg.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -141,13 +137,20 @@ public class ClickObjWindow : MonoBehaviour
     /// </summary>
     void Refresh()
     {
-        if (building && building.Upgrade())     // 빌딩 업그레이드
+        //if (building && building.Upgrade())     // 빌딩 업그레이드
+        //{
+        //    SetBuildingInfo();
+        //}
+        if (santa.Upgrade())      // 산타 업그레이드
         {
-            SetBuildingInfo();
-        }
-        else if (santa && santa.Upgrade())      // 산타 업그레이드
-        {
-            SetSantaInfo();
+            ObjLevel = santa.Level;
+            ObjPrice = santa.SantaPrice;
+
+            goldSb.Clear();
+            goldSb.Append("알바 효율 ");
+            goldSb.Append(santa.SantaEfficiency.ToString());
+            goldSb.Append("% 증가");
+            ObjAmount = goldSb.ToString();
         }
 
         SetButtonInteractable();
@@ -170,21 +173,21 @@ public class ClickObjWindow : MonoBehaviour
     #region 유니티 함수
     private void OnEnable()
     {
-        Refresh();
+        SetSantaInfo();
     }
 
-    private void OnDisable()
-    {
-        if (building)
-        {
-            building = null;
-            buildingImg.gameObject.SetActive(false);
-        }
-        if (santa)
-        {
-            santa = null;
-            santaImg.gameObject.SetActive(false);
-        }
-    }
+    //private void OnDisable()
+    //{
+    //    if (building)
+    //    {
+    //        building = null;
+    //        buildingImg.gameObject.SetActive(false);
+    //    }
+    //    if (santa)
+    //    {
+    //        santa = null;
+    //        santaImg.gameObject.SetActive(false);
+    //    }
+    //}
     #endregion
 }

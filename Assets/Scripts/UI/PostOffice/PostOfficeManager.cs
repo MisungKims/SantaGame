@@ -38,9 +38,9 @@ public class PostOfficeManager : MonoBehaviour
     public GameObject parent;          // 편지 오브젝트의 부모
 
     
-    private List<PostObject> postUIList = new List<PostObject>();       // 편지 UI 리스트
-    public List<Vector2> UITransformList = new List<Vector2>();       // 편지 UI의 위치 리스트
-    public List<Vector2> parentSizeList = new List<Vector2>();       // 편지 UI의 위치 리스트
+    private List<PostObject> postUIList = new List<PostObject>();    // 편지 UI 리스트
+    public List<Vector2> UITransformList = new List<Vector2>();      // 편지 UI의 위치 리스트
+    public List<Vector2> parentSizeList = new List<Vector2>();       // 부모(스크롤뷰의 content)의 크기 리스트
 
     // UI 배치
     private RectTransform rectTransform;
@@ -54,7 +54,7 @@ public class PostOfficeManager : MonoBehaviour
     public WritingPad writingPad;
 
     // 그 외 변수
-    public int maximum = 20;        // 편지함 맥시멈
+    public int maximum;        // 편지함 맥시멈
 
     #endregion
 
@@ -75,6 +75,8 @@ public class PostOfficeManager : MonoBehaviour
 
     private void Start()
     {
+        maximum = ObjectPoolingManager.Instance.poolingList[(int)EObjectFlag.post].initCount;
+
         StartCoroutine(SendPost());
     }
     #endregion
@@ -85,23 +87,31 @@ public class PostOfficeManager : MonoBehaviour
     /// </summary>
     void SetTransform()
     {
+        // UI 오브젝트의 갯수에 따른 위치들을 리스트에 넣기
         rectTransform = postObj.transform.GetComponent<RectTransform>();
-        rectTransform.anchoredPosition = new Vector3(0, 0, 0);
+        rectTransform.anchoredPosition = Vector2.zero;
+
+        Vector2 tempPos = Vector2.zero;
+        tempPos.y = nextYPos;
 
         for (int i = 0; i < maximum; i++)
         {
             UITransformList.Add(rectTransform.anchoredPosition);
-            rectTransform.anchoredPosition += new Vector2(0, nextYPos);
+            rectTransform.anchoredPosition += tempPos;
         }
 
+        // UI의 갯수에 따른 부모의 크기를 리스트에 넣기
         parentRectTransform = parent.transform.GetComponent<RectTransform>();
         parentRectTransform.sizeDelta = new Vector2(0, 80);
 
-        Vector2 temp = parentRectTransform.sizeDelta;
+        Vector2 tempSize = Vector2.zero;
+        tempSize.y = rectTransform.sizeDelta.y;
+
+        Vector2 size = parentRectTransform.sizeDelta;
         for (int i = 0; i < maximum; i++)
         {
-            parentSizeList.Add(temp);
-            temp += new Vector2(0, rectTransform.sizeDelta.y);
+            parentSizeList.Add(size);
+            size += tempSize;
         }
     }
 
@@ -132,9 +142,11 @@ public class PostOfficeManager : MonoBehaviour
         {
             yield return waitForSeconds;
 
-            int randIndex = Random.Range(0, postList.Count);
-           
-            PostOfficeInstance(postList[randIndex]);
+            int randIndex = Random.Range(0, postList.Count);        // 랜덤으로 편지 내용을 정함
+            if (postUIList.Count < maximum)          // 편지함이 차지 않았을 때만 생성
+            {
+                PostOfficeInstance(postList[randIndex]);
+            }
         }
     }
 
@@ -143,13 +155,10 @@ public class PostOfficeManager : MonoBehaviour
     /// </summary>
     void PostOfficeInstance(PostStruct post)
     {
-        PostObject newObj = PostOfficeObjectPool.Instance.Get(post);           // 오브젝트 풀에서 꺼냄
-
-        if (newObj == null)     // 편지함이 꽉 찼을 때에는 생성하지 않음
-        {
-            return;
-        }
-
+        PostObject newObj = ObjectPoolingManager.Instance.Get(EObjectFlag.post).GetComponent<PostObject>();
+        
+        newObj.PostName = post.name;
+        newObj.PostConent = post.content;
         newObj.transform.GetComponent<RectTransform>().anchoredPosition = UITransformList[0];       // 새로온 편지는 맨 상단으로 가도록
         newObj.index = postUIList.Count;
 
@@ -169,7 +178,8 @@ public class PostOfficeManager : MonoBehaviour
     /// <param name="index"></param>
     public void Refresh(int index)
     {
-        PostOfficeObjectPool.Instance.Set(postUIList[index]);           // 오브젝트 풀에 돌려줌
+        ObjectPoolingManager.Instance.Set(postUIList[index].gameObject, EObjectFlag.post);        // 오브젝트 풀에 돌려줌
+
         postUIList.RemoveAt(index);
 
         // UI 배치를 다시
