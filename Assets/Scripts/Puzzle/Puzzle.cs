@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[System.Serializable]
 public class Puzzle
 {
     public Sprite puzzleImage;
@@ -25,9 +26,10 @@ public class Puzzle
     }
 }
 
+[System.Serializable]
 public struct PuzzlePiece
 {
-    public int index;
+   // public int index;
     public Image pieceImage;
     public bool isGet;
 }

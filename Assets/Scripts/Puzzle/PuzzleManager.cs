@@ -13,18 +13,7 @@ using UnityEngine.UI;
 public class PuzzleManager : MonoBehaviour
 {
     #region 변수
-    //UI변수
-    public Sprite[] PuzzleImages;    // 퍼즐 배경 이미지 배열
-
     public List<Puzzle> puzzleList = new List<Puzzle>();    // 퍼즐의 모든 정보를 담고 있는 리스트
-
-    private List<Image[]> puzzlePieceList = new List<Image[]>();         // 각 퍼즐의 조각들을 담고 있는 리스트
-    [SerializeField]
-    private Image[] rcPiece;
-
-    [SerializeField]
-    private PuzzleButton[] buttons;
-
 
     // 캐싱
     private PuzzleUI puzzleUI;
@@ -52,52 +41,11 @@ public class PuzzleManager : MonoBehaviour
 
         getRewardWindow = UIManager.Instance.getRewardWindow;
 
-        InitPuzzlePieceList();
-
-        InitPuzzleList();
     }
     #endregion
 
 
     #region 함수
-
-    [SerializeField]
-    GameObject PuzzlePanel;
-    public void OpenPuzzlePanel()
-    {
-        PuzzlePanel.SetActive(true);
-    }
-
-    /// <summary>
-    /// 퍼즐 조각 리스트에 각 퍼즐의 조각 이미지를 넣어줌
-    /// </summary>
-    void InitPuzzlePieceList()
-    {
-        puzzlePieceList.Add(rcPiece);
-    }
-
-    /// <summary>
-    /// Puzzle 리스트에 퍼즐의 각 값들을 넣어줌
-    /// </summary>
-    void InitPuzzleList()
-    {
-        for (int i = 0; i < PuzzleImages.Length; i++)
-        {
-            List<PuzzlePiece> pieceList = new List<PuzzlePiece>();
-            for (int j = 0; j < puzzlePieceList[i].Length; j++)
-            {
-                PuzzlePiece puzzlePiece;
-                puzzlePiece.index = j;
-                puzzlePiece.pieceImage = puzzlePieceList[i][j];
-                puzzlePiece.isGet = false;
-
-                pieceList.Add(puzzlePiece);
-            }
-
-            Puzzle puzzle = new Puzzle(PuzzleImages[i], pieceList, buttons[i], false);
-            puzzleList.Add(puzzle);
-        }
-    }
 
     // 테스트 용
     public void get()
@@ -111,21 +59,17 @@ public class PuzzleManager : MonoBehaviour
 
     IEnumerator getCoru()
     {
-        GetPiece(EGiftType.RCcar, 0);
-
-        while (!getRewardWindow.isTouch)
+      
+        for (int i = 0; i < 12; i++)
         {
-            yield return null;
+            GetPiece(EGiftType.RCcar, i);
+            while (!getRewardWindow.isTouch)
+            {
+                yield return null;
+            }
+
+            
         }
-
-        GetPiece(EGiftType.RCcar, 1);
-
-        while (!getRewardWindow.isTouch)
-        {
-            yield return null;
-        }
-
-        GetPiece(EGiftType.RCcar, 2);
     }
 
 
