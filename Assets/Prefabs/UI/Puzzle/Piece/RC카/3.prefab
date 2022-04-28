@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1948664606290971915
+--- !u!1 &8589483103353514307
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,9 +8,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1948664606290971914}
-  - component: {fileID: 1948664606290971908}
-  - component: {fileID: 1948664606290971909}
+  - component: {fileID: 8589483103353514306}
+  - component: {fileID: 8589483103353514316}
+  - component: {fileID: 8589483103353514317}
   m_Layer: 5
   m_Name: 3
   m_TagString: Untagged
@@ -18,13 +18,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &1948664606290971914
+--- !u!224 &8589483103353514306
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1948664606290971915}
+  m_GameObject: {fileID: 8589483103353514307}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -34,30 +34,30 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 33.051994, y: 106.34921}
-  m_SizeDelta: {x: 129.4862, y: 100.1736}
+  m_AnchoredPosition: {x: 68.11, y: 220.3461}
+  m_SizeDelta: {x: 263, y: 205}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &1948664606290971908
+--- !u!222 &8589483103353514316
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1948664606290971915}
+  m_GameObject: {fileID: 8589483103353514307}
   m_CullTransparentMesh: 1
---- !u!114 &1948664606290971909
+--- !u!114 &8589483103353514317
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1948664606290971915}
+  m_GameObject: {fileID: 8589483103353514307}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 4c8eae8b22339e448abc2a18f24ac223, type: 2}
+  m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}

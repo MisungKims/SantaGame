@@ -64,15 +64,7 @@ public class PuzzleUI : MonoBehaviour
     /// </summary>
     public void SetPuzzle()
     {
-        switch (puzzleType)
-        {
-            case EGiftType.RCcar:
-                PuzzleName = "RC카";
-
-                break;
-            default:
-                break;
-        }
+        PuzzleName = GiftManager.Instance.giftList[(int)puzzleType].giftName;
 
         // 퍼즐 배경 이미지 불러오기
         PuzzleImage.sprite = puzzleManager.puzzleList[(int)puzzleType].puzzleImage;
