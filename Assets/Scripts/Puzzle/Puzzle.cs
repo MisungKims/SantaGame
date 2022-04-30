@@ -13,13 +13,15 @@ using UnityEngine.UI;
 public class Puzzle
 {
     public Sprite puzzleImage;
+    public int line;
     public List<PuzzlePiece> puzzlePieceList = new List<PuzzlePiece>();
     public PuzzleButton button;
     public bool isSuccess;
 
-    public Puzzle(Sprite puzzleImage, List<PuzzlePiece> puzzlePieceList, PuzzleButton button, bool isSuccess)
+    public Puzzle(Sprite puzzleImage, int line, List<PuzzlePiece> puzzlePieceList, PuzzleButton button, bool isSuccess)
     {
         this.puzzleImage = puzzleImage;
+        this.line = line;
         this.puzzlePieceList = puzzlePieceList;
         this.button = button;
         this.isSuccess = isSuccess;
@@ -30,6 +32,6 @@ public class Puzzle
 public struct PuzzlePiece
 {
    // public int index;
-    public Image pieceImage;
+    public Sprite pieceImage;
     public bool isGet;
 }

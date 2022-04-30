@@ -62,13 +62,11 @@ public class PuzzleManager : MonoBehaviour
       
         for (int i = 0; i < 12; i++)
         {
-            GetPiece(EGiftType.RCcar, i);
+            GetPiece(EGiftType.bubbles, i);
             while (!getRewardWindow.isTouch)
             {
                 yield return null;
             }
-
-            
         }
     }
 
@@ -83,8 +81,7 @@ public class PuzzleManager : MonoBehaviour
     {
         PuzzlePiece puzzlePiece = puzzleList[(int)ePuzzle].puzzlePieceList[pieceIndex];
         puzzlePiece.isGet = true;
-
-        puzzleList[(int)ePuzzle].puzzlePieceList[pieceIndex] = puzzlePiece;
+        puzzleList[(int)ePuzzle].puzzlePieceList[pieceIndex] = puzzlePiece;     // ÇØ´ç ÆÛÁñ Á¶°¢ÀÇ isGetÀ» true·Î ¹Ù²Þ
 
         puzzleList[(int)ePuzzle].button.Count++;
 
@@ -96,7 +93,7 @@ public class PuzzleManager : MonoBehaviour
             puzzleUI.RefreshPieceImage(pieceIndex);
         }
 
-        getRewardWindow.OpenWindow("ÆÛÁñ Á¶°¢", puzzlePiece.pieceImage.sprite);      // º¸»ó È¹µæÃ¢ º¸¿©ÁÜ
+        getRewardWindow.OpenWindow("ÆÛÁñ Á¶°¢", puzzlePiece.pieceImage);      // º¸»ó È¹µæÃ¢ º¸¿©ÁÜ
     }
 
     /// <summary>

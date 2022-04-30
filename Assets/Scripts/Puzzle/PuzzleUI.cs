@@ -9,6 +9,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[System.Serializable]
+public class PieceObject            // 라인의 종류에 따른 퍼즐 오브젝트(UI)
+{
+    public GameObject LineType;
+    public Image[] images;
+}
+
 public class PuzzleUI : MonoBehaviour
 {
     #region 변수
@@ -21,8 +28,12 @@ public class PuzzleUI : MonoBehaviour
     private Text puzzleNameText;
     [SerializeField]
     private Image PuzzleImage;          // 현재 퍼즐 이미지
-    [SerializeField]
-    private Image[] PieceImages;          // 퍼즐 조각 위치
+    //[SerializeField]
+    //private Image[] PieceImages;          // 퍼즐 조각 위치
+
+    public List<PieceObject> pieceImages = new List<PieceObject>();
+
+    private PieceObject currentObj;     // 현재 보여지고 있는 라인의 퍼즐 오브젝트
 
     // 프로퍼티
     public string PuzzleName
@@ -49,6 +60,7 @@ public class PuzzleUI : MonoBehaviour
         else
             Destroy(this.gameObject);
 
+        puzzleType = EGiftType.bubbles;
         puzzleManager = PuzzleManager.Instance;
     }
 
@@ -64,6 +76,12 @@ public class PuzzleUI : MonoBehaviour
     /// </summary>
     public void SetPuzzle()
     {
+        if (currentObj != null)
+        {
+            currentObj.LineType.gameObject.SetActive(false);        // 기존에 보여지고 있던 오브젝트를 끔
+            currentObj = null;
+        }
+
         PuzzleName = GiftManager.Instance.giftList[(int)puzzleType].giftName;
 
         // 퍼즐 배경 이미지 불러오기
@@ -72,12 +90,14 @@ public class PuzzleUI : MonoBehaviour
         // 퍼즐 조각 불러오기
         List<PuzzlePiece> puzzlePieces = puzzleManager.puzzleList[(int)puzzleType].puzzlePieceList;
 
-        for (int i = 0; i < PieceImages.Length; i++)
-        {
-            PieceImages[i].sprite = puzzlePieces[i].pieceImage.sprite;
-            PieceImages[i].gameObject.SetActive(puzzlePieces[i].isGet);   // 얻지 않은 조각이면 보이지 않게
+        // UI에서 해당 퍼즐의 라인에 해당하는 오브젝트를 보여줌
+        currentObj = pieceImages[puzzleManager.puzzleList[(int)puzzleType].line - 1];
+        currentObj.LineType.gameObject.SetActive(true);
 
-            //PieceImages[i].gameObject.transform.GetComponent<RectTransform>().anchoredPosition = puzzlePieces[i].pieceImage.transform.GetComponent<RectTransform>().anchoredPosition;
+        for (int i = 0; i < currentObj.images.Length; i++)
+        {
+            currentObj.images[i].sprite = puzzlePieces[i].pieceImage;
+            currentObj.images[i].gameObject.SetActive(puzzlePieces[i].isGet);   // 얻지 않은 조각이면 보이지 않게
         }
     }
 
@@ -86,10 +106,11 @@ public class PuzzleUI : MonoBehaviour
     /// </summary>
     public void RefreshPieceImage(int index)
     {
-        PieceImages[index].gameObject.SetActive(true);
+        PieceObject visibleObject = pieceImages[puzzleManager.puzzleList[(int)puzzleType].line - 1];
+        visibleObject.images[index].gameObject.SetActive(true);
 
         // 퍼즐을 다 완성했다면 완성 버튼 보여줌
-        if (PuzzleManager.Instance.puzzleList[(int)puzzleType].isSuccess)
+        if (puzzleManager.puzzleList[(int)puzzleType].isSuccess)
         {
             successButton.SetActive(true);
         }

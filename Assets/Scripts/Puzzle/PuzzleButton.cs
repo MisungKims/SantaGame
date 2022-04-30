@@ -35,6 +35,7 @@ public class PuzzleButton : MonoBehaviour
     public void SetPuzzleEnum()
     {
         PuzzleUI.Instance.puzzleType = puzzleType;
+        PuzzleUI.Instance.SetPuzzle();
     }
     #endregion
 }
