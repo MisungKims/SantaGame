@@ -16,7 +16,6 @@ public class ButtonScale : ClickScale
         StartCoroutine(ScaleDown());                     // 스케일을 작아지게
     }
 
-
     protected override IEnumerator Start()
     {
         yield return StartCoroutine(base.Start()); // 베이스 호출

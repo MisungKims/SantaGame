@@ -7,7 +7,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 
 public class PuzzleManager : MonoBehaviour
@@ -103,10 +102,9 @@ public class PuzzleManager : MonoBehaviour
     {
         EGiftType RandomPuzzleIndex = GiftManager.Instance.RandomGift().giftType;        // 확률에 따라 랜덤으로 퍼즐 그림 정하기
         
-        int RandomPieceIndex = Random.Range(0, 13);         // 그 퍼즐의 어떤 조각을 가져올지
+        int RandomPieceIndex = Random.Range(0, 12);         // 그 퍼즐의 어떤 조각을 가져올지
 
-        //GetPiece(RandomPuzzleIndex, RandomPieceIndex);
-        Debug.Log(RandomPuzzleIndex + " " + RandomPieceIndex);
+        GetPiece(RandomPuzzleIndex, RandomPieceIndex);
     }
 
     /// <summary>
