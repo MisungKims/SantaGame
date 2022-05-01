@@ -15,6 +15,7 @@ public struct PostStruct
 {
     public string name;
     public string content;
+    public int giftIndex;
 }
 #endregion
 
@@ -66,7 +67,7 @@ public class PostOfficeManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        waitForSeconds = new WaitForSeconds(GameManager.Instance.dayCount);     // 다음 날이 될 때마다 편지를 전송하기 위함
+        waitForSeconds = new WaitForSeconds(5f);     // 다음 달이 될 때마다 편지를 전송하기 위함
 
         SetTransform();
 
@@ -127,6 +128,7 @@ public class PostOfficeManager : MonoBehaviour
             PostStruct newPost;
             newPost.name = data[i]["수신"].ToString();
             newPost.content = data[i]["내용"].ToString();
+            newPost.giftIndex = (int)data[i]["선물 인덱스"];
 
             postList.Add(newPost);
         }
@@ -170,6 +172,8 @@ public class PostOfficeManager : MonoBehaviour
         parentRectTransform.sizeDelta = parentSizeList[postUIList.Count];
 
         postUIList.Add(newObj);
+
+        GiftManager.Instance.giftList[post.giftIndex].wishCount++;      // 선물 위시리스트에 추가
     }
 
     /// <summary>

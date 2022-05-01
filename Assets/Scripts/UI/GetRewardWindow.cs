@@ -19,8 +19,15 @@ public class GetRewardWindow : MonoBehaviour
     [SerializeField]
     private Image RewardImg;
     
-
     public bool isTouch;
+
+    RectTransform imgRect;
+    Vector2 giftImgSize = new Vector2(300f, 300f);
+
+    private void Awake()
+    {
+        imgRect = RewardImg.GetComponent<RectTransform>();
+    }
 
     private void OnEnable()
     {
@@ -37,6 +44,7 @@ public class GetRewardWindow : MonoBehaviour
         RewardName.text = gift.giftName;
         RewardGrade.text = Enum.GetName(typeof(EGiftGrade), (int)gift.giftGrade);
         RewardImg.sprite = gift.giftImage;
+        imgRect.sizeDelta = giftImgSize;
     }
 
     /// <summary>
@@ -49,6 +57,7 @@ public class GetRewardWindow : MonoBehaviour
         RewardName.text = name;
         RewardGrade.text = "";
         RewardImg.sprite = sprite;
+        imgRect.sizeDelta = sprite.bounds.size;
     }
 
     /// <summary>

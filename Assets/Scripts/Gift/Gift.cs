@@ -53,6 +53,8 @@ public class Gift
     public EGiftGrade giftGrade;
     public string giftName;
     public Sprite giftImage;
+    public int wishCount;
+    public int inventoryIndex = -1;
 
     public Gift(Gift gift)
     {
@@ -60,6 +62,8 @@ public class Gift
         this.giftGrade = gift.giftGrade;
         this.giftName = gift.giftName;
         this.giftImage = gift.giftImage;
+        this.wishCount = gift.wishCount;
+        this.inventoryIndex = gift.inventoryIndex;
     }
 
     public static int GetWeight(EGiftGrade giftGrade)

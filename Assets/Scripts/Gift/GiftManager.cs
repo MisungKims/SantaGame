@@ -37,6 +37,10 @@ public class GiftManager : MonoBehaviour
 
         getRewardWindow = UIManager.Instance.getRewardWindow;
 
+        for (int i = 0; i < giftList.Count; i++)
+        {
+            giftList[i].inventoryIndex = -1;
+        }
     }
 
     private void Start()
@@ -77,7 +81,7 @@ public class GiftManager : MonoBehaviour
     {
         getRewardWindow.OpenWindow(gift);     // 보상 획득창 보여줌
 
-        /// TODO : 인벤토리에 저장
+        Inventory.Instance.AddItem(gift);   // 인벤토리에 저장
     }
     #endregion
 

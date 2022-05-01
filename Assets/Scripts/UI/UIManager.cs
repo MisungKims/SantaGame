@@ -1,7 +1,7 @@
 /**
  * @brief UI를 관리
  * @author 김미성
- * @date 22-04-18
+ * @date 22-05-01
  */
 
 using System.Collections;
@@ -23,7 +23,8 @@ public class UIManager : MonoBehaviour
     [Header("---------- UI 변수")]
     public GameObject mainPanel;
     public GameObject alwaysVisiblePanel;
-    public GameObject snowPanel;            // 눈 패널
+  //  public GameObject snowPanel;            // 눈 패널
+ //   public RainPuzzle rainPuzzle;
     public GameObject cameraPanel;          // 카메라 패널
     public GameObject citizenPanel;         // 주민 패널
     public GameObject storePanel;        // 상점 패널
@@ -33,7 +34,9 @@ public class UIManager : MonoBehaviour
     public GameObject InviteRabbitWindow;  // 토끼 초대 창
     public QuestionWindow questionWindow;
     public GetRewardWindow getRewardWindow; // 보상 획득 창
-   
+
+    public GameObject panel;        // 시작 전 껐다 켜야하는 창들을 담은 오브젝트
+
     #endregion
 
     #region 함수
@@ -102,11 +105,36 @@ public class UIManager : MonoBehaviour
         alwaysVisiblePanel.SetActive(true);
     }
 
+  
+
     public void SetisOpenPanel(bool value)
     {
         isOpenPanel = value;
     }
+
+
+ /////////////////// 테스트
+    public void TestNewItem()
+    {
+        Inventory.Instance.AddItem(GiftManager.Instance.giftList[2]);
+    }
+
+    public void TestNewItem2()
+    {
+        Inventory.Instance.AddItem(GiftManager.Instance.giftList[13]);
+    }
+
+    public void TestNewItem3()
+    {
+        Inventory.Instance.AddItem(GiftManager.Instance.giftList[3]);
+    }
+
+    public void TestRemoveItem()
+    {
+        Inventory.Instance.RemoveItem(GiftManager.Instance.giftList[13]);
+    }
     #endregion
+
 
 
     private void Awake()
@@ -117,8 +145,33 @@ public class UIManager : MonoBehaviour
             Destroy(this.gameObject);
     }
 
-    //private void Start()
+    private IEnumerator Start()
+    {
+        
+
+        yield return null;
+
+        // 켰다가 다시 끄기
+        for (int i = 0; i < panel.transform.childCount; i++)
+        {
+            panel.transform.GetChild(i).gameObject.SetActive(true);
+            panel.transform.GetChild(i).gameObject.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// 눈 내리는 패널 보이는 타이머
+    /// </summary>
+    /// <returns></returns>
+    //private IEnumerator SnowTimer()
     //{
-    //    SetNotificationImage();
+    //    yield return new WaitForSeconds(30f);
+
+    //    snowPanel.SetActive(true);
+
+    //    yield return StartCoroutine(rainPuzzle.ClickPuzzleCoru());      // 퍼즐이 클릭될 때까지 대기
+    //    yield return new WaitForSeconds(1f);
+
+    //    snowPanel.SetActive(false);
     //}
 }

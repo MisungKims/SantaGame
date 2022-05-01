@@ -122,6 +122,30 @@ public class PuzzleUI : MonoBehaviour
     public void ClickSuccessButton()
     {
         GiftManager.Instance.ReceiveGift(GiftManager.Instance.giftList[(int)puzzleType]);
+
+        InitPiece();
+    }
+
+    /// <summary>
+    /// 퍼즐을 초기화
+    /// </summary>
+    public void InitPiece()
+    {
+        // 퍼즐 조각 불러오기
+        List<PuzzlePiece> puzzlePieces = puzzleManager.puzzleList[(int)puzzleType].puzzlePieceList;
+
+        // 퍼즐을 초기화
+        for (int i = 0; i < puzzlePieces.Count; i++)
+        {
+            PuzzlePiece puzzlePiece = puzzlePieces[i];
+            puzzlePiece.isGet = false;
+            puzzlePieces[i] = puzzlePiece;     // 해당 퍼즐 조각의 isGet을 false로 바꿈
+
+            PieceObject invisibleObject = pieceImages[puzzleManager.puzzleList[(int)puzzleType].line - 1];
+            invisibleObject.images[i].gameObject.SetActive(false);
+        }
+
+        successButton.SetActive(false);
     }
     #endregion
 }
