@@ -56,7 +56,6 @@ public class GiftShop : MonoBehaviour
     /// </summary>
     public void ClickLever()
     {
-        Debug.Log("click");
         count++;
         anim.SetInteger("Animation", count);
 
@@ -95,8 +94,6 @@ public class GiftShop : MonoBehaviour
     /// </summary>
     void GetRandomGift()
     {
-        Gift randomGift = giftManager.RandomGift();
-        
-        giftManager.ReceiveGift(randomGift);        // 인벤토리에 넣기
+        giftManager.ReceiveRandomGift();
     }
 }

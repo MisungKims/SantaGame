@@ -57,7 +57,7 @@ public class GetRewardWindow : MonoBehaviour
         RewardName.text = name;
         RewardGrade.text = "";
         RewardImg.sprite = sprite;
-        imgRect.sizeDelta = sprite.bounds.size;
+       // imgRect.sizeDelta = sprite.bounds.size;
     }
 
     /// <summary>

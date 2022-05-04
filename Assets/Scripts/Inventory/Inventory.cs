@@ -1,7 +1,7 @@
 /**
  * @brief 선물 인벤토리
  * @author 김미성
- * @date 22-05-01
+ * @date 22-05-04
  */
 
 using System.Collections;
@@ -47,19 +47,13 @@ public class Inventory : MonoBehaviour
             Destroy(this.gameObject);
     }
 
-    private void OnEnable()
-    {
-        Debug.Log("REFRESH");
-        RefreshInventory();
-    }
-
     #endregion
 
     #region 함수
     /// <summary>
     /// 인벤토리에 아이템 추가
     /// </summary>
-    /// <param name="gift">추가할 선물</param>
+    /// <param name="gift">추가할 아이템</param>
     public void AddItem(Gift gift)
     {
         int giftInvIndex = gift.inventoryIndex;
@@ -97,32 +91,26 @@ public class Inventory : MonoBehaviour
 
                 if (giftItems.Count > 0)    // 제거 후 인벤토리에 다른 아이템이 있으면 UI 재배치
                 {
-                   // Debug.Log(giftInvIndex);
-                    for (int i = giftInvIndex; i < giftItems.Count + giftInvIndex; i++)
+                    for (int i = giftInvIndex; i < giftItems.Count; i++)
                     {
-                       // Debug.Log(giftItems[i].gift.giftName + " " + giftItems[i].gift.inventoryIndex);
-                       // slots[giftItems[i].gift.inventoryIndex].SetEmpty();
-                        giftItems[i].gift.inventoryIndex -= 1;
-                        
-
+                        giftItems[i].gift.inventoryIndex -= 1;          // 제거한 슬롯의 뒤에 있는 슬롯을 앞으로 한 칸씩 당 김
+                        slots[giftItems[i].gift.inventoryIndex].SetSlot(giftItems[giftItems[i].gift.inventoryIndex]);
                     }
+                    slots[giftItems.Count].SetEmpty();          // 한 칸씩 당기면 맨 뒤의 슬롯은 필요없으므로 비워둠
                 }
-
-               
             }
         }
     }
 
-    /// <summary>
-    /// 인벤토리 새로 고침
-    /// </summary>
-    public void RefreshInventory()
-    {
-        for (int i = 0; i < giftItems.Count; i++)
-        {
-            Debug.Log(giftItems[i].gift.giftName);
-            slots[i].SetSlot(giftItems[i]);
-        }
-    }
+    ///// <summary>
+    ///// 인벤토리 새로 고침
+    ///// </summary>
+    //public void RefreshInventory()
+    //{
+    //    for (int i = 0; i < giftItems.Count; i++)
+    //    {
+    //        slots[i].SetSlot(giftItems[i]);
+    //    }
+    //}
     #endregion
 }

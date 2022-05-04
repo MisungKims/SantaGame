@@ -1,7 +1,7 @@
 /**
  * @brief 선물 인벤토리 슬롯
  * @author 김미성
- * @date 22-05-01
+ * @date 22-05-04
  */
 
 using System.Collections;
