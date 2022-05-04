@@ -23,13 +23,12 @@ public class UIManager : MonoBehaviour
     [Header("---------- UI 변수")]
     public GameObject mainPanel;
     public GameObject alwaysVisiblePanel;
-  //  public GameObject snowPanel;            // 눈 패널
- //   public RainPuzzle rainPuzzle;
     public GameObject cameraPanel;          // 카메라 패널
     public GameObject citizenPanel;         // 주민 패널
     public GameObject storePanel;        // 상점 패널
+    public GameObject giftShopPanel;        // 선물 가게 패널
     public PuzzleUI puzzlePanel;            // 퍼즐 패널
-
+    
     public GameObject clickObjWindow;       // 클릭 오브젝트 창
     public GameObject InviteRabbitWindow;  // 토끼 초대 창
     public QuestionWindow questionWindow;
@@ -105,7 +104,32 @@ public class UIManager : MonoBehaviour
         alwaysVisiblePanel.SetActive(true);
     }
 
-  
+    /// <summary>
+    /// 선물 가게 패널을 보여줌
+    /// </summary>
+    public void ShowGiftShopPanel()
+    {
+        SetisOpenPanel(true);
+
+        giftShopPanel.SetActive(true);
+        mainPanel.SetActive(false);
+        alwaysVisiblePanel.SetActive(false);
+
+        if (InviteRabbitWindow.activeSelf) InviteRabbitWindow.SetActive(false);
+        if (citizenPanel.activeSelf) citizenPanel.SetActive(false);
+    }
+
+    /// <summary>
+    /// 선물 가게 패널을 숨김
+    /// </summary>
+    public void HideGiftShopPanel()
+    {
+        SetisOpenPanel(false);
+
+        giftShopPanel.SetActive(false);
+        mainPanel.SetActive(true);
+        alwaysVisiblePanel.SetActive(true);
+    }
 
     public void SetisOpenPanel(bool value)
     {

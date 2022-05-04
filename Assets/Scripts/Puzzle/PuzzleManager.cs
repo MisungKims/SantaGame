@@ -61,7 +61,7 @@ public class PuzzleManager : MonoBehaviour
       
         for (int i = 0; i < 12; i++)
         {
-            GetPiece(EGiftType.bubbles, i);
+            GetPiece(EGiftType.phone, i);
             while (!getRewardWindow.isTouch)
             {
                 yield return null;

@@ -75,13 +75,22 @@ public class GiftManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 랜덤으로 선물을 받음
+    /// </summary>
+    public void ReceiveRandomGift()
+    {
+        ReceiveGift(RandomGift().giftType);
+    }
+
+    /// <summary>
     /// 받은 선물을 인벤토리에 저장
     /// </summary>
-    public void ReceiveGift(Gift gift)
+    public void ReceiveGift(EGiftType giftType)
     {
-        getRewardWindow.OpenWindow(gift);     // 보상 획득창 보여줌
+        Gift gift = giftList[(int)giftType];
 
-        Inventory.Instance.AddItem(gift);   // 인벤토리에 저장
+        getRewardWindow.OpenWindow(gift);       // 보상 획득창 보여줌
+        Inventory.Instance.AddItem(gift);       // 인벤토리에 저장
     }
     #endregion
 
