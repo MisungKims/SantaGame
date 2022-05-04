@@ -49,6 +49,7 @@ public class Inventory : MonoBehaviour
 
     private void OnEnable()
     {
+        Debug.Log("REFRESH");
         RefreshInventory();
     }
 
@@ -96,11 +97,18 @@ public class Inventory : MonoBehaviour
 
                 if (giftItems.Count > 0)    // 제거 후 인벤토리에 다른 아이템이 있으면 UI 재배치
                 {
-                    for (int i = giftInvIndex + 1; i < giftItems.Count + giftInvIndex + 1; i++)
+                   // Debug.Log(giftInvIndex);
+                    for (int i = giftInvIndex; i < giftItems.Count + giftInvIndex; i++)
                     {
-                        slots[i].SetEmpty();
+                       // Debug.Log(giftItems[i].gift.giftName + " " + giftItems[i].gift.inventoryIndex);
+                       // slots[giftItems[i].gift.inventoryIndex].SetEmpty();
+                        giftItems[i].gift.inventoryIndex -= 1;
+                        
+
                     }
                 }
+
+               
             }
         }
     }
@@ -112,6 +120,7 @@ public class Inventory : MonoBehaviour
     {
         for (int i = 0; i < giftItems.Count; i++)
         {
+            Debug.Log(giftItems[i].gift.giftName);
             slots[i].SetSlot(giftItems[i]);
         }
     }

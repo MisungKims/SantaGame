@@ -35,7 +35,7 @@ public class UIManager : MonoBehaviour
     public QuestionWindow questionWindow;
     public GetRewardWindow getRewardWindow; // 보상 획득 창
 
-    public GameObject panel;        // 시작 전 껐다 켜야하는 창들을 담은 오브젝트
+   // public GameObject panel;        // 시작 전 껐다 켜야하는 창들을 담은 오브젝트
 
     #endregion
 
@@ -145,19 +145,19 @@ public class UIManager : MonoBehaviour
             Destroy(this.gameObject);
     }
 
-    private IEnumerator Start()
-    {
+    //private IEnumerator Start()
+    //{
         
 
-        yield return null;
+    //    yield return null;
 
-        // 켰다가 다시 끄기
-        for (int i = 0; i < panel.transform.childCount; i++)
-        {
-            panel.transform.GetChild(i).gameObject.SetActive(true);
-            panel.transform.GetChild(i).gameObject.SetActive(false);
-        }
-    }
+    //    // 켰다가 다시 끄기
+    //    for (int i = 0; i < panel.transform.childCount; i++)
+    //    {
+    //        panel.transform.GetChild(i).gameObject.SetActive(true);
+    //        panel.transform.GetChild(i).gameObject.SetActive(false);
+    //    }
+    //}
 
     /// <summary>
     /// 눈 내리는 패널 보이는 타이머
