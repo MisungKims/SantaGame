@@ -285,6 +285,8 @@ public class GameManager : MonoBehaviour
 
         StartCoroutine(IncreaseGaugeCorou(20f));
 
+        SoundManager.Instance.PlayBGM(EBgmType.main);
+
         //BigInteger start = 100;
         //string value = start.ToString();
         //float sf = 1.7f;
