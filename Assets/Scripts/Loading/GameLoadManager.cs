@@ -23,22 +23,32 @@ public class GameLoadManager : MonoBehaviour
    private void Start()
     {
         progressBar.fillAmount = 0;
+
+        if (nextScene == null)
+        {
+            nextScene = "SantaVillage";
+        }
+        
         StartCoroutine(LoadAsyncScene());
     }
 
     public static void LoadScene(string sceneName)
     {
-      //  nextScene = sceneName;
+        nextScene = sceneName;
 
-        SceneManager.LoadScene("LoadingScene");
+        SceneManager.LoadScene("GameLoad");
     }
 
+    public static Scene CurrentScene()
+    {
+        return SceneManager.GetActiveScene();
+    }
 
     IEnumerator LoadAsyncScene()
     {
         yield return null;
 
-        AsyncOperation asyncScene = SceneManager.LoadSceneAsync("SantaVillage");
+        AsyncOperation asyncScene = SceneManager.LoadSceneAsync(nextScene);
         asyncScene.allowSceneActivation = false;
 
         float timer = 0.0f;

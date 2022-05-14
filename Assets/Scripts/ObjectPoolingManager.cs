@@ -31,9 +31,15 @@ public class ObjectPoolingManager : MonoBehaviour
     void Awake()
     {
         if (instance == null)
+        {
             instance = this;
+            DontDestroyOnLoad(gameObject);      // 씬 전환 시에도 파괴되지 않음
+        }
         else
-            Destroy(gameObject);
+        {
+            if (instance != this)
+                Destroy(this.gameObject);
+        }
 
         for (int i = 0; i < poolingList.Count; i++)     // poolingList를 탐색해 각 오브젝트를 미리 생성
         {

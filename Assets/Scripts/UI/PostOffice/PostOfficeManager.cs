@@ -147,7 +147,10 @@ public class PostOfficeManager : MonoBehaviour
             int randIndex = Random.Range(0, postList.Count);        // 랜덤으로 편지 내용을 정함
             if (postUIList.Count < maximum)          // 편지함이 차지 않았을 때만 생성
             {
-                PostOfficeInstance(postList[randIndex]);
+                if (GameLoadManager.CurrentScene().name == "SantaVillage")
+                {
+                    PostOfficeInstance(postList[randIndex]);
+                }
             }
         }
     }

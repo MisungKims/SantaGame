@@ -11,6 +11,8 @@ public class CitizenButtonRay : ButtonRaycast
     protected override void Touched()
     {
         base.Touched();
+
+        SoundManager.Instance.PlaySoundEffect(ESoundEffectType.getGoldButton);      // È¿°úÀ½
         citizen.isTouch = true;
     }
 }

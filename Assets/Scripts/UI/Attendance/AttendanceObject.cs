@@ -88,6 +88,7 @@ public class AttendanceObject : MonoBehaviour
     {
         if (attendanceManager.GetReward(day))
         {
+            SoundManager.Instance.PlaySoundEffect(ESoundEffectType.stamp);
             CheckImage.SetActive(true);
         }
     }

@@ -280,11 +280,12 @@ public class StoreObject : MonoBehaviour
             return;
         }
 
+        SoundManager.Instance.PlaySoundEffect(ESoundEffectType.uiButton);       // 효과음 실행
+
         lockingImage.SetActive(false);
         unlockingObject.SetActive(true);
 
         BuyNewBuilding();
-
     }
 
     /// <summary>
@@ -292,6 +293,8 @@ public class StoreObject : MonoBehaviour
     /// </summary>
     void BuyNewBuilding()
     {
+        SoundManager.Instance.PlaySoundEffect(ESoundEffectType.newBuilding);            // 효과음 실행  
+
         isBuyBuilding = true;
 
         buildingInstance = ObjectManager.Instance.buildingList[index].GetComponent<Building>();
@@ -312,6 +315,7 @@ public class StoreObject : MonoBehaviour
     {
         if (buildingInstance.Upgrade())
         {
+            SoundManager.Instance.PlaySoundEffect(ESoundEffectType.uiButton);       // 효과음 실행
             RefreshBuildingInfo();
         }
     }
@@ -325,6 +329,8 @@ public class StoreObject : MonoBehaviour
     {
         if (GoldManager.CompareBigintAndUnit(gameManager.MyGold, SantaPrice))     // 플레이어가 가진 돈으로 업그레이드가 가능할 때
         {
+            SoundManager.Instance.PlaySoundEffect(ESoundEffectType.uiButton);       // 효과음 실행
+
             if (!isBuySanta) BuyNewSanta();                    // 사지 않은 산타면 새로 구매
             else UpgradeSanta();                               // 산 건물이면 업그레이드
         }
