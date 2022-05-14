@@ -78,6 +78,7 @@ public class RainPuzzlePiece : MonoBehaviour
         isStop = true;
         this.gameObject.SetActive(false);
 
+        SoundManager.Instance.PlaySoundEffect(ESoundEffectType.getGoldButton);
         PuzzleManager.Instance.GetRandomPuzzle();       // ·£´ýÀ¸·Î ÆÛÁñ È¹µæ
     }
     #endregion

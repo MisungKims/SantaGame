@@ -20,7 +20,15 @@ public enum EBgmType
 
 public enum ESoundEffectType
 {
-    screenShot
+    uiButton,
+    getGoldButton,
+    stamp,
+    screenShot,
+    newBuilding,
+    giftShopLever,
+    giftShopBall,
+    giftShopFallingBall,
+    getGift
 }
 
 public class SoundManager : MonoBehaviour

@@ -64,13 +64,17 @@ public class GameManager : MonoBehaviour
         set
         {
             gauge = value;
-            gaugeSlider.value = gauge;
-            
-            gaugeSb.Clear();
-            gaugeSb.Append(gauge.ToString("N0"));
-            gaugeSb.Append("%");
 
-            gaugeText.text = gaugeSb.ToString();
+            if (GameLoadManager.CurrentScene().name == "SantaVillage")
+            {
+                gaugeSlider.value = gauge;
+
+                gaugeSb.Clear();
+                gaugeSb.Append(gauge.ToString("N0"));
+                gaugeSb.Append("%");
+
+                gaugeText.text = gaugeSb.ToString();
+            }
         }
     }
 
@@ -155,7 +159,10 @@ public class GameManager : MonoBehaviour
                 else month++;
             }
 
-            dateText.text = String.Format("{0}년 {1}월 {2}일", year, month, day);
+            if (GameLoadManager.CurrentScene().name == "SantaVillage")
+            {
+                dateText.text = String.Format("{0}년 {1}월 {2}일", year, month, day);
+            }
         }
     }
 
@@ -226,8 +233,12 @@ public class GameManager : MonoBehaviour
     IEnumerator IncreaseGaugeCorou(float amount)
     {
         /// TODO : 효과음 실행
+        if (GameLoadManager.CurrentScene().name == "SantaVillage")
+        {
+            gaugeAnim.SetBool("isIncrease", true);      // 게이지 상승 애니메이션 실행
+        }
 
-        gaugeAnim.SetBool("isIncrease", true);      // 게이지 상승 애니메이션 실행
+            
 
         float goalGuage = gauge + amount;
 
@@ -240,7 +251,11 @@ public class GameManager : MonoBehaviour
 
         Gauge = goalGuage;
 
-        gaugeAnim.SetBool("isIncrease", false);
+        if (GameLoadManager.CurrentScene().name == "SantaVillage")
+        {
+            gaugeAnim.SetBool("isIncrease", false);
+        }
+        
 
         if (gauge >= 100.0f)
             LevelUp();

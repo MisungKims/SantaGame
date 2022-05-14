@@ -9,6 +9,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+enum EBackgroundDirection
+{
+    leftToRight,
+    rightToLeft,
+    upToDown,
+    cross
+}
+
 public class Background : MonoBehaviour
 {
     [SerializeField]
@@ -16,8 +24,11 @@ public class Background : MonoBehaviour
 
     Material mat;
 
+    //[SerializeField]
+    //bool isCross;       // 대각선으로 움직일 것인지?
+
     [SerializeField]
-    bool isCross;       // 대각선으로 움직일 것인지?
+    private EBackgroundDirection direction;
 
     private void Start()
     {
@@ -25,19 +36,29 @@ public class Background : MonoBehaviour
         mat.SetTextureScale("_MainTex", Vector2.one);
     }
 
-    void Update()
+    protected virtual void Update()
     {
-        if (isCross)
+        // Material의 Offset의 y값을 조정하여 배경을 움직임
+        switch (direction)
         {
-            // Material의 Offset의 x, y값을 조정하여 대각선으로 움직이는 것 처럼 보이게 함
-            mat.SetTextureOffset("_MainTex", new Vector2(Time.time * speed, Time.time * -speed));
-        }
-        else
-        {
-            // Material의 Offset의 y값을 조정하여 위에서 아래로 움직이는 것 처럼 보이게 함
-            mat.SetTextureOffset("_MainTex", new Vector2(0, Time.time * speed));
-        }
+            case EBackgroundDirection.leftToRight:
+                mat.SetTextureOffset("_MainTex", new Vector2(Time.time * speed, 0));
+                break;
 
+            case EBackgroundDirection.rightToLeft:
+                mat.SetTextureOffset("_MainTex", new Vector2(Time.time * -speed, 0));
+                break;
+
+            case EBackgroundDirection.upToDown:
+                mat.SetTextureOffset("_MainTex", new Vector2(0, Time.time * speed));
+                break;
+
+            case EBackgroundDirection.cross:
+                mat.SetTextureOffset("_MainTex", new Vector2(Time.time * speed, Time.time * -speed));
+                break;
+            default:
+                break;
+        }
     }
 }
 
