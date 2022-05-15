@@ -6,6 +6,7 @@ public class GiftDeliveryButton : MonoBehaviour
 {
    public void ClickButton()
     {
+        SoundManager.Instance.StopBGM();
         GameLoadManager.LoadScene("GiftDeliveryGame");
     }
 }
