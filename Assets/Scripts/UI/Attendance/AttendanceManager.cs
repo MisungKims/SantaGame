@@ -47,9 +47,15 @@ public class AttendanceManager : MonoBehaviour
     private void Awake()
     {
         if (instance == null)
+        {
             instance = this;
+            DontDestroyOnLoad(gameObject);      // 씬 전환 시에도 파괴되지 않음
+        }
         else
-            Destroy(this.gameObject);
+        {
+            if (instance != this)
+                Destroy(this.gameObject);
+        }
 
         ReadCSV();
     }
@@ -148,12 +154,14 @@ public class AttendanceManager : MonoBehaviour
     {
         while (true)
         {
-            // 마지막 출석 보상 수령 날짜가 오늘 날짜와 다르면 현재 받을 출석 보상이 있으므로,
-            if (getRewardDate != DateTime.Now.ToString("yyyy.MM.dd"))
+            if (GameLoadManager.CurrentScene().name == "SantaVillage")
             {
-                notificationImage.SetActive(true);        // UI로 알려줌
+                // 마지막 출석 보상 수령 날짜가 오늘 날짜와 다르면 현재 받을 출석 보상이 있으므로,
+                if (getRewardDate != DateTime.Now.ToString("yyyy.MM.dd"))
+                {
+                    notificationImage.SetActive(true);        // UI로 알려줌
+                }
             }
-
             yield return null;
         }
     }

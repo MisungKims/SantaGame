@@ -16,6 +16,9 @@ public class GetGoldButtonRay : ButtonRaycast
     protected override void Touched()
     {
         base.Touched();
+
+        SoundManager.Instance.PlaySoundEffect(ESoundEffectType.getGoldButton);      // È¿°úÀ½
+
         building.ClickGetBtn();
     }
 }
