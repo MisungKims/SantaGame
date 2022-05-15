@@ -140,6 +140,8 @@ public class DeliveryGameManager : MonoBehaviour
 
     public void GameStart()
     {
+        SoundManager.Instance.PlayBGM(EBgmType.game);
+
         startWindow.gameObject.SetActive(false);
         santa.gameObject.SetActive(true);
 
