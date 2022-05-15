@@ -16,8 +16,8 @@ public enum EObjectFlag // 배열이나 리스트의 순서
 
 public enum EDeliveryFlag // 배열이나 리스트의 순서
 {
-    gift1,
-    gift2
+    gift,
+    utilityPole     // 전봇대
 }
 
 public class ObjectPoolingManager : MonoBehaviour
@@ -113,13 +113,14 @@ public class ObjectPoolingManager : MonoBehaviour
         if (poolingList[index].queue.Count > 0)             // 큐에 게임 오브젝트가 남아 있을 때
         {
             tempGb = poolingList[index].queue.Dequeue();
-            tempGb.SetActive(true);
         }
         else         // 큐에 더이상 없으면 새로 생성
         {
+            
             tempGb = GameObject.Instantiate(poolingList[index].copyObj, poolingList[index].parent.transform);
         }
 
+        tempGb.SetActive(true);
         return tempGb;
     }
 

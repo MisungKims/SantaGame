@@ -5,9 +5,11 @@ using UnityEngine;
 public class DropGift : MonoBehaviour
 {
     float moveSpeed = 50f;
+    public Gift gift;
 
-    private void Start()
+    private void OnEnable()
     {
+        Debug.Log(gift.giftName);
         StartCoroutine(Dissapear());
     }
 
@@ -18,8 +20,8 @@ public class DropGift : MonoBehaviour
 
     IEnumerator Dissapear()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(3f);
 
-        ObjectPoolingManager.Instance.Set(this.gameObject, EDeliveryFlag.gift1);
+        ObjectPoolingManager.Instance.Set(this.gameObject, EDeliveryFlag.gift);
     }
 }

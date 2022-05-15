@@ -30,6 +30,8 @@ public class Inventory : MonoBehaviour
 
     public Sprite[] gradeSprite;    // 등급별 이미지
 
+    public int count = 0;   // 가지고 있는 선물의 총 갯수
+
     // 싱글톤
     private static Inventory instance;
     public static Inventory Instance
@@ -42,9 +44,19 @@ public class Inventory : MonoBehaviour
     private void Awake()
     {
         if (instance == null)
+        {
             instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
         else
-            Destroy(this.gameObject);
+        {
+            if (instance != this)
+                Destroy(this.gameObject);
+        }
+    }
+    private void OnEnable()
+    {
+        RefreshInventory();
     }
 
     #endregion
@@ -56,6 +68,8 @@ public class Inventory : MonoBehaviour
     /// <param name="gift">추가할 아이템</param>
     public void AddItem(Gift gift)
     {
+        count++;
+
         int giftInvIndex = gift.inventoryIndex;
 
         if (giftInvIndex > -1)          // 이미 인벤토리에 있는 선물이라면
@@ -77,6 +91,7 @@ public class Inventory : MonoBehaviour
     /// <param name="gift">제거할 아이템</param>
     public void RemoveItem(Gift gift)
     {
+        count--;
         int giftInvIndex = gift.inventoryIndex;
 
         if (giftInvIndex > -1)                          // 인벤토리에 아이템이 있을 때
@@ -93,7 +108,7 @@ public class Inventory : MonoBehaviour
                 {
                     for (int i = giftInvIndex; i < giftItems.Count; i++)
                     {
-                        giftItems[i].gift.inventoryIndex -= 1;          // 제거한 슬롯의 뒤에 있는 슬롯을 앞으로 한 칸씩 당 김
+                        giftItems[i].gift.inventoryIndex -= 1;          // 제거한 슬롯의 뒤에 있는 슬롯을 앞으로 한 칸씩 당김
                         slots[giftItems[i].gift.inventoryIndex].SetSlot(giftItems[giftItems[i].gift.inventoryIndex]);
                     }
                     slots[giftItems.Count].SetEmpty();          // 한 칸씩 당기면 맨 뒤의 슬롯은 필요없으므로 비워둠
@@ -102,15 +117,43 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    public void RemoveItem2(Gift gift)
+    {
+        count--;
+        int giftInvIndex = gift.inventoryIndex;
+
+        if (giftInvIndex > -1)                          // 인벤토리에 아이템이 있을 때
+        {
+            giftItems[giftInvIndex].amount--;          // 수량을 줄임
+            
+            if (giftItems[giftInvIndex].amount <= 0)    // 수량이 0 이하이면 인벤토리에서 완전 제거
+            {
+                giftItems.RemoveAt(giftInvIndex);
+                gift.inventoryIndex = -1;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 인벤토리에서 랜덤으로 선물을 꺼내어 반환
+    /// </summary>
+    public Gift RandomGet()
+    {
+        int rand = Random.Range(0, giftItems.Count);
+        RemoveItem2(giftItems[rand].gift);
+
+        return giftItems[rand].gift;
+    }
+
     ///// <summary>
     ///// 인벤토리 새로 고침
     ///// </summary>
-    //public void RefreshInventory()
-    //{
-    //    for (int i = 0; i < giftItems.Count; i++)
-    //    {
-    //        slots[i].SetSlot(giftItems[i]);
-    //    }
-    //}
+    public void RefreshInventory()
+    {
+        for (int i = 0; i < giftItems.Count; i++)
+        {
+            slots[i].SetSlot(giftItems[i]);
+        }
+    }
     #endregion
 }

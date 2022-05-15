@@ -27,16 +27,41 @@ public class DeliveryGameManager : MonoBehaviour
     private DeliverySanta santa;
 
     [SerializeField]
-    private Text giftCountText;
+    private Image[] lifeImages;
 
-    // 싱글톤
-    private static DeliveryGameManager instance;
-    public static DeliveryGameManager Instance
+    public bool isEnd;
+
+    private int life;
+    public int Life
     {
-        get { return instance; }
+        get { return life; }
+        set
+        {
+            life = value;
+
+            if (life == 3)
+            {
+                for (int i = 0; i < lifeImages.Length; i++)
+                {
+                    lifeImages[i].gameObject.SetActive(true);
+                }
+            }
+            else
+            {
+                lifeImages[life].gameObject.SetActive(false);
+            }
+
+            if (life <= 0)
+            {
+                End();
+            }
+        }
     }
 
-    private int giftCount =10;
+    [SerializeField]
+    private Text giftCountText;
+
+    private int giftCount = 10;
     public int GiftCount
     {
         get { return giftCount; }
@@ -45,6 +70,56 @@ public class DeliveryGameManager : MonoBehaviour
             giftCount = value;
             giftCountText.text = giftCount.ToString();
         }
+    }
+
+    [SerializeField]
+    private Text satisfiedCountText;
+
+    private int satisfiedCount = 0;
+    public int SatisfiedCount
+    {
+        get { return satisfiedCount; }
+        set
+        {
+            SatisfiedCount = value;
+            satisfiedCountText.text = SatisfiedCount.ToString();
+        }
+    }
+
+    [SerializeField]
+    private Text puzzleCountText;
+
+    private int puzzleCount = 0;
+    public int PuzzleCount
+    {
+        get { return puzzleCount; }
+        set
+        {
+            puzzleCount = value;
+            puzzleCountText.text = puzzleCount.ToString();
+        }
+    }
+
+    [SerializeField]
+    private Text carrotCountText;
+
+    private int carrotCount = 0;
+    public int CarrotCount
+    {
+        get { return carrotCount; }
+        set
+        {
+            carrotCount = value;
+            carrotCountText.text = carrotCount.ToString();
+        }
+    }
+
+
+    // 싱글톤
+    private static DeliveryGameManager instance;
+    public static DeliveryGameManager Instance
+    {
+        get { return instance; }
     }
 
     private void Awake()
@@ -60,7 +135,7 @@ public class DeliveryGameManager : MonoBehaviour
         startWindow.gameObject.SetActive(true);
         santa.gameObject.SetActive(false);
 
-        GiftCount = giftCount;
+        GiftCount = Inventory.Instance.count;
     }
 
     public void GameStart()
@@ -71,6 +146,11 @@ public class DeliveryGameManager : MonoBehaviour
         // 배경의 isMove를 true로 변경하여 배경을 움직이게 함
         background.isMove = true;
         cloud.isMove = true;
+
+        Life = 3;
+
+        isEnd = false;
+        StartCoroutine(CreateObstacle());
     }
 
     public void End()
@@ -81,5 +161,23 @@ public class DeliveryGameManager : MonoBehaviour
         // 배경의 isMove를 true로 변경하여 배경을 움직이게 함
         background.isMove = false;
         cloud.isMove = false;
+
+        isEnd = true;
+    }
+
+    /// <summary>
+    /// 장애물 생성 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator CreateObstacle()
+    {
+        while (!isEnd)
+        {
+            yield return new WaitForSeconds(2f);
+
+            EDeliveryFlag rand = (EDeliveryFlag)Random.Range(1, 1);
+            Obstacle obstacle = ObjectPoolingManager.Instance.Get(rand).GetComponent<Obstacle>();
+            obstacle.flag = rand;
+        }
     }
 }

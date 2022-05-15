@@ -22,9 +22,7 @@ public class DeliverySanta : MonoBehaviour
 
     private int jumpCnt = 0;
 
-    [SerializeField]
-    private GameObject[] gifts;
-    
+  
 
     public void Jump()
     {
@@ -45,15 +43,16 @@ public class DeliverySanta : MonoBehaviour
     {
         if (DeliveryGameManager.Instance.GiftCount > 0)
         {
-            DeliveryGameManager.Instance.GiftCount--;
+            DropGift drop = ObjectPoolingManager.Instance.Get(EDeliveryFlag.gift).GetComponent<DropGift>();
+            drop.gift = Inventory.Instance.RandomGet();
 
-            int rand = Random.Range(0, 1);
-            ObjectPoolingManager.Instance.Get((EDeliveryFlag)rand);
+            DeliveryGameManager.Instance.GiftCount = Inventory.Instance.count;
+            //DeliveryGameManager.Instance.SatisfiedCount++;
+        }
 
-            if (DeliveryGameManager.Instance.GiftCount == 0)
-            {
-                DeliveryGameManager.Instance.End();
-            }
+        if (DeliveryGameManager.Instance.GiftCount == 0)
+        {
+            DeliveryGameManager.Instance.End();
         }
     }
 
@@ -68,6 +67,14 @@ public class DeliverySanta : MonoBehaviour
         if (collision.gameObject.CompareTag("Floor"))       // 땅에 닿으면 jumpCnt를 초기화
         {
             jumpCnt = 0;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Obstacle"))    // 장애물에 부딪히면 생명 감소
+        {
+            DeliveryGameManager.Instance.Life--;
         }
     }
 }

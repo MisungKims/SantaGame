@@ -9,6 +9,7 @@ TagManager:
   - WorldSpaceUI
   - Fluid
   - Floor
+  - Obstacle
   layers:
   - Default
   - TransparentFX
