@@ -12,7 +12,6 @@ using UnityEngine;
 public enum EBgmType
 {
     main,
-    loading,
     giftStore,
     game,
     none
