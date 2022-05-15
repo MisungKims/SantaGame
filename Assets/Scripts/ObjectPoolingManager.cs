@@ -14,6 +14,12 @@ public enum EObjectFlag // 배열이나 리스트의 순서
     post
 }
 
+public enum EDeliveryFlag // 배열이나 리스트의 순서
+{
+    gift1,
+    gift2
+}
+
 public class ObjectPoolingManager : MonoBehaviour
 {
     #region 변수
@@ -33,7 +39,7 @@ public class ObjectPoolingManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);      // 씬 전환 시에도 파괴되지 않음
+           // DontDestroyOnLoad(gameObject);      // 씬 전환 시에도 파괴되지 않음
         }
         else
         {
@@ -89,6 +95,39 @@ public class ObjectPoolingManager : MonoBehaviour
     /// 다 쓴 오브젝트를 큐에 돌려줌
     /// </summary>
     public void Set(GameObject gb, EObjectFlag flag)
+    {
+        int index = (int)flag;
+        gb.SetActive(false);
+
+        poolingList[index].queue.Enqueue(gb);
+    }
+
+    /// <summary>
+    /// 오브젝트를 반환 (선물 전달 게임 씬에서 사용)
+    /// </summary>
+    public GameObject Get(EDeliveryFlag flag)
+    {
+        int index = (int)flag;
+        GameObject tempGb;
+
+        if (poolingList[index].queue.Count > 0)             // 큐에 게임 오브젝트가 남아 있을 때
+        {
+            tempGb = poolingList[index].queue.Dequeue();
+            tempGb.SetActive(true);
+        }
+        else         // 큐에 더이상 없으면 새로 생성
+        {
+            tempGb = GameObject.Instantiate(poolingList[index].copyObj, poolingList[index].parent.transform);
+        }
+
+        return tempGb;
+    }
+
+
+    /// <summary>
+    /// 다 쓴 오브젝트를 큐에 돌려줌 (선물 전달 게임 씬에서 사용)
+    /// </summary>
+    public void Set(GameObject gb, EDeliveryFlag flag)
     {
         int index = (int)flag;
         gb.SetActive(false);

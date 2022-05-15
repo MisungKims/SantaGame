@@ -22,14 +22,9 @@ public class DeliverySanta : MonoBehaviour
 
     private int jumpCnt = 0;
 
-
-    // Start is called before the first frame update
-    void Awake()
-    {
-        rigid = GetComponent<Rigidbody>();
-        Physics.gravity = gravity;
-    }
-
+    [SerializeField]
+    private GameObject[] gifts;
+    
 
     public void Jump()
     {
@@ -46,9 +41,31 @@ public class DeliverySanta : MonoBehaviour
         else return;
     }
 
+    public void Drop()
+    {
+        if (DeliveryGameManager.Instance.GiftCount > 0)
+        {
+            DeliveryGameManager.Instance.GiftCount--;
+
+            int rand = Random.Range(0, 1);
+            ObjectPoolingManager.Instance.Get((EDeliveryFlag)rand);
+
+            if (DeliveryGameManager.Instance.GiftCount == 0)
+            {
+                DeliveryGameManager.Instance.End();
+            }
+        }
+    }
+
+    void Awake()
+    {
+        rigid = GetComponent<Rigidbody>();
+        Physics.gravity = gravity;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Floor"))
+        if (collision.gameObject.CompareTag("Floor"))       // ∂•ø° ¥Í¿∏∏È jumpCnt∏¶ √ ±‚»≠
         {
             jumpCnt = 0;
         }

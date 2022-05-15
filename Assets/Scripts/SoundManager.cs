@@ -1,7 +1,7 @@
 /**
  * @brief 게임의 사운드
  * @author 김미성
- * @date 22-05-08
+ * @date 22-05-15
  */
 
 
@@ -93,6 +93,12 @@ public class SoundManager : MonoBehaviour
         bgm.clip = bgmList[(int)bgmType];
         bgm.Play();
         nowBgm = bgmType;
+    }
+
+    public void StopBGM()
+    {
+        bgm.Stop();
+        nowBgm = EBgmType.none;
     }
 
     /// <summary>
