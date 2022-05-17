@@ -17,7 +17,9 @@ public enum EObjectFlag // 배열이나 리스트의 순서
 public enum EDeliveryFlag // 배열이나 리스트의 순서
 {
     gift,
-    utilityPole     // 전봇대
+    utilityPole,     // 전봇대
+    chimney,        // 굴뚝
+    bird
 }
 
 public class ObjectPoolingManager : MonoBehaviour

@@ -9,7 +9,7 @@ public class Obstacle : MonoBehaviour
 
     Vector3 startPos = new Vector3(0, 0, 0);
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         this.transform.localPosition = startPos;
         StartCoroutine(Dissapear());

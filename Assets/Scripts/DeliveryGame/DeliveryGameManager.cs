@@ -114,6 +114,19 @@ public class DeliveryGameManager : MonoBehaviour
         }
     }
 
+    [SerializeField]
+    private Text timeCountText;
+    private int timeCount;
+    public int TimeCount
+    {
+        get { return timeCount; }
+        set
+        {
+            timeCount = value;
+            timeCountText.text = string.Format("{0:D2}", timeCount);
+        }
+    }
+
 
     // 싱글톤
     private static DeliveryGameManager instance;
@@ -135,12 +148,12 @@ public class DeliveryGameManager : MonoBehaviour
         startWindow.gameObject.SetActive(true);
         santa.gameObject.SetActive(false);
 
-        GiftCount = Inventory.Instance.count;
+        //GiftCount = Inventory.Instance.count;
     }
 
     public void GameStart()
     {
-        SoundManager.Instance.PlayBGM(EBgmType.game);
+       // SoundManager.Instance.PlayBGM(EBgmType.game);
 
         startWindow.gameObject.SetActive(false);
         santa.gameObject.SetActive(true);
@@ -150,21 +163,43 @@ public class DeliveryGameManager : MonoBehaviour
         cloud.isMove = true;
 
         Life = 3;
+        TimeCount = 60;
 
         isEnd = false;
+
+        StartCoroutine(StartTimeCount());
         StartCoroutine(CreateObstacle());
     }
 
     public void End()
     {
-        santa.gameObject.SetActive(false);
-        resultWindow.gameObject.SetActive(true);
+        StartCoroutine(GameOver());
+    }
 
-        // 배경의 isMove를 true로 변경하여 배경을 움직이게 함
+    IEnumerator StartTimeCount()
+    {
+        while (TimeCount > 0)
+        {
+            yield return new WaitForSeconds(1f);
+
+            TimeCount--;
+        }
+
+        End();
+    }
+
+    IEnumerator GameOver()
+    {
+        // 배경의 isMove를 false 변경하여 배경의 움직임을 멈춤
         background.isMove = false;
         cloud.isMove = false;
 
         isEnd = true;
+
+        yield return new WaitForSeconds(1f);
+
+        santa.gameObject.SetActive(false);
+        resultWindow.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -177,7 +212,23 @@ public class DeliveryGameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(2f);
 
-            EDeliveryFlag rand = (EDeliveryFlag)Random.Range(1, 1);
+            EDeliveryFlag rand = EDeliveryFlag.chimney;
+
+            // 장애물이 나올 확률
+            int randInt = Random.Range(1, 100);
+            if (randInt <= 45)
+            {
+               rand = EDeliveryFlag.chimney;             // 45%
+            }
+            else if (randInt <= 75)
+            {
+                rand = EDeliveryFlag.utilityPole;        // 30%
+            }
+            else if (randInt <= 100)
+            {
+                rand = EDeliveryFlag.bird;              // 25%
+            }
+
             Obstacle obstacle = ObjectPoolingManager.Instance.Get(rand).GetComponent<Obstacle>();
             obstacle.flag = rand;
         }

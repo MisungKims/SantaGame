@@ -9,7 +9,6 @@ public class DropGift : MonoBehaviour
 
     private void OnEnable()
     {
-        Debug.Log(gift.giftName);
         StartCoroutine(Dissapear());
     }
 
@@ -23,5 +22,14 @@ public class DropGift : MonoBehaviour
         yield return new WaitForSeconds(3f);
 
         ObjectPoolingManager.Instance.Set(this.gameObject, EDeliveryFlag.gift);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Chimney"))    // ±¼¶Ò¿¡ ºÎµúÈ÷¸é ¼±¹° ÁÖ±â
+        {
+            Debug.Log("Chimney");
+            ObjectPoolingManager.Instance.Set(this.gameObject, EDeliveryFlag.gift);
+        }
     }
 }

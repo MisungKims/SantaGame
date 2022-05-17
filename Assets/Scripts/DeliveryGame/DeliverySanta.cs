@@ -41,19 +41,21 @@ public class DeliverySanta : MonoBehaviour
 
     public void Drop()
     {
-        if (DeliveryGameManager.Instance.GiftCount > 0)
-        {
-            DropGift drop = ObjectPoolingManager.Instance.Get(EDeliveryFlag.gift).GetComponent<DropGift>();
-            drop.gift = Inventory.Instance.RandomGet();
+        ObjectPoolingManager.Instance.Get(EDeliveryFlag.gift);
 
-            DeliveryGameManager.Instance.GiftCount = Inventory.Instance.count;
-            //DeliveryGameManager.Instance.SatisfiedCount++;
-        }
+        //if (DeliveryGameManager.Instance.GiftCount > 0)
+        //{
+        //    DropGift drop = ObjectPoolingManager.Instance.Get(EDeliveryFlag.gift).GetComponent<DropGift>();
+        //    drop.gift = Inventory.Instance.RandomGet();
 
-        if (DeliveryGameManager.Instance.GiftCount == 0)
-        {
-            DeliveryGameManager.Instance.End();
-        }
+        //    DeliveryGameManager.Instance.GiftCount = Inventory.Instance.count;
+        //    //DeliveryGameManager.Instance.SatisfiedCount++;
+        //}
+
+        //if (DeliveryGameManager.Instance.GiftCount == 0)
+        //{
+        //    DeliveryGameManager.Instance.End();
+        //}
     }
 
     void Awake()
