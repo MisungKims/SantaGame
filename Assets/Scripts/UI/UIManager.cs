@@ -133,6 +133,11 @@ public class UIManager : MonoBehaviour
 
     public void SetisOpenPanel(bool value)
     {
+        if (value)
+        {
+            SoundManager.Instance.PlaySoundEffect(ESoundEffectType.uiButton);       // 효과음 실행
+        }
+        
         isOpenPanel = value;
     }
 

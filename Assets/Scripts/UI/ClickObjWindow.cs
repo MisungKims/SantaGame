@@ -151,6 +151,8 @@ public class ClickObjWindow : MonoBehaviour
             goldSb.Append(santa.SantaEfficiency.ToString());
             goldSb.Append("% 증가");
             ObjAmount = goldSb.ToString();
+
+            SoundManager.Instance.PlaySoundEffect(ESoundEffectType.uiButton);       // 효과음 실행
         }
 
         SetButtonInteractable();

@@ -1,7 +1,7 @@
 /**
  * @brief 게임 로딩
  * @author 김미성
- * @date 22-04-18
+ * @date 22-05-08
  */
 
 using System.Collections;
@@ -15,39 +15,53 @@ public class GameLoadManager : MonoBehaviour
     public static string nextScene;
 
     [SerializeField]
-    Image progressBar;
+    private Image progressBar;
 
-    private void Start()
+    [SerializeField]
+    private float speed = 0.1f;        // 로딩 속도
+
+   private void Start()
     {
-        StartCoroutine(LoadScene());
+        progressBar.fillAmount = 0;
+
+        if (nextScene == null)
+        {
+            nextScene = "SantaVillage";
+        }
+        
+        StartCoroutine(LoadAsyncScene());
     }
 
     public static void LoadScene(string sceneName)
     {
         nextScene = sceneName;
 
-        SceneManager.LoadScene("LoadingScene");
+        SceneManager.LoadScene("GameLoad");
     }
 
+    public static Scene CurrentScene()
+    {
+        return SceneManager.GetActiveScene();
+    }
 
-    IEnumerator LoadScene()
+    IEnumerator LoadAsyncScene()
     {
         yield return null;
 
-        AsyncOperation op = SceneManager.LoadSceneAsync(nextScene);
-        op.allowSceneActivation = false;
+        AsyncOperation asyncScene = SceneManager.LoadSceneAsync(nextScene);
+        asyncScene.allowSceneActivation = false;
 
         float timer = 0.0f;
 
-        while (!op.isDone)
+        while (!asyncScene.isDone)
         {
             yield return null;
 
-            timer += Time.deltaTime;
-            if (op.progress < 0.9f) 
+            timer += Time.deltaTime * speed;
+            if (asyncScene.progress < 0.9f) 
             { 
-                progressBar.fillAmount = Mathf.Lerp(progressBar.fillAmount, op.progress, timer); 
-                if (progressBar.fillAmount >= op.progress) 
+                progressBar.fillAmount = Mathf.Lerp(progressBar.fillAmount, asyncScene.progress, timer); 
+                if (progressBar.fillAmount >= asyncScene.progress) 
                 { 
                     timer = 0f; 
                 } 
@@ -56,8 +70,8 @@ public class GameLoadManager : MonoBehaviour
             {
                 progressBar.fillAmount = Mathf.Lerp(progressBar.fillAmount, 1f, timer);
                 if (progressBar.fillAmount == 1.0f) 
-                { 
-                    op.allowSceneActivation = true; 
+                {
+                    asyncScene.allowSceneActivation = true; 
                     yield break; 
                 }
             }
