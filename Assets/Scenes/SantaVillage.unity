@@ -6187,7 +6187,7 @@ GameObject:
   - component: {fileID: 305081365}
   - component: {fileID: 305081366}
   m_Layer: 0
-  m_Name: "\uAFC8\uD0D0\uD5D8\uAD00"
+  m_Name: DreamExplorer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
