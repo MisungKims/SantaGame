@@ -25,9 +25,11 @@ public enum ESoundEffectType
     screenShot,
     newBuilding,
     giftShopLever,
-    giftShopBall,
-    giftShopFallingBall,
-    getGift
+    getGift,
+    deliveryGameClear,
+    deliveryGameOver,
+    deliveryGetGift,
+    deliveryObstacle
 }
 
 public class SoundManager : MonoBehaviour

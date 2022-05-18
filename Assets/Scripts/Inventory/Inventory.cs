@@ -1,7 +1,7 @@
 /**
  * @brief 선물 인벤토리
  * @author 김미성
- * @date 22-05-04
+ * @date 22-05-18
  */
 
 using System.Collections;
@@ -117,13 +117,19 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="gift"></param>
     public void RemoveItem2(Gift gift)
     {
         count--;
         int giftInvIndex = gift.inventoryIndex;
+        Debug.Log(gift.giftName +" : " + giftInvIndex);
 
         if (giftInvIndex > -1)                          // 인벤토리에 아이템이 있을 때
         {
+            //Debug.Log(giftItems[giftInvIndex].amount);
             giftItems[giftInvIndex].amount--;          // 수량을 줄임
             
             if (giftItems[giftInvIndex].amount <= 0)    // 수량이 0 이하이면 인벤토리에서 완전 제거
@@ -139,10 +145,15 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public Gift RandomGet()
     {
-        int rand = Random.Range(0, giftItems.Count);
-        RemoveItem2(giftItems[rand].gift);
-
-        return giftItems[rand].gift;
+        if (giftItems.Count <= 0)
+        {
+            return null;
+        }
+        else
+        {
+            int rand = Random.Range(0, giftItems.Count);
+            return giftItems[rand].gift;
+        }
     }
 
     ///// <summary>

@@ -56,14 +56,14 @@ public class GiftShop : MonoBehaviour
     /// </summary>
     public void ClickLever()
     {
-        SoundManager.Instance.PlaySoundEffect(ESoundEffectType.giftShopLever);  // 효과음 실행
-
         count++;
         anim.SetInteger("Animation", count);
 
         StartCoroutine(IsEndAnim());
 
         RandBall();
+
+        SoundManager.Instance.PlaySoundEffect(ESoundEffectType.giftShopLever);  // 효과음 실행
     }
 
     /// <summary>
@@ -72,8 +72,6 @@ public class GiftShop : MonoBehaviour
     /// <returns></returns>
     IEnumerator IsEndAnim()
     {
-       // SoundManager.Instance.PlaySoundEffect(ESoundEffectType.giftShopBall);  // 효과음 실행
-
         while (true)
         {
             yield return null;
@@ -89,7 +87,7 @@ public class GiftShop : MonoBehaviour
             }
         }
 
-        SoundManager.Instance.PlaySoundEffect(ESoundEffectType.giftShopFallingBall);  // 효과음 실행
+        
         anim.SetInteger("Animation", -1);
         GetRandomGift();
     }

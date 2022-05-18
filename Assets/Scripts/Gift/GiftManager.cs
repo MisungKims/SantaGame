@@ -74,6 +74,48 @@ public class GiftManager : MonoBehaviour
         return null;
     }
 
+    ///// <summary>
+    ///// 위시 리스트에 추가된 선물을 랜덤으로 반환
+    ///// </summary>
+    ///// <returns></returns>
+    //public Gift RandomWishListGift()
+    //{
+    //    if (!IsHaveWishList())       // 위시리스트가 비어있을 때
+    //    {
+    //        return null;
+    //    }
+
+    //    Gift gift = RandomGift();
+    //    if (gift.wishCount > 0)     // 랜덤으로 가져온 선물이 위시리스트에 있을 때 반환
+    //    {
+    //        return gift;
+    //    }
+    //    else
+    //    {
+    //        return RandomWishListGift();
+    //    }
+    //}
+
+    ///// <summary>
+    ///// 위시리스트에 모든 선물이 없으면 false 반환 
+    ///// </summary>
+    ///// <returns>위시리스트에 선물이 하나라도 있으면 true</returns>
+    //public bool IsHaveWishList()
+    //{
+    //    bool returnVal = false;
+
+    //    for (int i = 0; i < giftList.Count; i++)
+    //    {
+    //        if (giftList[i].wishCount > 0)
+    //        {
+    //            returnVal = true;
+    //            break;
+    //        }
+    //    }
+
+    //    return returnVal;
+    //}
+
     /// <summary>
     /// 랜덤으로 선물을 받음
     /// </summary>
