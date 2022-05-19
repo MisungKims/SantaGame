@@ -7,6 +7,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 [System.Serializable]
 public class GiftItem
@@ -124,18 +125,30 @@ public class Inventory : MonoBehaviour
     public void RemoveItem2(Gift gift)
     {
         count--;
+
         int giftInvIndex = gift.inventoryIndex;
-        Debug.Log(gift.giftName +" : " + giftInvIndex);
 
         if (giftInvIndex > -1)                          // 인벤토리에 아이템이 있을 때
         {
+           // Debug.Log(giftItems[giftInvIndex].gift.giftName + " : " + giftInvIndex);
+
             //Debug.Log(giftItems[giftInvIndex].amount);
+
             giftItems[giftInvIndex].amount--;          // 수량을 줄임
-            
             if (giftItems[giftInvIndex].amount <= 0)    // 수량이 0 이하이면 인벤토리에서 완전 제거
             {
+               // Debug.Log("Remove  " + giftItems[giftInvIndex].gift.giftName + " : " + giftItems[giftInvIndex].amount);
+
                 giftItems.RemoveAt(giftInvIndex);
                 gift.inventoryIndex = -1;
+
+                if (giftItems.Count > 0)    // 제거 후 인벤토리에 다른 아이템이 있으면 UI 재배치
+                {
+                    for (int i = giftInvIndex; i < giftItems.Count; i++)
+                    {
+                        giftItems[i].gift.inventoryIndex -= 1;          // 제거한 슬롯의 뒤에 있는 슬롯을 앞으로 한 칸씩 당김
+                    }
+                }
             }
         }
     }
@@ -155,6 +168,46 @@ public class Inventory : MonoBehaviour
             return giftItems[rand].gift;
         }
     }
+
+    ///// <summary>
+    ///// 인벤토리에서 특정한 아이템을 제외하고 랜덤으로 선물을 꺼내어 반환
+    ///// </summary>
+    //public Gift RandomGet(int idx)
+    //{
+    //    if (giftItems.Count <= 0)
+    //    {
+    //        return null;
+    //    }
+    //    else
+    //    {
+    //        int[] arr = { };
+    //        arr[0] = idx;
+    //        int rand = GetRandomNumber(0, giftItems.Count, arr);
+    //        return giftItems[rand].gift;
+    //    }
+    //}
+
+    ///// <summary>
+    ///// 특정 값을 제외한 랜덤한 값 구하기
+    ///// </summary>
+    ///// <param name="min"></param>
+    ///// <param name="max"></param>
+    ///// <param name="notContainVal"></param>
+    ///// <returns></returns>
+    //private int GetRandomNumber(int min, int max, int[] notContainVal)
+    //{
+    //    var exclude = new HashSet<int>();
+    //    for (int i = 0; i < notContainVal.Length; i++)
+    //    {
+    //        exclude.Add(notContainVal[i]);
+    //    }
+
+    //    var range = Enumerable.Range(min, max).Where(i => !exclude.Contains(i));
+    //    var rand = new System.Random();
+    //    int index = rand.Next(min, max - exclude.Count);
+
+    //    return range.ElementAt(index);
+    //}
 
     ///// <summary>
     ///// 인벤토리 새로 고침

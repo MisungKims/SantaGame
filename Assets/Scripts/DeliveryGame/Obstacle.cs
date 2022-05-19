@@ -2,32 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Obstacle : MonoBehaviour
+public class Obstacle : DeliveryGameObject
 {
-    float moveSpeed = 50f;
-    public EDeliveryFlag flag;
+    [SerializeField]
+    private Transform rewardPos;
 
-    Vector3 startPos = new Vector3(0, 0, 0);
-
-    protected virtual void OnEnable()
+    protected override void OnEnable()
     {
-        this.transform.localPosition = startPos;
-        StartCoroutine(Dissapear());
-    }
+        base.OnEnable();
 
-    void Update()
-    {
-        if (!DeliveryGameManager.Instance.isEnd)
-        {
-            this.transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
-        }
-        else ObjectPoolingManager.Instance.Set(this.gameObject, flag);
-    }
+        //int rand = Random.Range(0, 100);
 
-    IEnumerator Dissapear()
-    {
-        yield return new WaitForSeconds(5f);
+        //if (rand <= 3)
+        //{
+        //    ObjectPoolingManager.Instance.Get(EDeliveryFlag.reward);
+        //}
 
-        ObjectPoolingManager.Instance.Set(this.gameObject, flag);
+        ObjectPoolingManager.Instance.Get(EDeliveryFlag.reward).transform.position = rewardPos.localPosition;
     }
 }

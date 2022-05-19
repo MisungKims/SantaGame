@@ -30,10 +30,10 @@ public class PostObject : MonoBehaviour
         {
             postName = value;
 
-            nameSb.Clear();
-            nameSb.Append("To. ");
-            nameSb.Append(postName);
-            nameText.text = nameSb.ToString();
+            //nameSb.Clear();
+            //nameSb.Append("To. ");
+            //nameSb.Append(postName);
+            nameText.text = postName.ToString();
         }
     }
 
