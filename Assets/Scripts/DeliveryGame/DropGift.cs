@@ -11,10 +11,12 @@ using UnityEngine;
 public class DropGift : MonoBehaviour
 {
     #region 변수
-    float moveSpeed = 50f;
-
     public Gift gift;
     public GiftCollider giftCollider;
+
+    public Transform targetPos;
+
+    //private Vector3 startPos = new Vector3(0, 0, 0);
 
     // 캐싱
     private DeliveryGameManager deliveryGameManager;
@@ -44,13 +46,16 @@ public class DropGift : MonoBehaviour
     private void OnEnable()
     {
         giftCollider.gameObject.SetActive(false);
+        gift = null;
+
+        if(DeliverySanta.giftPos != null) this.transform.position = DeliverySanta.giftPos.transform.position;
 
         StartCoroutine(Dissapear());
     }
 
     void Update()
     {
-        this.transform.Translate(Vector3.down * moveSpeed * Time.deltaTime);        // 아래로 떨어짐
+        this.transform.Translate(targetPos.localPosition * Time.deltaTime);        // 아래로 떨어짐
     }
 
     private void OnTriggerEnter(Collider other)
@@ -58,9 +63,15 @@ public class DropGift : MonoBehaviour
         // 굴뚝에 부딪히면 선물 전달 완료
         if (other.gameObject.CompareTag("Chimney"))    
         {
+            Chimney chimney = other.GetComponent<Chimney>();
+
+            if (chimney.isAlreadyGet)       //이미 선물을 받은 굴뚝에는 아무런 효과 없음
+            {
+                return;
+            }
+
             soundManager.PlaySoundEffect(ESoundEffectType.deliveryGetGift);     // 효과음 실행
 
-            Chimney chimney = other.GetComponent<Chimney>();
             gift = chimney.gift;
 
             inventory.RemoveItem2(gift);       // 인벤토리에서 제거
@@ -75,7 +86,8 @@ public class DropGift : MonoBehaviour
             deliveryGameManager.GiftCount = inventory.count;
             objectPoolingManager.Set(this.gameObject, EDeliveryFlag.gift);
 
-            
+            chimney.giftImage.transform.parent.gameObject.SetActive(false);
+
             if (deliveryGameManager.GiftCount == 0)
             {
                 deliveryGameManager.End(false);
@@ -90,10 +102,10 @@ public class DropGift : MonoBehaviour
     /// </summary>
     IEnumerator Dissapear()
     {
-        yield return twoSec;
+        yield return oneSec;
 
         giftCollider.gameObject.SetActive(true);
-        yield return oneSec;
+        //yield return oneSec;
 
         if (!giftCollider.isRemove)                 // 인벤토리에서 아이템을 제거할 수 없었다면,
         {
@@ -101,7 +113,6 @@ public class DropGift : MonoBehaviour
             
             if (gift != null)
             {
-                Debug.Log(gift.giftName);
                 inventory.RemoveItem2(gift);     // 인벤토리의 랜덤 아이템을 제거
             }
             else
@@ -110,7 +121,7 @@ public class DropGift : MonoBehaviour
             }
         }
 
-        //yield return oneSec;
+        yield return oneSec;
 
         objectPoolingManager.Set(this.gameObject, EDeliveryFlag.gift);
 

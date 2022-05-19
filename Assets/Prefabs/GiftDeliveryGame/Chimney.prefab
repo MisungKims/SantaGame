@@ -206,6 +206,7 @@ MonoBehaviour:
     giftImage: {fileID: 0}
     wishCount: 0
     inventoryIndex: 0
+  preChimney: {fileID: 0}
 --- !u!65 &8958971699962171951
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -217,8 +218,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 27.468216, y: 8.411755, z: 1}
-  m_Center: {x: 0.29723358, y: 15.096624, z: 0}
+  m_Size: {x: 27.468216, y: 4.77639, z: 1}
+  m_Center: {x: 0.29723358, y: 16.914307, z: 0}
 --- !u!1 &7570577513199349239
 GameObject:
   m_ObjectHideFlags: 0

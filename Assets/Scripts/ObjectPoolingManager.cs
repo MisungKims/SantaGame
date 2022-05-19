@@ -19,7 +19,8 @@ public enum EDeliveryFlag // 배열이나 리스트의 순서
     gift,
     utilityPole,     // 전봇대
     chimney,        // 굴뚝
-    bird
+    bird,
+    reward
 }
 
 public class ObjectPoolingManager : MonoBehaviour

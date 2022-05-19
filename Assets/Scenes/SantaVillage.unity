@@ -1054,7 +1054,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.03
-  direction: 0
+  direction: 2
 --- !u!222 &32114836
 CanvasRenderer:
   m_ObjectHideFlags: 0

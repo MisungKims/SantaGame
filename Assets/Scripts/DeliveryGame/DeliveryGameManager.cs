@@ -128,6 +128,7 @@ public class DeliveryGameManager : MonoBehaviour
         }
     }
 
+    public Chimney preChimney = null;      // 이전에 나온 굴뚝
 
     // 싱글톤
     private static DeliveryGameManager instance;
@@ -212,7 +213,7 @@ public class DeliveryGameManager : MonoBehaviour
         santa.gameObject.SetActive(false);
         resultWindow.gameObject.SetActive(true);        // 결과창을 띄움
     }
-
+    DeliveryGameObject deliveryGameObject;
     /// <summary>
     /// 장애물 생성 코루틴
     /// </summary>
@@ -223,10 +224,13 @@ public class DeliveryGameManager : MonoBehaviour
         {
             yield return twoSec;
 
+            //if(obstacle != null) preChimney = obstacle.GetComponent<Chimney>();
+
+
             EDeliveryFlag rand = EDeliveryFlag.chimney;
 
-            // 확률에 따라 장애물 생성
-            int randInt = Random.Range(1, 100);
+            //확률에 따라 장애물 생성
+            int randInt = Random.Range(0, 100);
             if (randInt <= 45)
             {
                 rand = EDeliveryFlag.chimney;             // 45%
@@ -240,8 +244,9 @@ public class DeliveryGameManager : MonoBehaviour
                 rand = EDeliveryFlag.bird;              // 25%
             }
 
-            Obstacle obstacle = objectPoolingManager.Get(rand).GetComponent<Obstacle>();
-            obstacle.flag = rand;
+            deliveryGameObject = objectPoolingManager.Get(rand).GetComponent<DeliveryGameObject>();
+            deliveryGameObject.flag = rand;
+           
         }
     }
     #endregion

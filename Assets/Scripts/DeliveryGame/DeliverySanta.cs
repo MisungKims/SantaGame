@@ -23,6 +23,8 @@ public class DeliverySanta : MonoBehaviour
 
     private int jumpCnt = 0;
 
+    public static GameObject giftPos;      // ¼±¹°À» ¶³¾î¶ß¸± À§Ä¡
+
     // Ä³½Ì
     private DeliveryGameManager deliveryGameManager;
 
@@ -40,6 +42,8 @@ public class DeliverySanta : MonoBehaviour
         deliveryGameManager = DeliveryGameManager.Instance;
         objectPoolingManager = ObjectPoolingManager.Instance;
         soundManager = SoundManager.Instance;
+
+        giftPos = this.transform.GetChild(1).gameObject;
     }
 
     private void OnCollisionEnter(Collision collision)
