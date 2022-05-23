@@ -30,25 +30,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    [Header("---------- UI 변수")]
-    [SerializeField]
-    private Slider gaugeSlider;
-    [SerializeField]
-    private Text gaugeText;
-    [SerializeField]
-    private Text lvText;
-    [SerializeField]
-    private Text goldText;
-    [SerializeField]
-    private Text carrotsText;
-    [SerializeField]
-    private Text diaText;
-    [SerializeField]
-    private Text citizenCountText;
-    [SerializeField]
-    private Text dateText;
-    [SerializeField]
-    private GameObject gaugeBellImage;
+    //[Header("---------- UI 변수")]
+    //[SerializeField]
+    //private Slider gaugeSlider;
+    //[SerializeField]
+    //private Text gaugeText;
+    //[SerializeField]
+    //private Text lvText;
+    //[SerializeField]
+    //private Text goldText;
+    //[SerializeField]
+    //private Text carrotsText;
+    //[SerializeField]
+    //private Text diaText;
+    //[SerializeField]
+    //private Text citizenCountText;
+    //[SerializeField]
+    //private Text dateText;
+    //[SerializeField]
+    //private GameObject gaugeBellImage;
 
     private Animator gaugeAnim;
 
@@ -67,13 +67,13 @@ public class GameManager : MonoBehaviour
 
             if (GameLoadManager.CurrentScene().name == "SantaVillage")
             {
-                gaugeSlider.value = gauge;
+                UIManager.Instance.gaugeSlider.value = gauge;
 
                 gaugeSb.Clear();
                 gaugeSb.Append(gauge.ToString("N0"));
                 gaugeSb.Append("%");
 
-                gaugeText.text = gaugeSb.ToString();
+                UIManager.Instance.gaugeText.text = gaugeSb.ToString();
             }
         }
     }
@@ -85,7 +85,7 @@ public class GameManager : MonoBehaviour
         set
         {
             level = value;
-            lvText.text = string.Format("{0:D2}", level);
+            UIManager.Instance.lvText.text = string.Format("{0:D2}", level);
         }
     }
 
@@ -96,7 +96,7 @@ public class GameManager : MonoBehaviour
         set
         {
             myGold = value;
-            goldText.text = GoldManager.ExpressUnitOfGold(myGold);
+            UIManager.Instance.goldText.text = GoldManager.ExpressUnitOfGold(myGold);
         }
     }
 
@@ -107,9 +107,11 @@ public class GameManager : MonoBehaviour
         set
         {
             myCarrots = value;
-            carrotsText.text = GoldManager.ExpressUnitOfGold(MyCarrots);
+            UIManager.Instance.carrotsText.text = GoldManager.ExpressUnitOfGold(MyCarrots);
         }
     }
+
+  
 
     private int myDia = 0;
     public int MyDia
@@ -118,7 +120,7 @@ public class GameManager : MonoBehaviour
         set
         {
             myDia = value;
-            diaText.text = myDia.ToString();
+            UIManager.Instance.diaText.text = myDia.ToString();
         }
     }
 
@@ -129,7 +131,7 @@ public class GameManager : MonoBehaviour
         set
         {
             citizenCount = value;
-            citizenCountText.text = citizenCount.ToString();
+            UIManager.Instance.citizenCountText.text = citizenCount.ToString();
         }
     }
 
@@ -161,12 +163,12 @@ public class GameManager : MonoBehaviour
 
             if (GameLoadManager.CurrentScene().name == "SantaVillage")
             {
-                dateText.text = String.Format("{0}년 {1}월 {2}일", year, month, day);
+                UIManager.Instance.dateText.text = String.Format("{0}년 {1}월 {2}일", year, month, day);
             }
         }
     }
 
-    public float dayCount = 5f;        // 게임 속 에서 몇초마다 다음 날이 될 지
+    public float dayCount = 600f;        // 게임 속 에서 몇초마다 다음 날이 될 지
 
     public float goldEfficiency = 1.0f;         // 토끼 주민 초대 시 증가할 효율
 
@@ -209,6 +211,22 @@ public class GameManager : MonoBehaviour
         StartCoroutine(IncreaseGaugeCorou(amount));
     }
 
+    /// <summary>
+    /// 게이지 상승(애니메이션 실행하지 않음)
+    /// </summary>
+    /// <param name="amount"></param>
+    public void IncreaseGaugeNotAnim(float amount)
+    {
+        Gauge = gauge + amount;
+
+        if (gauge >= 100.0f)
+            LevelUp();
+    }
+
+    public void GetCarrot(BigInteger amount)
+    {
+        myCarrots += amount;
+    }
     #endregion
 
     #region 코루틴
@@ -233,12 +251,7 @@ public class GameManager : MonoBehaviour
     IEnumerator IncreaseGaugeCorou(float amount)
     {
         /// TODO : 효과음 실행
-        if (GameLoadManager.CurrentScene().name == "SantaVillage")
-        {
-            gaugeAnim.SetBool("isIncrease", true);      // 게이지 상승 애니메이션 실행
-        }
-
-            
+         gaugeAnim.SetBool("isIncrease", true);      // SantaVillage 씬에서만 게이지 상승 애니메이션 실행
 
         float goalGuage = gauge + amount;
 
@@ -251,11 +264,7 @@ public class GameManager : MonoBehaviour
 
         Gauge = goalGuage;
 
-        if (GameLoadManager.CurrentScene().name == "SantaVillage")
-        {
-            gaugeAnim.SetBool("isIncrease", false);
-        }
-        
+        gaugeAnim.SetBool("isIncrease", false);
 
         if (gauge >= 100.0f)
             LevelUp();
@@ -291,7 +300,7 @@ public class GameManager : MonoBehaviour
 
         waitForSeconds = new WaitForSeconds(dayCount);
 
-        gaugeAnim = gaugeBellImage.GetComponent<Animator>();
+        gaugeAnim = UIManager.Instance.gaugeBellImage.GetComponent<Animator>();
     }
 
     void Start()

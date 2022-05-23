@@ -1,18 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DeliveryReward : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public ERewardType rewardType;
 
-    // Update is called once per frame
-    void Update()
+    [SerializeField]
+    private Sprite[] rewardImages;   // 보상 이미지가 들어있는 배열
+    [SerializeField]
+    private Image image;        // 보상 이미지
+
+    private void OnEnable()
     {
-        
+        int rand = Random.Range(0, 2);
+        image.sprite = rewardImages[rand];
+
+        if (rand == 0)
+            rewardType = ERewardType.carrot;
+        else if (rand == 1)
+            rewardType = ERewardType.puzzle;
     }
 }

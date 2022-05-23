@@ -13,15 +13,15 @@ using System;
 [System.Serializable]
 public class Slot : MonoBehaviour
 {
-    [SerializeField]
+    //[SerializeField]
     private Image gradeImage;
-    [SerializeField]
+    //[SerializeField]
     private Image giftimage;
-    [SerializeField]
+    //[SerializeField]
     private Text gradeText;
-    [SerializeField]
+   // [SerializeField]
     private Text wishCountText;
-    [SerializeField]
+    //[SerializeField]
     private Text amountText;
 
     private EGiftType giftType;
@@ -31,6 +31,9 @@ public class Slot : MonoBehaviour
         set
         {
             giftType = value;
+
+            //if (giftimage == null)
+            //    InitVariable();
             giftimage.sprite = GiftManager.Instance.giftList[(int)giftType].giftImage;
         }
     }
@@ -42,6 +45,10 @@ public class Slot : MonoBehaviour
         set
         {
             giftGrade = value;
+
+            //if (gradeText == null)
+            //    InitVariable();
+
             gradeText.text = Enum.GetName(typeof(EGiftGrade), (int)giftGrade);
             gradeImage.sprite = Inventory.Instance.gradeSprite[(int)giftGrade];
         }
@@ -54,6 +61,9 @@ public class Slot : MonoBehaviour
         set
         {
             amount = value;
+
+            //if (amountText == null)
+            //    InitVariable();
             amountText.text = amount.ToString();
         }
     }
@@ -65,8 +75,25 @@ public class Slot : MonoBehaviour
         set
         {
             wishCount = value;
+
+            //if (wishCountText == null)
+            //    InitVariable();
             wishCountText.text = wishCount.ToString();
         }
+    }
+
+    private void Awake()
+    {
+        InitVariable();
+    }
+
+    private void InitVariable()
+    {
+        gradeImage = this.GetComponent<Image>();
+        giftimage = this.transform.GetChild(0).GetComponent<Image>();
+        gradeText = this.transform.GetChild(1).GetComponent<Text>();
+        wishCountText = this.transform.GetChild(2).GetComponent<Text>();
+        amountText = wishCountText.transform.GetChild(0).GetComponent<Text>();
     }
 
     /// <summary>
@@ -75,6 +102,8 @@ public class Slot : MonoBehaviour
     /// <param name="item">슬롯에 넣을 선물 아이템</param>
     public void SetSlot(GiftItem item)
     {
+        // Debug.Log(this.name);
+
         Amount = item.amount;
 
         if (Amount <= 0)        // 수량이 0보다 적다면

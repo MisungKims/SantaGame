@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DeliveryGameObject : MonoBehaviour
 {
-    float moveSpeed = 50f;
+    protected float moveSpeed = 50f;
     public EDeliveryFlag flag;
 
     Vector3 startPos = new Vector3(0, 0, 0);
@@ -15,7 +15,7 @@ public class DeliveryGameObject : MonoBehaviour
         StartCoroutine(Dissapear());
     }
 
-    void Update()
+    protected virtual void Update()
     {
         if (!DeliveryGameManager.Instance.isEnd)
         {

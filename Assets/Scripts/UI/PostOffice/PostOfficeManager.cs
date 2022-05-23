@@ -147,10 +147,9 @@ public class PostOfficeManager : MonoBehaviour
             int randIndex = Random.Range(0, postList.Count);        // 랜덤으로 편지 내용을 정함
             if (postUIList.Count < maximum)          // 편지함이 차지 않았을 때만 생성
             {
-                if (GameLoadManager.CurrentScene().name == "SantaVillage")
-                {
-                    PostOfficeInstance(postList[randIndex]);
-                }
+                PostOfficeInstance(postList[randIndex]);
+
+                
             }
         }
     }
@@ -176,7 +175,14 @@ public class PostOfficeManager : MonoBehaviour
 
         postUIList.Add(newObj);
 
-        GiftManager.Instance.giftList[post.giftIndex].wishCount++;      // 선물 위시리스트에 추가
+        Gift gift = GiftManager.Instance.giftList[post.giftIndex];      
+        gift.wishCount++;                                            // 선물을 위시리스트에 추가
+
+        // 인벤토리가 열려있고, 위시리스트에 추가한 선물이 인벤토리에 있었으면 인벤토리 새로고침
+        if (UIManager.Instance.inventoryPanel.activeSelf && gift.inventoryIndex > -1)
+        {
+            Inventory.Instance.RefreshInventory();
+        }
     }
 
     /// <summary>

@@ -61,6 +61,22 @@ public class DeliverySanta : MonoBehaviour
             soundManager.PlaySoundEffect(ESoundEffectType.deliveryObstacle);     // 효과음 실행
             deliveryGameManager.Life--;
         }
+        else if (other.gameObject.CompareTag("Reward"))
+        {
+            soundManager.PlaySoundEffect(ESoundEffectType.deliveryGetGift);     // 효과음 실행
+
+            DeliveryReward reward = other.transform.GetComponent<DeliveryReward>();
+            ObjectPoolingManager.Instance.Set(reward.gameObject, EDeliveryFlag.reward);     // 오브젝트 풀에 반환
+
+            if (reward.rewardType.Equals(ERewardType.carrot))           // 보상이 당근일 때
+            {
+                deliveryGameManager.carrotCount++;
+            }
+            else if (reward.rewardType.Equals(ERewardType.puzzle))           // 보상이 퍼즐 조각일 때
+            {
+                deliveryGameManager.PuzzleCount++;
+            }
+        }
     }
     #endregion
 
@@ -70,6 +86,11 @@ public class DeliverySanta : MonoBehaviour
     /// </summary>
     public void Jump()
     {
+        if (!deliveryGameManager.isStart)
+        {
+            return;
+        }
+
         if (jumpCnt == 0)
         {
             jumpCnt++;
@@ -90,6 +111,11 @@ public class DeliverySanta : MonoBehaviour
     /// </summary>
     public void Drop()
     {
+        if (!deliveryGameManager.isStart)
+        {
+            return;
+        }
+
         if (deliveryGameManager.GiftCount > 0)
         {
             soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
