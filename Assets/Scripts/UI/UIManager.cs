@@ -29,6 +29,7 @@ public class UIManager : MonoBehaviour
     public GameObject storePanel;        // 상점 패널
     public GameObject giftShopPanel;        // 선물 가게 패널
     public GameObject inventoryPanel;       // 인벤토리 패널
+    public GameObject postOfficePanel;       // 우체국 패널
     public PuzzleUI puzzlePanel;            // 퍼즐 패널
     
     public GameObject clickObjWindow;       // 클릭 오브젝트 창
