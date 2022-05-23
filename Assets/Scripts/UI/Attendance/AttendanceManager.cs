@@ -47,14 +47,13 @@ public class AttendanceManager : MonoBehaviour
     private void Awake()
     {
         if (instance == null)
-        {
             instance = this;
-            DontDestroyOnLoad(gameObject);      // 씬 전환 시에도 파괴되지 않음
-        }
         else
         {
-            if (instance != this)
-                Destroy(this.gameObject);
+            if (instance != null)
+            {
+                Destroy(gameObject);
+            }
         }
 
         ReadCSV();

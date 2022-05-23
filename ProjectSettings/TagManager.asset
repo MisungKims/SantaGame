@@ -11,6 +11,7 @@ TagManager:
   - Floor
   - Obstacle
   - Chimney
+  - Reward
   layers:
   - Default
   - TransparentFX

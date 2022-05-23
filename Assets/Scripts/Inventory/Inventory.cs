@@ -39,6 +39,9 @@ public class Inventory : MonoBehaviour
     {
         get { return instance; }
     }
+
+    // 캐싱
+    UIManager uIManager;
     #endregion
 
     #region 유니티 함수
@@ -54,12 +57,14 @@ public class Inventory : MonoBehaviour
             if (instance != this)
                 Destroy(this.gameObject);
         }
-    }
-    private void OnEnable()
-    {
-        RefreshInventory();
-    }
 
+        //for (int i = 0; i < 20; i++)
+        //{
+        //    slots[i]
+        //}
+
+        uIManager = UIManager.Instance;
+    }
     #endregion
 
     #region 함수
@@ -76,13 +81,13 @@ public class Inventory : MonoBehaviour
         if (giftInvIndex > -1)          // 이미 인벤토리에 있는 선물이라면
         {
             giftItems[giftInvIndex].amount++;              // 카운트를 늘림
-            slots[giftInvIndex].SetSlot(giftItems[giftInvIndex]);     // 슬롯에 저장
+            //UIManager.Instance.slots[giftInvIndex].SetSlot(giftItems[giftInvIndex]);     // 슬롯에 저장
         }
         else
         {
             gift.inventoryIndex = giftItems.Count;
             giftItems.Add(new GiftItem(gift, 1));       // 인벤토리에 없다면 새로 생성
-            slots[giftItems.Count - 1].SetSlot(giftItems[giftItems.Count - 1]);     // 슬롯에 저장
+            //UIManager.Instance.slots[giftItems.Count - 1].SetSlot(giftItems[giftItems.Count - 1]);     // 슬롯에 저장
         }
     }
 
@@ -90,7 +95,8 @@ public class Inventory : MonoBehaviour
     /// 인벤토리에서 아이템 제거
     /// </summary>
     /// <param name="gift">제거할 아이템</param>
-    public void RemoveItem(Gift gift)
+    /// <param name="isUseSlot">슬롯 UI를 조정할 것인지?</param>
+    public void RemoveItem(Gift gift, bool isUseSlot)
     {
         count--;
         int giftInvIndex = gift.inventoryIndex;
@@ -98,7 +104,7 @@ public class Inventory : MonoBehaviour
         if (giftInvIndex > -1)                          // 인벤토리에 아이템이 있을 때
         {
             giftItems[giftInvIndex].amount--;          // 수량을 줄임
-            slots[giftInvIndex].SetSlot(giftItems[giftInvIndex]);
+           // UIManager.Instance.slots[giftInvIndex].SetSlot(giftItems[giftInvIndex]);
 
             if (giftItems[giftInvIndex].amount <= 0)    // 수량이 0 이하이면 인벤토리에서 완전 제거
             {
@@ -110,48 +116,14 @@ public class Inventory : MonoBehaviour
                     for (int i = giftInvIndex; i < giftItems.Count; i++)
                     {
                         giftItems[i].gift.inventoryIndex -= 1;          // 제거한 슬롯의 뒤에 있는 슬롯을 앞으로 한 칸씩 당김
-                        slots[giftItems[i].gift.inventoryIndex].SetSlot(giftItems[giftItems[i].gift.inventoryIndex]);
+                        //UIManager.Instance.slots[giftItems[i].gift.inventoryIndex].SetSlot(giftItems[giftItems[i].gift.inventoryIndex]);
                     }
-                    slots[giftItems.Count].SetEmpty();          // 한 칸씩 당기면 맨 뒤의 슬롯은 필요없으므로 비워둠
+                   if(isUseSlot) uIManager.slots[giftItems.Count].SetEmpty();          // 한 칸씩 당기면 맨 뒤의 슬롯은 필요없으므로 비워둠
                 }
             }
         }
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="gift"></param>
-    public void RemoveItem2(Gift gift)
-    {
-        count--;
-
-        int giftInvIndex = gift.inventoryIndex;
-
-        if (giftInvIndex > -1)                          // 인벤토리에 아이템이 있을 때
-        {
-           // Debug.Log(giftItems[giftInvIndex].gift.giftName + " : " + giftInvIndex);
-
-            //Debug.Log(giftItems[giftInvIndex].amount);
-
-            giftItems[giftInvIndex].amount--;          // 수량을 줄임
-            if (giftItems[giftInvIndex].amount <= 0)    // 수량이 0 이하이면 인벤토리에서 완전 제거
-            {
-               // Debug.Log("Remove  " + giftItems[giftInvIndex].gift.giftName + " : " + giftItems[giftInvIndex].amount);
-
-                giftItems.RemoveAt(giftInvIndex);
-                gift.inventoryIndex = -1;
-
-                if (giftItems.Count > 0)    // 제거 후 인벤토리에 다른 아이템이 있으면 UI 재배치
-                {
-                    for (int i = giftInvIndex; i < giftItems.Count; i++)
-                    {
-                        giftItems[i].gift.inventoryIndex -= 1;          // 제거한 슬롯의 뒤에 있는 슬롯을 앞으로 한 칸씩 당김
-                    }
-                }
-            }
-        }
-    }
 
     /// <summary>
     /// 인벤토리에서 랜덤으로 선물을 꺼내어 반환
@@ -170,53 +142,13 @@ public class Inventory : MonoBehaviour
     }
 
     ///// <summary>
-    ///// 인벤토리에서 특정한 아이템을 제외하고 랜덤으로 선물을 꺼내어 반환
-    ///// </summary>
-    //public Gift RandomGet(int idx)
-    //{
-    //    if (giftItems.Count <= 0)
-    //    {
-    //        return null;
-    //    }
-    //    else
-    //    {
-    //        int[] arr = { };
-    //        arr[0] = idx;
-    //        int rand = GetRandomNumber(0, giftItems.Count, arr);
-    //        return giftItems[rand].gift;
-    //    }
-    //}
-
-    ///// <summary>
-    ///// 특정 값을 제외한 랜덤한 값 구하기
-    ///// </summary>
-    ///// <param name="min"></param>
-    ///// <param name="max"></param>
-    ///// <param name="notContainVal"></param>
-    ///// <returns></returns>
-    //private int GetRandomNumber(int min, int max, int[] notContainVal)
-    //{
-    //    var exclude = new HashSet<int>();
-    //    for (int i = 0; i < notContainVal.Length; i++)
-    //    {
-    //        exclude.Add(notContainVal[i]);
-    //    }
-
-    //    var range = Enumerable.Range(min, max).Where(i => !exclude.Contains(i));
-    //    var rand = new System.Random();
-    //    int index = rand.Next(min, max - exclude.Count);
-
-    //    return range.ElementAt(index);
-    //}
-
-    ///// <summary>
     ///// 인벤토리 새로 고침
     ///// </summary>
     public void RefreshInventory()
     {
         for (int i = 0; i < giftItems.Count; i++)
         {
-            slots[i].SetSlot(giftItems[i]);
+            uIManager.slots[i].SetSlot(giftItems[i]);
         }
     }
     #endregion

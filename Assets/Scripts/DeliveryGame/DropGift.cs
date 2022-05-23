@@ -74,16 +74,16 @@ public class DropGift : MonoBehaviour
 
             gift = chimney.gift;
 
-            inventory.RemoveItem2(gift);       // 인벤토리에서 제거
+            inventory.RemoveItem(gift, false);       // 인벤토리에서 제거
             if (gift.wishCount > 0)                     // 위시리스트에 있었던 것들은 위시카운트 감소
             {
                 gift.wishCount--;
-                /// TODO : 위시리스트에 있던것들은 추가적으로 점수
+                deliveryGameManager.WishCount++;
             }
 
             deliveryGameManager.SatisfiedCount++;
 
-            deliveryGameManager.GiftCount = inventory.count;
+            //deliveryGameManager.GiftCount = inventory.count;
             objectPoolingManager.Set(this.gameObject, EDeliveryFlag.gift);
 
             chimney.giftImage.transform.parent.gameObject.SetActive(false);
@@ -107,18 +107,10 @@ public class DropGift : MonoBehaviour
         giftCollider.gameObject.SetActive(true);
         //yield return oneSec;
 
-        if (!giftCollider.isRemove)                 // 인벤토리에서 아이템을 제거할 수 없었다면,
+        if (!giftCollider.isRemove)                 // GiftCollider가 근처 굴뚝을 찾지 못하여 인벤토리에서 아이템을 제거할 수 없었다면, 인벤토리의 랜덤 아이템을 제거
         {
             gift = inventory.RandomGet();
-            
-            if (gift != null)
-            {
-                inventory.RemoveItem2(gift);     // 인벤토리의 랜덤 아이템을 제거
-            }
-            else
-            {
-                Debug.Log("null");
-            }
+            inventory.RemoveItem(gift, false);
         }
 
         yield return oneSec;

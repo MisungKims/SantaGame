@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Text;
 
 public class DeliveryGameManager : MonoBehaviour
 {
@@ -30,7 +31,6 @@ public class DeliveryGameManager : MonoBehaviour
     [SerializeField]
     private Image[] lifeImages;
 
-    public bool isEnd;
 
     private int life;
     public int Life
@@ -88,6 +88,20 @@ public class DeliveryGameManager : MonoBehaviour
     }
 
     [SerializeField]
+    private Text wishCountText;
+
+    private int wishCount = 0;
+    public int WishCount
+    {
+        get { return wishCount; }
+        set
+        {
+            wishCount = value;
+            wishCountText.text = wishCount.ToString();
+        }
+    }
+
+    [SerializeField]
     private Text puzzleCountText;
 
     private int puzzleCount = 0;
@@ -104,16 +118,15 @@ public class DeliveryGameManager : MonoBehaviour
     [SerializeField]
     private Text carrotCountText;
 
-    private int carrotCount = 0;
-    public int CarrotCount
-    {
-        get { return carrotCount; }
-        set
-        {
-            carrotCount = value;
-            carrotCountText.text = carrotCount.ToString();
-        }
-    }
+    public int carrotCount = 0;
+    //public int CarrotCount
+    //{
+    //    get { return carrotCount; }
+    //    set
+    //    {
+    //        carrotCount = value;
+    //    }
+    //}
 
     [SerializeField]
     private Text timeCountText;
@@ -128,7 +141,12 @@ public class DeliveryGameManager : MonoBehaviour
         }
     }
 
-    public Chimney preChimney = null;      // 이전에 나온 굴뚝
+    
+    [SerializeField]
+    private Text gaugeAmountText;
+
+    public bool isStart;    // 게임이 시작되었는지?
+    public bool isEnd;      // 게임이 종료되었는지?
 
     // 싱글톤
     private static DeliveryGameManager instance;
@@ -164,6 +182,7 @@ public class DeliveryGameManager : MonoBehaviour
     void Start()
     {
         startWindow.gameObject.SetActive(true);     // 시작 창 보여줌
+        resultWindow.gameObject.SetActive(false);
         santa.gameObject.SetActive(false);
 
         GiftCount = inventory.count;
@@ -195,6 +214,7 @@ public class DeliveryGameManager : MonoBehaviour
     /// </summary>
     IEnumerator GameOver(bool isClear)
     {
+        isStart = false;
         isEnd = true;
 
         if (!isClear)       // 제한 시간 내 생명이 다해서 죽었다면 GameOver 효과음 실행
@@ -208,12 +228,44 @@ public class DeliveryGameManager : MonoBehaviour
         background.isMove = false;
         cloud.isMove = false;
 
-        soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
+        GetReward();
+
+        //soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
 
         santa.gameObject.SetActive(false);
-        resultWindow.gameObject.SetActive(true);        // 결과창을 띄움
+
+        // 결과창을 띄우고 차례대로 값을 보여주게끔
+        satisfiedCountText.gameObject.SetActive(false);
+        wishCountText.gameObject.SetActive(false);
+        puzzleCountText.gameObject.SetActive(false);
+        carrotCountText.gameObject.SetActive(false);
+        gaugeAmountText.gameObject.SetActive(false);
+
+        resultWindow.gameObject.SetActive(true);        
+        yield return new WaitForSeconds(0.5f);
+
+        soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
+        satisfiedCountText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+
+        soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
+        wishCountText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+
+        soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
+        puzzleCountText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+
+        soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
+        carrotCountText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+
+        soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
+        gaugeAmountText.gameObject.SetActive(true);
+
+        
     }
-    DeliveryGameObject deliveryGameObject;
+
     /// <summary>
     /// 장애물 생성 코루틴
     /// </summary>
@@ -224,29 +276,25 @@ public class DeliveryGameManager : MonoBehaviour
         {
             yield return twoSec;
 
-            //if(obstacle != null) preChimney = obstacle.GetComponent<Chimney>();
-
-
             EDeliveryFlag rand = EDeliveryFlag.chimney;
 
             //확률에 따라 장애물 생성
             int randInt = Random.Range(0, 100);
-            if (randInt <= 45)
+            if (randInt <= 50)
             {
-                rand = EDeliveryFlag.chimney;             // 45%
+                rand = EDeliveryFlag.chimney;             // 50%
             }
-            else if (randInt <= 75)
+            else if (randInt <= 80)
             {
                 rand = EDeliveryFlag.utilityPole;        // 30%
             }
             else if (randInt <= 100)
             {
-                rand = EDeliveryFlag.bird;              // 25%
+                rand = EDeliveryFlag.bird;              // 20%
             }
 
-            deliveryGameObject = objectPoolingManager.Get(rand).GetComponent<DeliveryGameObject>();
+            DeliveryGameObject deliveryGameObject = objectPoolingManager.Get(rand).GetComponent<DeliveryGameObject>();
             deliveryGameObject.flag = rand;
-           
         }
     }
     #endregion
@@ -267,8 +315,15 @@ public class DeliveryGameManager : MonoBehaviour
         cloud.isMove = true;
 
         Life = 3;
+
+        SatisfiedCount = 0;
+        WishCount = 0;
+        PuzzleCount = 0;
+        carrotCount = 0;
+
         TimeCount = 60;
 
+        isStart = true;
         isEnd = false;
 
         StartCoroutine(StartTimeCount());
@@ -284,6 +339,37 @@ public class DeliveryGameManager : MonoBehaviour
     public void End(bool isClear)
     {
         StartCoroutine(GameOver(isClear));
+    }
+
+    /// <summary>
+    /// 게임 종료 후 보상 획득
+    /// </summary>
+    public void GetReward()
+    {
+        // 신뢰도 획득
+        int gaugeAmount = SatisfiedCount + WishCount;
+        GameManager.Instance.IncreaseGaugeNotAnim(gaugeAmount);
+
+        // 결과창에 신뢰도 결과 띄우기
+        StringBuilder sb = new StringBuilder();
+        sb.Append("신뢰도  ");
+        sb.Append(gaugeAmount);
+        sb.Append("%  증가");
+        gaugeAmountText.text = sb.ToString();
+
+        // 당근 획득
+        int carrotAmount = carrotCount * 10000;
+        carrotCountText.text = GoldManager.ExpressUnitOfGold(carrotAmount);
+        GameManager.Instance.GetCarrot(carrotAmount);
+    }
+
+    /// <summary>
+    /// 씬을 변경 (인스펙터에서 호출)
+    /// </summary>
+    public void ChangeScene()
+    {
+        soundManager.StopBGM();           // BGM 종료
+        GameLoadManager.LoadScene("SantaVillage");
     }
     #endregion
 }

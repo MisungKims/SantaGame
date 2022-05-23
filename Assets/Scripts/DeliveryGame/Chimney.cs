@@ -36,28 +36,17 @@ public class Chimney : DeliveryGameObject
 
         isAlreadyGet = false;
 
-        gift = inventory.RandomGet();      // 인벤토리에 있는 선물을 랜덤으로 가져옴
-
-        //if (deliveryGameManager && deliveryGameManager.preChimney)
-        //{
-        //    preChimney = deliveryGameManager.preChimney;
-
-        //    // 아이템의 수량이 하나 남았으면 연속으로 나오지 않도록 함
-        //    GiftItem invItem = inventory.giftItems[preChimney.gift.inventoryIndex];
-        //    if (invItem.gift == gift && invItem.amount <= 1)
-        //    {
-        //        gift = inventory.RandomGet(preChimney.gift.inventoryIndex);
-        //    }
-        //}
         
+        gift = inventory.RandomGet();      // 인벤토리에 있는 선물을 랜덤으로 가져옴
         if (gift == null)
         {
-            deliveryGameManager.End(true);
+            if(deliveryGameManager != null) deliveryGameManager.End(true);
         }
         else
         {
             giftImage.sprite = gift.giftImage;
         }
+   
     }
     #endregion
 }

@@ -46,10 +46,10 @@ public class GiftCollider : MonoBehaviour
             Chimney chimney = other.GetComponent<Chimney>();
             Debug.Log(chimney.gift.giftName);
 
-            inventory.RemoveItem2(chimney.gift);
+            inventory.RemoveItem(chimney.gift, false);
             isRemove = true;
 
-            deliveryGameManager.GiftCount = inventory.count;
+            //deliveryGameManager.GiftCount = inventory.count;
 
             collider.enabled = false;
         }
