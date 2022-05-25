@@ -13,18 +13,18 @@ using System;
 public class DailyQuestManager : QuestManager
 {
     #region 변수
-    [SerializeField]
-    private Button allSuccessButton;        // 모두 완료 버튼
+    //[SerializeField]
+    //private Button allSuccessButton;        // 모두 완료 버튼
 
-    private bool isAllSuccess;
-    public bool IsAllSuccess
-    {
-        set
-        {
-            isAllSuccess = value;
-            allSuccessButton.interactable = value;      // 모두 완료 여부에 따라 버튼의 interactable 설정
-        }
-    }
+    public bool isAllSuccess;
+    //public bool IsAllSuccess
+    //{
+    //    set
+    //    {
+    //        isAllSuccess = value;
+    //        //allSuccessButton.interactable = value;      // 모두 완료 여부에 따라 버튼의 interactable 설정
+    //    }
+    //}
 
     private string initQuestDate;       // 퀘스트를 마지막으로 초기화한 날짜
 
@@ -53,17 +53,16 @@ public class DailyQuestManager : QuestManager
         questType = EQuestType.daily;
 
         // UI 배치 시 필요
-        startPos = new Vector3(0, 102, 0);
-        startParentSize = new Vector2(0, 52);
+        startPos = new Vector3(0, 190, 0);
+        startParentSize = new Vector2(0, 480);
         nextYPos = -75;
-        increaseParentYSize = 20;
 
         base.Awake();
     }
 
     void Start()
     {
-        IsAllSuccess = false;   // 추후 저장 필요
+        isAllSuccess = false;   // 추후 저장 필요
 
         StartCoroutine(Init());     // 익일 초기화
     }
@@ -73,19 +72,22 @@ public class DailyQuestManager : QuestManager
     #region 함수
     public override void Success(int id)
     {
-        base.Success(id);
-
-        // 일일 퀘스트를 모두 완료했는지 탐색
-        for (int i = 0; i < questList.Count; i++)
+        if (!isAllSuccess)
         {
-            if (questList[i].count == questList[i].maxCount)
-            {
-                IsAllSuccess = false;
-                return;
-            }
-        }
+            base.Success(id);
 
-        IsAllSuccess = true;
+            // 일일 퀘스트를 모두 완료했는지 탐색
+            for (int i = 0; i < questList.Count; i++)
+            {
+                if (questList[i].count == questList[i].maxCount)
+                {
+                    isAllSuccess = false;
+                    return;
+                }
+            }
+
+            isAllSuccess = true;
+        }
     }
 
     /// <summary>

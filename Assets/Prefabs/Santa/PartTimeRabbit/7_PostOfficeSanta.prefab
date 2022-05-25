@@ -426,16 +426,16 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1724444165680626}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0.9999813, z: -0.0061261477, w: 0}
   m_LocalPosition: {x: 1, y: 0, z: 1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_Children:
   - {fileID: 4169506137948410}
   - {fileID: 4113068767636658}
   - {fileID: 4027714551374148}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -0.702, y: -180, z: 0}
 --- !u!114 &-4808426795143374509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -448,7 +448,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bd11f9cc84ef8a4282ccf0c380111f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  getGoldSlider: {fileID: 0}
+  index: 0
 --- !u!95 &95368463829637242
 Animator:
   serializedVersion: 3

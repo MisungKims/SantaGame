@@ -25,7 +25,7 @@ public class QuestManager : MonoBehaviour
     public GameObject notificationImage;   // 보상을 받을 퀘스트가 있음을 알리는 이미지
     
     // UI 배치에 필요한 변수
-    protected Vector3 startPos = new Vector3(0, 102, 0);
+    protected Vector3 startPos = new Vector3(0, 270, 0);
     protected Vector2 startParentSize = new Vector2(0, 52);
     protected float nextYPos;
     protected float increaseParentYSize = 20;
@@ -104,7 +104,7 @@ public class QuestManager : MonoBehaviour
 
         rectTransform.anchoredPosition += new Vector2(0, nextYPos);         // 다음 오브젝트를 스크롤뷰의 알맞은 위치에 넣기 위해 RectTransform을 조정
 
-        parentRectTransform.sizeDelta += new Vector2(0, rectTransform.sizeDelta.y + increaseParentYSize);        // 스크롤뷰의 Content의 크기를 늘려줌
+       // parentRectTransform.sizeDelta += new Vector2(0, rectTransform.sizeDelta.y);        // 스크롤뷰의 Content의 크기를 늘려줌
     }
 
     /// <summary>

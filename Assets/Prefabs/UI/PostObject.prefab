@@ -497,6 +497,13 @@ MonoBehaviour:
   contentPreviewText: {fileID: 6554328222461830368}
   notificationImage: {fileID: 6554328223440749536}
   index: 0
+  gift:
+    giftType: 0
+    giftGrade: 0
+    giftName: 
+    giftImage: {fileID: 0}
+    wishCount: 0
+    inventoryIndex: 0
 --- !u!1 &6554328222391125826
 GameObject:
   m_ObjectHideFlags: 0

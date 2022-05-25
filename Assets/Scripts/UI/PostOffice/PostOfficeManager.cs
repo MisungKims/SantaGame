@@ -67,7 +67,7 @@ public class PostOfficeManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        waitForSeconds = new WaitForSeconds(5f);     // 다음 달이 될 때마다 편지를 전송하기 위함
+        waitForSeconds = new WaitForSeconds(GameManager.Instance.dayCount * 7);     // 다음 달이 될 때마다 편지를 전송하기 위함
 
         SetTransform();
 
@@ -148,8 +148,6 @@ public class PostOfficeManager : MonoBehaviour
             if (postUIList.Count < maximum)          // 편지함이 차지 않았을 때만 생성
             {
                 PostOfficeInstance(postList[randIndex]);
-
-                
             }
         }
     }
@@ -164,8 +162,11 @@ public class PostOfficeManager : MonoBehaviour
         newObj.PostName = post.name;
         newObj.PostConent = post.content;
         newObj.transform.GetComponent<RectTransform>().anchoredPosition = UITransformList[0];       // 새로온 편지는 맨 상단으로 가도록
-        newObj.index = postUIList.Count;
+       
+        Gift gift = GiftManager.Instance.giftList[post.giftIndex];
+        newObj.gift = gift;
 
+        newObj.index = postUIList.Count;
         for (int i = 0; i < postUIList.Count; i++)          // 오래된 편지가 밑으로 가도록 UI를 다시 배치
         {
             postUIList[i].RefreshTransform(UITransformList[postUIList.Count - i]);
@@ -174,9 +175,6 @@ public class PostOfficeManager : MonoBehaviour
         parentRectTransform.sizeDelta = parentSizeList[postUIList.Count];
 
         postUIList.Add(newObj);
-
-        Gift gift = GiftManager.Instance.giftList[post.giftIndex];      
-        gift.wishCount++;                                            // 선물을 위시리스트에 추가
 
         // 인벤토리가 열려있고, 위시리스트에 추가한 선물이 인벤토리에 있었으면 인벤토리 새로고침
         if (UIManager.Instance.inventoryPanel.activeSelf && gift.inventoryIndex > -1)

@@ -18,7 +18,7 @@ public class GiftCollider : MonoBehaviour
 
     private Inventory inventory;
 
-    private CapsuleCollider collider;
+    private CapsuleCollider capsuleCollider;
     #endregion
 
     #region 유니티 함수
@@ -28,12 +28,12 @@ public class GiftCollider : MonoBehaviour
 
         inventory = Inventory.Instance;
 
-        collider = this.GetComponent<CapsuleCollider>();
+        capsuleCollider = this.GetComponent<CapsuleCollider>();
     }
 
     private void OnEnable()
     {
-        collider.enabled = true;
+        capsuleCollider.enabled = true;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -51,7 +51,7 @@ public class GiftCollider : MonoBehaviour
 
             //deliveryGameManager.GiftCount = inventory.count;
 
-            collider.enabled = false;
+            capsuleCollider.enabled = false;
         }
     }
     #endregion

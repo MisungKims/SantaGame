@@ -76,6 +76,10 @@ public class PostObject : MonoBehaviour
 
     public int index;
 
+    public Gift gift;
+
+    private int questID = 4;
+
     #endregion
 
     #region 유니티 함수
@@ -97,7 +101,13 @@ public class PostObject : MonoBehaviour
     public void Read()
     {
         if (!isRead)        // 편지를 처음 읽었을 때
+        {
             IsRead = true;
+
+            gift.wishCount++;        // 선물을 위시리스트에 추가
+
+            DailyQuestManager.Instance.Success(questID);        // 퀘스트 성공
+        }
 
         writingPad.gameObject.SetActive(true);
         writingPad.PostName = postName;
