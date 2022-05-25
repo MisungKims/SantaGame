@@ -290,7 +290,7 @@ public class GameManager : MonoBehaviour
                 Destroy(this.gameObject);
         }
 
-        Level = 10;
+        Level = 20;
         Gauge = 10;
         CitizenCount = 0;
         Day = 1;

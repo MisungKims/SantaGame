@@ -13,9 +13,11 @@ using System.Text;
 public class Building : MonoBehaviour
 {
     #region 변수
-
+    [HideInInspector]
     public int index;
+
     public Object buildingObj;
+
     public string BuilidingName
     {
         get { return buildingObj.buildingName; }
@@ -89,6 +91,7 @@ public class Building : MonoBehaviour
 
     private Vector3 distance;       // 카메라와의 거리
 
+    private int questID = 2;
 
     // 캐싱
     private GameManager gameManager;
@@ -111,6 +114,7 @@ public class Building : MonoBehaviour
         SetCamTargetThis();                 // 카메라가 건물을 바라보도록
 
         Level = 1;
+        IncrementGold = IncrementGold;
 
         getGoldSlider.maxValue = (int)Second;
         StartCoroutine(Increment());        // 골드획득 시작
@@ -129,6 +133,8 @@ public class Building : MonoBehaviour
         {
             return false;
         }
+
+        DailyQuestManager.Instance.Success(questID);        // 퀘스트 완료
 
         gameManager.MyGold -= GoldManager.UnitToBigInteger(BuildingPrice);  // 업그레이드 비용 지불
 

@@ -14,8 +14,10 @@ public class Santa : MonoBehaviour
 {
     #region 변수
 
-    public Object santaObj;
+    [HideInInspector]
     public int index;
+
+    public Object santaObj;
 
     public int Level
     {
@@ -55,7 +57,10 @@ public class Santa : MonoBehaviour
     {
         get { return santaObj.santaSprite; }
     }
-   
+
+    private int questID = 3;
+
+    bool isInit = false;
 
     // 캐싱
     private GameManager gameManager;
@@ -71,7 +76,11 @@ public class Santa : MonoBehaviour
 
         Building.isAuto = true;     // 골드 자동화 시작
 
+        isInit = true;
+
         Upgrade();
+
+        isInit = false;
 
         SetCamTargetThis();                 // 카메라가 산타를 따라다니도록
 
@@ -86,6 +95,11 @@ public class Santa : MonoBehaviour
     {
         if (!GoldManager.CompareBigintAndUnit(gameManager.MyCarrots, SantaPrice))   // 가진 당근으로 산타를 업그레이드 할 수 없다면
             return false;
+        
+        if (!isInit)
+        {
+            DailyQuestManager.Instance.Success(questID);        // 퀘스트 성공
+        }
 
         gameManager.MyCarrots -= GoldManager.UnitToBigInteger(SantaPrice);          // 비용 지불
 

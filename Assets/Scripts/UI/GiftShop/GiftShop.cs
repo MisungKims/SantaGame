@@ -30,6 +30,8 @@ public class GiftShop : MonoBehaviour
     // Ä³½Ì
     private GiftManager giftManager;
 
+    private int questID = 1;
+
     private void Awake()
     {
         giftManager = GiftManager.Instance;
@@ -97,6 +99,8 @@ public class GiftShop : MonoBehaviour
     /// </summary>
     void GetRandomGift()
     {
+        DailyQuestManager.Instance.Success(questID);        // Äù½ºÆ® ¼º°ø
+
         giftManager.ReceiveRandomGift();
     }
 }

@@ -63,8 +63,6 @@ public class RabbitCitizen : MonoBehaviour
         gameManager = GameManager.Instance;
         anim = GetComponent<Animator>();
 
-        GetButton();
-
         int rand = Random.Range(0, 12);
         rabbitMat.material = materials[rand];       // ≈‰≥¢¿« Material¿ª ∑£¥˝¿∏∑Œ º≥¡§
 
@@ -89,8 +87,8 @@ public class RabbitCitizen : MonoBehaviour
         {
             yield return waitForSecond;
 
-            getCarrotButton.gameObject.SetActive(true);     // ¥Á±Ÿ »πµÊ πˆ∆∞¿ª ∫∏ø©¡‹
-
+            GetButton();
+           
             yield return StartCoroutine(IsGetCarrot());         // ¥Á±Ÿ »πµÊ¿ª ±‚¥Ÿ∏≤
         }
     }
@@ -122,6 +120,7 @@ public class RabbitCitizen : MonoBehaviour
 
         yield return new WaitForSeconds(0.13f);
         ObjectPoolingManager.Instance.Set(getCarrotButton.gameObject, EObjectFlag.getCarrotButton);
+        getCarrotButton = null;
     }
 
     
@@ -158,7 +157,7 @@ public class RabbitCitizen : MonoBehaviour
 
             Vector3 goalPoint;
             bool isFindGoal= false;
-
+            
             if (randBehavior < 4)             // idle, dance ¿œ ∂ß¥¬ ∑£¥˝ ¿ßƒ°∑Œ
             {
                 if (RandomPoint(this.transform.position, 50, out goalPoint))        // ∑£¥˝ ∏Ò¿˚¡ˆ∏¶ √£æ“¿ª ∂ß
@@ -238,7 +237,7 @@ public class RabbitCitizen : MonoBehaviour
     {
         getCarrotButton = ObjectPoolingManager.Instance.Get(EObjectFlag.getCarrotButton).GetComponent<CitizenButtonRay>();
         getCarrotButton.citizen = this;
-        getCarrotButton.gameObject.SetActive(false);
+        //getCarrotButton.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -323,7 +322,7 @@ public class RabbitCitizen : MonoBehaviour
 
     private void Update()
     {
-        if (getCarrotButton.gameObject.activeSelf)
+        if (getCarrotButton && getCarrotButton.gameObject.activeSelf)
         {
             Vector3 newPos = transform.position;
             newPos.y += 5f;

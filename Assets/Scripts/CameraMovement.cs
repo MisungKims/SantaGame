@@ -316,12 +316,16 @@ public class CameraMovement : MonoBehaviour
             }
             else if (chaseState == EChaseState.chaseBuilding)       // 건물을 추적할 때 건물의 cameraPos 위치로 이동
             {
-                targetPos = cam.transform.position;
-                targetPos.x = chasingTarget.position.x + buildingDistance.localPosition.x;
+                targetPos = chasingTarget.position + buildingDistance.localPosition;
+                //targetPos = cam.transform.position;
+                //targetPos.x = chasingTarget.position.x + buildingDistance.localPosition.x;
+                //targetPos.z = chasingTarget.position.z + buildingDistance.localPosition.z;
                 while (Vector3.Distance(cam.transform.position, targetPos) > 0.05f && chaseState == EChaseState.chaseBuilding)
                 {
-                    targetPos = cam.transform.position;
-                    targetPos.x = chasingTarget.position.x + buildingDistance.localPosition.x;
+                    targetPos = chasingTarget.position + buildingDistance.localPosition;
+                    //targetPos = cam.transform.position;
+                    //targetPos.x = chasingTarget.position.x + buildingDistance.localPosition.x;
+                    //targetPos.z = chasingTarget.position.z + buildingDistance.localPosition.z;
                     cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos, Time.deltaTime * 1.6f);
 
                     yield return null;

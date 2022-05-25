@@ -60,7 +60,10 @@ public class RewardManager : MonoBehaviour
                 break;
 
             case ERewardType.puzzle:
-                PuzzleManager.Instance.GetRandomPuzzle();
+                for (int i = 0; i < int.Parse(amount); i++)
+                {
+                    PuzzleManager.Instance.GetRandomPuzzle();
+                }
                 break;
 
             case ERewardType.clothesBox:
@@ -87,13 +90,13 @@ public class RewardManager : MonoBehaviour
             case "골드":
                 return ERewardType.gold;
                 
-            case "보석":
+            case "다이아":
                 return ERewardType.dia;
               
-            case "퍼즐 조각":
+            case "퍼즐":
                 return ERewardType.puzzle;
                 
-            case "랜덤 의상 상자":
+            case "랜덤 상자":
                 return ERewardType.clothesBox;
               
             case "당근":
@@ -102,5 +105,16 @@ public class RewardManager : MonoBehaviour
             default:
                 return ERewardType.gold;
         }
+    }
+
+    /// <summary>
+    /// 랜덤 보상을 반환
+    /// </summary>
+    /// <returns></returns>
+    public static ERewardType RandomReward()
+    {
+        int randType = Random.Range(0, 5);
+
+        return (ERewardType)randType;
     }
 }
