@@ -61,7 +61,7 @@ public class PuzzleManager : MonoBehaviour
       
         for (int i = 0; i < 12; i++)
         {
-            GetPiece(EGiftType.phone, i);
+            GetPiece(EGiftType.phone, i, true);
             while (!getRewardWindow.isTouch)
             {
                 yield return null;
@@ -76,7 +76,7 @@ public class PuzzleManager : MonoBehaviour
     /// </summary>
     /// <param name="ePuzzle">획득한 퍼즐의 종류</param>
     /// <param name="pieceIndex">퍼즐 조각 인덱스</param>
-    public void GetPiece(EGiftType ePuzzle, int pieceIndex)
+    public void GetPiece(EGiftType ePuzzle, int pieceIndex, bool isOpenWindow)
     {
         PuzzlePiece puzzlePiece = puzzleList[(int)ePuzzle].puzzlePieceList[pieceIndex];
         puzzlePiece.isGet = true;
@@ -92,7 +92,10 @@ public class PuzzleManager : MonoBehaviour
             puzzleUI.RefreshPieceImage(pieceIndex);
         }
 
-        getRewardWindow.OpenWindow("퍼즐 조각", puzzlePiece.pieceImage);      // 보상 획득창 보여줌
+        if (isOpenWindow)
+        {
+            getRewardWindow.OpenWindow("퍼즐 조각", puzzlePiece.pieceImage);      // 보상 획득창 보여줌
+        }
     }
 
     /// <summary>
@@ -104,26 +107,37 @@ public class PuzzleManager : MonoBehaviour
         
         int RandomPieceIndex = Random.Range(0, 12);         // 그 퍼즐의 어떤 조각을 가져올지
 
-        GetPiece(RandomPuzzleIndex, RandomPieceIndex);
+        GetPiece(RandomPuzzleIndex, RandomPieceIndex, true);
     }
 
-    /// <summary>
-    /// 다수의 랜덤 퍼즐 조각 획득
-    /// </summary>
-    /// <param name="count">획득할 조각의 개수</param>
-    /// <returns></returns>
-    IEnumerator GetManyRandomPiece(int count)
+    public void GetManyRandomPiece(int count)
     {
-        for (int i = 0; i < count; i++)
-        {
-            GetRandomPuzzle();
+        EGiftType RandomPuzzleIndex = GiftManager.Instance.RandomGift().giftType;        // 확률에 따라 랜덤으로 퍼즐 그림 정하기
 
-            while (!getRewardWindow.isTouch)        // 보상 획득 창이 닫힐 때까지 대기
-            {
-                yield return null;
-            }
-        }
+        int RandomPieceIndex = Random.Range(0, 12);         // 그 퍼즐의 어떤 조각을 가져올지
+
+        GetPiece(RandomPuzzleIndex, RandomPieceIndex, false);
     }
+
+
+    ///// <summary>
+    ///// 다수의 랜덤 퍼즐 조각 획득
+    ///// </summary>
+    ///// <param name="count">획득할 조각의 개수</param>
+    ///// <returns></returns>
+    //IEnumerator GetManyRandomPiece(int count)
+    //{
+    //    for (int i = 0; i < count; i++)
+    //    {
+            
+    //        //GetRandomPuzzle();
+
+    //        //while (!getRewardWindow.isTouch)        // 보상 획득 창이 닫힐 때까지 대기
+    //        //{
+    //        //    yield return null;
+    //        //}
+    //    }
+    //}
 
     /// <summary>
     /// 퍼즐을 다 완성했는지 체크

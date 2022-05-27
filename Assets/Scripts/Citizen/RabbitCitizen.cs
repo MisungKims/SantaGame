@@ -152,7 +152,8 @@ public class RabbitCitizen : MonoBehaviour
     {
         while (true)
         {
-            int randBehavior = Random.Range(0, 4);    // 랜덤 행동을 정함
+            //int randBehavior = Random.Range(0, 5);    // 랜덤 행동을 정함
+            int randBehavior = 0;    // 랜덤 행동을 정함
             citizenBehavior = (ECitizenBehavior)randBehavior;
 
             Vector3 goalPoint;

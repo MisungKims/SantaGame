@@ -13,7 +13,8 @@ using System.IO;
 
 public class ScreenShot : MonoBehaviour
 {
-   
+    private int questID = 0;
+
     /// <summary>
     /// 스크린샷을 찍어 갤러리에 저장
     /// </summary>
@@ -34,6 +35,8 @@ public class ScreenShot : MonoBehaviour
         string albumName = "BRUNCH";
         NativeGallery.SaveImageToGallery(texture, albumName, fileName, (success, path) =>
         {
+            DailyQuestManager.Instance.Success(questID);        // 퀘스트 완료
+
             Debug.Log(success);
             Debug.Log(path);
         });

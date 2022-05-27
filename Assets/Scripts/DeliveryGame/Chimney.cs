@@ -12,6 +12,7 @@ using UnityEngine.UI;
 public class Chimney : DeliveryGameObject
 {
     #region 변수
+    
     public Image giftImage;
     public Gift gift;
 
@@ -36,7 +37,8 @@ public class Chimney : DeliveryGameObject
 
         isAlreadyGet = false;
 
-        
+        giftImage.transform.parent.gameObject.SetActive(true);
+
         gift = inventory.RandomGet();      // 인벤토리에 있는 선물을 랜덤으로 가져옴
         if (gift == null)
         {

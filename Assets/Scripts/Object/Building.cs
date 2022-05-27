@@ -122,6 +122,8 @@ public class Building : MonoBehaviour
         ObjectManager.Instance.unlockCount++;
 
         getGoldSlider.gameObject.SetActive(true);
+
+        gameManager.IncreaseGauge(5);       // 게이지 증가
     }
 
     /// <summary>

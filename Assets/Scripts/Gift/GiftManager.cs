@@ -31,9 +31,15 @@ public class GiftManager : MonoBehaviour
     private void Awake()
     {
         if (instance == null)
+        {
             instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
         else
-            Destroy(this.gameObject);
+        {
+            if (instance != this)
+                Destroy(this.gameObject);
+        }
 
         getRewardWindow = UIManager.Instance.getRewardWindow;
 

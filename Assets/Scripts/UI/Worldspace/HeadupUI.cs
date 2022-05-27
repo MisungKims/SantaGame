@@ -24,6 +24,9 @@ public class HeadupUI : MonoBehaviour
 
     Camera cam;
 
+    [SerializeField]
+    private bool isUseDistance = true;
+
     void Awake()
     {
         cam = CameraMovement.Instance.cam;
@@ -34,7 +37,10 @@ public class HeadupUI : MonoBehaviour
         newPos.y += height;
         this.transform.position = newPos;
 
-        StartCoroutine(CamDistance());
+        if (isUseDistance)
+        {
+            StartCoroutine(CamDistance());
+        }
     }
 
 
