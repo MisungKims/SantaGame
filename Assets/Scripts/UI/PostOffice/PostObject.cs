@@ -107,6 +107,8 @@ public class PostObject : MonoBehaviour
             gift.wishCount++;        // 선물을 위시리스트에 추가
 
             DailyQuestManager.Instance.Success(questID);        // 퀘스트 성공
+
+            GameManager.Instance.IncreaseGauge(3);      // 게이지 증가
         }
 
         writingPad.gameObject.SetActive(true);

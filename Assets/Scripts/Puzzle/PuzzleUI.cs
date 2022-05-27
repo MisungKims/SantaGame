@@ -135,6 +135,8 @@ public class PuzzleUI : MonoBehaviour
     {
         GiftManager.Instance.ReceiveGift(puzzleType);
 
+        GameManager.Instance.IncreaseGauge(5f);
+
         InitPiece();
     }
 

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class DeliveryGameObject : MonoBehaviour
 {
-    protected float moveSpeed = 50f;
-    public EDeliveryFlag flag;
+    protected float moveSpeed = 500f;
+    public EObjectFlag flag;
 
     Vector3 startPos = new Vector3(0, 0, 0);
 
@@ -26,7 +26,7 @@ public class DeliveryGameObject : MonoBehaviour
 
     IEnumerator Dissapear()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(10f);
 
         ObjectPoolingManager.Instance.Set(this.gameObject, flag);
     }

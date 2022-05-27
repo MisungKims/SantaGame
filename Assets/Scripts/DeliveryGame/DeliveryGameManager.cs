@@ -31,6 +31,15 @@ public class DeliveryGameManager : MonoBehaviour
     [SerializeField]
     private Image[] lifeImages;
 
+    [SerializeField]
+    private GameObject deliveryGame;
+
+    [SerializeField]
+    private Canvas villiageCanvas;
+
+    [SerializeField]
+    private Canvas villiageWorldCanvas;
+
 
     private int life;
     public int Life
@@ -74,32 +83,32 @@ public class DeliveryGameManager : MonoBehaviour
     }
 
     [SerializeField]
-    private Text satisfiedCountText;
+    private Text scoreText;
 
-    private int satisfiedCount = 0;
-    public int SatisfiedCount
+    private int score = 0;
+    public int Score
     {
-        get { return satisfiedCount; }
+        get { return score; }
         set
         {
-            satisfiedCount = value;
-            satisfiedCountText.text = satisfiedCount.ToString();
+            score = value;
+            scoreText.text = score.ToString();
         }
     }
 
-    [SerializeField]
-    private Text wishCountText;
+    //[SerializeField]
+    //private Text wishCountText;
 
-    private int wishCount = 0;
-    public int WishCount
-    {
-        get { return wishCount; }
-        set
-        {
-            wishCount = value;
-            wishCountText.text = wishCount.ToString();
-        }
-    }
+    public int wishCount = 0;
+    //public int WishCount
+    //{
+    //    get { return wishCount; }
+    //    set
+    //    {
+    //        wishCount = value;
+    //        wishCountText.text = wishCount.ToString();
+    //    }
+    //}
 
     [SerializeField]
     private Text puzzleCountText;
@@ -235,8 +244,8 @@ public class DeliveryGameManager : MonoBehaviour
         santa.gameObject.SetActive(false);
 
         // °á°úÃ¢À» ¶ç¿ì°í Â÷·Ê´ë·Î °ªÀ» º¸¿©ÁÖ°Ô²û
-        satisfiedCountText.gameObject.SetActive(false);
-        wishCountText.gameObject.SetActive(false);
+        scoreText.gameObject.SetActive(false);
+        //wishCountText.gameObject.SetActive(false);
         puzzleCountText.gameObject.SetActive(false);
         carrotCountText.gameObject.SetActive(false);
         gaugeAmountText.gameObject.SetActive(false);
@@ -245,12 +254,12 @@ public class DeliveryGameManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
-        satisfiedCountText.gameObject.SetActive(true);
+        scoreText.gameObject.SetActive(true);
         yield return new WaitForSeconds(0.5f);
 
-        soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
-        wishCountText.gameObject.SetActive(true);
-        yield return new WaitForSeconds(0.5f);
+        //soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
+        //wishCountText.gameObject.SetActive(true);
+        //yield return new WaitForSeconds(0.5f);
 
         soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
         puzzleCountText.gameObject.SetActive(true);
@@ -258,7 +267,7 @@ public class DeliveryGameManager : MonoBehaviour
 
         soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
         carrotCountText.gameObject.SetActive(true);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.7f);
 
         soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
         gaugeAmountText.gameObject.SetActive(true);
@@ -276,21 +285,21 @@ public class DeliveryGameManager : MonoBehaviour
         {
             yield return twoSec;
 
-            EDeliveryFlag rand = EDeliveryFlag.chimney;
+            EObjectFlag rand = EObjectFlag.chimney;
 
             //È®·ü¿¡ µû¶ó Àå¾Ö¹° »ý¼º
             int randInt = Random.Range(0, 100);
             if (randInt <= 50)
             {
-                rand = EDeliveryFlag.chimney;             // 50%
+                rand = EObjectFlag.chimney;             // 50%
             }
             else if (randInt <= 80)
             {
-                rand = EDeliveryFlag.utilityPole;        // 30%
+                rand = EObjectFlag.utilityPole;        // 30%
             }
             else if (randInt <= 100)
             {
-                rand = EDeliveryFlag.bird;              // 20%
+                rand = EObjectFlag.bird;              // 20%
             }
 
             DeliveryGameObject deliveryGameObject = objectPoolingManager.Get(rand).GetComponent<DeliveryGameObject>();
@@ -316,8 +325,8 @@ public class DeliveryGameManager : MonoBehaviour
 
         Life = 3;
 
-        SatisfiedCount = 0;
-        WishCount = 0;
+        Score = 0;
+        //WishCount = 0;
         PuzzleCount = 0;
         carrotCount = 0;
 
@@ -347,7 +356,7 @@ public class DeliveryGameManager : MonoBehaviour
     public void GetReward()
     {
         // ½Å·Úµµ È¹µæ
-        int gaugeAmount = SatisfiedCount + WishCount;
+        int gaugeAmount = Score + wishCount;
         GameManager.Instance.IncreaseGaugeNotAnim(gaugeAmount);
 
         // °á°úÃ¢¿¡ ½Å·Úµµ °á°ú ¶ç¿ì±â
@@ -361,15 +370,34 @@ public class DeliveryGameManager : MonoBehaviour
         int carrotAmount = carrotCount * 10000;
         carrotCountText.text = GoldManager.ExpressUnitOfGold(carrotAmount);
         GameManager.Instance.GetCarrot(carrotAmount);
+
+        // ÆÛÁñ È¹µæ
+        PuzzleManager.Instance.GetManyRandomPiece(puzzleCount);
     }
 
+
     /// <summary>
-    /// ¾ÀÀ» º¯°æ (ÀÎ½ºÆåÅÍ¿¡¼­ È£Ãâ)
+    /// DeliveryGame Ã¢À» ´ÝÀ½ (ÀÎ½ºÆåÅÍ¿¡¼­ È£Ãâ)
     /// </summary>
-    public void ChangeScene()
+    public void CloseDeliverGame()
     {
-        soundManager.StopBGM();           // BGM Á¾·á
-        GameLoadManager.LoadScene("SantaVillage");
+        soundManager.PlayBGM(EBgmType.main);
+
+        UIManager.Instance.SetisOpenPanel(false);
+
+        UIManager.Instance.mainPanel.SetActive(true);
+        deliveryGame.SetActive(false);
+        villiageCanvas.enabled = true;
+        villiageWorldCanvas.enabled = false;
     }
+
+    ///// <summary>
+    ///// ¾ÀÀ» º¯°æ (ÀÎ½ºÆåÅÍ¿¡¼­ È£Ãâ)
+    ///// </summary>
+    //public void ChangeScene()
+    //{
+    //    soundManager.StopBGM();           // BGM Á¾·á
+    //    GameLoadManager.LoadScene("SantaVillage");
+    //}
     #endregion
 }

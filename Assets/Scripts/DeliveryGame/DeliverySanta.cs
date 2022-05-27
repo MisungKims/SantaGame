@@ -15,11 +15,11 @@ public class DeliverySanta : MonoBehaviour
     private Rigidbody rigid;
 
     [SerializeField]
-    private float jumpPower = 50f;
+    private float jumpPower = 700f;
     [SerializeField]
-    private float doubleJumpPower = 40f;
+    private float doubleJumpPower = 450f;
     [SerializeField]
-    private Vector3 gravity = new Vector3(0, -50f, 0);
+    private Vector3 gravity = new Vector3(0, -800f, 0);
 
     private int jumpCnt = 0;
 
@@ -66,7 +66,7 @@ public class DeliverySanta : MonoBehaviour
             soundManager.PlaySoundEffect(ESoundEffectType.deliveryGetGift);     // 효과음 실행
 
             DeliveryReward reward = other.transform.GetComponent<DeliveryReward>();
-            ObjectPoolingManager.Instance.Set(reward.gameObject, EDeliveryFlag.reward);     // 오브젝트 풀에 반환
+            ObjectPoolingManager.Instance.Set(reward.gameObject, EObjectFlag.reward);     // 오브젝트 풀에 반환
 
             if (reward.rewardType.Equals(ERewardType.carrot))           // 보상이 당근일 때
             {
@@ -120,7 +120,7 @@ public class DeliverySanta : MonoBehaviour
         {
             soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
 
-            objectPoolingManager.Get(EDeliveryFlag.gift);
+            objectPoolingManager.Get(EObjectFlag.gift);
             deliveryGameManager.GiftCount--;
         }
     }

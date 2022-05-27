@@ -16,7 +16,7 @@ public class Obstacle : DeliveryGameObject
         int rand = Random.Range(0, 100);
         if (rand <= 10)     // 10%의 확률로 보상 아이템 Spawn
         {
-            reward = ObjectPoolingManager.Instance.Get(EDeliveryFlag.reward);
+            reward = ObjectPoolingManager.Instance.Get(EObjectFlag.reward);
             reward.transform.position = rewardPos.position;
         }
     }
@@ -35,7 +35,7 @@ public class Obstacle : DeliveryGameObject
 
             if (reward)
             {
-                ObjectPoolingManager.Instance.Set(reward, EDeliveryFlag.reward);
+                ObjectPoolingManager.Instance.Set(reward, EObjectFlag.reward);
                 reward = null;
             }
         }

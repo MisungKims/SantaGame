@@ -27,7 +27,8 @@ public class Inventory : MonoBehaviour
     #region 변수
     public List<GiftItem> giftItems = new List<GiftItem>();     // 선물 인벤토리 리스트
 
-    public Slot[] slots;        // 인벤토리 UI 슬롯
+
+    public Slot[] slots;        // 인벤토리 UI 슬롯 프리팹
 
     public Sprite[] gradeSprite;    // 등급별 이미지
 
@@ -57,11 +58,6 @@ public class Inventory : MonoBehaviour
             if (instance != this)
                 Destroy(this.gameObject);
         }
-
-        //for (int i = 0; i < 20; i++)
-        //{
-        //    slots[i]
-        //}
 
         uIManager = UIManager.Instance;
     }
@@ -118,7 +114,7 @@ public class Inventory : MonoBehaviour
                         giftItems[i].gift.inventoryIndex -= 1;          // 제거한 슬롯의 뒤에 있는 슬롯을 앞으로 한 칸씩 당김
                         //UIManager.Instance.slots[giftItems[i].gift.inventoryIndex].SetSlot(giftItems[giftItems[i].gift.inventoryIndex]);
                     }
-                   if(isUseSlot) uIManager.slots[giftItems.Count].SetEmpty();          // 한 칸씩 당기면 맨 뒤의 슬롯은 필요없으므로 비워둠
+                   if(isUseSlot) slots[giftItems.Count].SetEmpty();          // 한 칸씩 당기면 맨 뒤의 슬롯은 필요없으므로 비워둠
                 }
             }
         }
@@ -148,8 +144,10 @@ public class Inventory : MonoBehaviour
     {
         for (int i = 0; i < giftItems.Count; i++)
         {
-            uIManager.slots[i].SetSlot(giftItems[i]);
+            slots[i].SetSlot(giftItems[i]);
         }
     }
+
+   
     #endregion
 }

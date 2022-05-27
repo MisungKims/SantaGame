@@ -11,17 +11,18 @@ using UnityEngine;
 public enum EObjectFlag // 배열이나 리스트의 순서
 {
     getCarrotButton,
-    post
-}
-
-public enum EDeliveryFlag // 배열이나 리스트의 순서
-{
+    post,
     gift,
     utilityPole,     // 전봇대
     chimney,        // 굴뚝
     bird,
     reward
 }
+
+//public enum EDeliveryFlag // 배열이나 리스트의 순서
+//{
+    
+//}
 
 public class ObjectPoolingManager : MonoBehaviour
 {
@@ -105,39 +106,39 @@ public class ObjectPoolingManager : MonoBehaviour
         poolingList[index].queue.Enqueue(gb);
     }
 
-    /// <summary>
-    /// 오브젝트를 반환 (선물 전달 게임 씬에서 사용)
-    /// </summary>
-    public GameObject Get(EDeliveryFlag flag)
-    {
-        int index = (int)flag;
-        GameObject tempGb;
+    ///// <summary>
+    ///// 오브젝트를 반환 (선물 전달 게임 씬에서 사용)
+    ///// </summary>
+    //public GameObject Get(EObjectFlag flag)
+    //{
+    //    int index = (int)flag;
+    //    GameObject tempGb;
 
-        if (poolingList[index].queue.Count > 0)             // 큐에 게임 오브젝트가 남아 있을 때
-        {
-            tempGb = poolingList[index].queue.Dequeue();
-        }
-        else         // 큐에 더이상 없으면 새로 생성
-        {
+    //    if (poolingList[index].queue.Count > 0)             // 큐에 게임 오브젝트가 남아 있을 때
+    //    {
+    //        tempGb = poolingList[index].queue.Dequeue();
+    //    }
+    //    else         // 큐에 더이상 없으면 새로 생성
+    //    {
             
-            tempGb = GameObject.Instantiate(poolingList[index].copyObj, poolingList[index].parent.transform);
-        }
+    //        tempGb = GameObject.Instantiate(poolingList[index].copyObj, poolingList[index].parent.transform);
+    //    }
 
-        tempGb.SetActive(true);
-        return tempGb;
-    }
+    //    tempGb.SetActive(true);
+    //    return tempGb;
+    //}
 
 
-    /// <summary>
-    /// 다 쓴 오브젝트를 큐에 돌려줌 (선물 전달 게임 씬에서 사용)
-    /// </summary>
-    public void Set(GameObject gb, EDeliveryFlag flag)
-    {
-        int index = (int)flag;
-        gb.SetActive(false);
+    ///// <summary>
+    ///// 다 쓴 오브젝트를 큐에 돌려줌 (선물 전달 게임 씬에서 사용)
+    ///// </summary>
+    //public void Set(GameObject gb, EDeliveryFlag flag)
+    //{
+    //    int index = (int)flag;
+    //    gb.SetActive(false);
 
-        poolingList[index].queue.Enqueue(gb);
-    }
+    //    poolingList[index].queue.Enqueue(gb);
+    //}
     #endregion
 
 }

@@ -44,12 +44,9 @@ public class GiftCollider : MonoBehaviour
         if (other.gameObject.CompareTag("Chimney"))
         {
             Chimney chimney = other.GetComponent<Chimney>();
-            Debug.Log(chimney.gift.giftName);
 
             inventory.RemoveItem(chimney.gift, false);
             isRemove = true;
-
-            //deliveryGameManager.GiftCount = inventory.count;
 
             capsuleCollider.enabled = false;
         }

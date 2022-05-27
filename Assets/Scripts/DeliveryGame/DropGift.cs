@@ -55,7 +55,7 @@ public class DropGift : MonoBehaviour
 
     void Update()
     {
-        this.transform.Translate(targetPos.localPosition * Time.deltaTime);        // 아래로 떨어짐
+        this.transform.Translate(targetPos.localPosition * Time.deltaTime * 5f);        // 아래로 떨어짐
     }
 
     private void OnTriggerEnter(Collider other)
@@ -78,17 +78,36 @@ public class DropGift : MonoBehaviour
             if (gift.wishCount > 0)                     // 위시리스트에 있었던 것들은 위시카운트 감소
             {
                 gift.wishCount--;
-                deliveryGameManager.WishCount++;
+                deliveryGameManager.wishCount++;
             }
 
-            deliveryGameManager.SatisfiedCount++;
+            int score = 1;
+            switch (gift.giftGrade)
+            {
+                case EGiftGrade.SS:
+                    score = 5;
+                    break;
+                case EGiftGrade.S:
+                    score = 4;
+                    break;
+                case EGiftGrade.A:
+                    score = 3;
+                    break;
+                case EGiftGrade.B:
+                    score = 2;
+                    break;
+                case EGiftGrade.C:
+                    score = 1;
+                    break;
+            }
 
-            //deliveryGameManager.GiftCount = inventory.count;
-            objectPoolingManager.Set(this.gameObject, EDeliveryFlag.gift);
+            deliveryGameManager.Score += score;
+
+            objectPoolingManager.Set(this.gameObject, EObjectFlag.gift);
 
             chimney.giftImage.transform.parent.gameObject.SetActive(false);
 
-            if (deliveryGameManager.GiftCount == 0)
+            if (deliveryGameManager.GiftCount <= 0)
             {
                 deliveryGameManager.End(false);
             }
@@ -115,10 +134,10 @@ public class DropGift : MonoBehaviour
 
         yield return oneSec;
 
-        objectPoolingManager.Set(this.gameObject, EDeliveryFlag.gift);
+        objectPoolingManager.Set(this.gameObject, EObjectFlag.gift);
 
         // 떨어뜨릴 선물이 없다면 게임 종료
-        if (deliveryGameManager.GiftCount == 0)
+        if (deliveryGameManager.GiftCount <= 0)
         {
             deliveryGameManager.End(true);
         }

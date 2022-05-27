@@ -132,6 +132,11 @@ public class GameManager : MonoBehaviour
         {
             citizenCount = value;
             UIManager.Instance.citizenCountText.text = citizenCount.ToString();
+
+            if (citizenCount != 0 && citizenCount % 5 == 0)      // 주민의 수가 5의 배수일 때 게이지 증가
+            {
+                IncreaseGauge(5);
+            }
         }
     }
 
@@ -250,8 +255,9 @@ public class GameManager : MonoBehaviour
     /// <param name="amount">획득할 게이지</param>
     IEnumerator IncreaseGaugeCorou(float amount)
     {
-        /// TODO : 효과음 실행
-         gaugeAnim.SetBool("isIncrease", true);      // SantaVillage 씬에서만 게이지 상승 애니메이션 실행
+        //SoundManager.Instance.PlaySoundEffect(ESoundEffectType.getGoldButton);      // 효과음 실행
+
+        gaugeAnim.SetBool("isIncrease", true);      // SantaVillage 씬에서만 게이지 상승 애니메이션 실행
 
         float goalGuage = gauge + amount;
 

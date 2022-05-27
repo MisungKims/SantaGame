@@ -20,7 +20,6 @@ public class GiftShopButtonRay : ButtonRaycast
     {
         yield return new WaitForSeconds(0.13f);
 
-        UIManager.Instance.SetisOpenPanel(true);
         UIManager.Instance.giftShopPanel.SetActive(true);
     }
 }

@@ -37,6 +37,8 @@ public class UIManager : MonoBehaviour
     public QuestionWindow questionWindow;
     public GetRewardWindow getRewardWindow; // 보상 획득 창
 
+    
+
     // public GameObject panel;        // 시작 전 껐다 켜야하는 창들을 담은 오브젝트
 
     [Header("---------- 게임 매니저 UI 변수")]
@@ -50,8 +52,8 @@ public class UIManager : MonoBehaviour
     public Text dateText;
     public GameObject gaugeBellImage;
 
-    [Header("---------- 인벤토리 UI 변수")]
-    public Slot[] slots;        // 인벤토리 UI 슬롯
+    //[Header("---------- 인벤토리 UI 변수")]
+    //public Slot[] slots;        // 인벤토리 UI 슬롯
 
     #endregion
 
@@ -129,8 +131,8 @@ public class UIManager : MonoBehaviour
         SetisOpenPanel(true);
 
         giftShopPanel.SetActive(true);
-        mainPanel.SetActive(false);
-        alwaysVisiblePanel.SetActive(false);
+        //mainPanel.SetActive(false);
+        //alwaysVisiblePanel.SetActive(false);
 
         if (InviteRabbitWindow.activeSelf) InviteRabbitWindow.SetActive(false);
         if (citizenPanel.activeSelf) citizenPanel.SetActive(false);
@@ -144,8 +146,8 @@ public class UIManager : MonoBehaviour
         SetisOpenPanel(false);
 
         giftShopPanel.SetActive(false);
-        mainPanel.SetActive(true);
-        alwaysVisiblePanel.SetActive(true);
+        //mainPanel.SetActive(true);
+        //alwaysVisiblePanel.SetActive(true);
     }
 
     /// <summary>
