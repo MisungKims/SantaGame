@@ -7,6 +7,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 
 public class PuzzleManager : MonoBehaviour
@@ -40,6 +41,7 @@ public class PuzzleManager : MonoBehaviour
 
         getRewardWindow = UIManager.Instance.getRewardWindow;
 
+        LoadData();
     }
     #endregion
 
@@ -156,4 +158,71 @@ public class PuzzleManager : MonoBehaviour
         puzzleList[(int)ePuzzle].isSuccess = true;
     }
     #endregion
+
+    //앱의 활성화 상태를 저장하는 변수
+    bool isPaused = false;
+
+    void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            isPaused = true;
+
+            SaveData();         // 앱이 비활성화되었을 때 데이터 저장
+        }
+
+        else
+        {
+            if (isPaused)
+            {
+                isPaused = false;
+                /* 앱이 활성화 되었을 때 처리 */
+            }
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        SaveData();         // 앱 종료 시 데이터 저장
+    }
+
+    /// <summary>
+    /// 데이터 저장
+    /// </summary>
+    void SaveData()
+    {
+        string jdata = JsonUtility.ToJson(new Serialization<Puzzle>(puzzleList));
+        File.WriteAllText(Application.dataPath + "/Resources/PuzzleData.json", jdata);
+    }
+
+    /// <summary>
+    /// 데이터 로드
+    /// </summary>
+    /// <returns>불러오기 성공 여부</returns>
+    public bool LoadData()
+    {
+        FileInfo fileInfo = new FileInfo(Application.dataPath + "/Resources/PuzzleData.json");
+        if (fileInfo.Exists)
+        {
+            string jdata = File.ReadAllText(Application.dataPath + "/Resources/PuzzleData.json");
+
+            puzzleList = JsonUtility.FromJson<Serialization<Puzzle>>(jdata).target;
+            for (int i = 0; i < puzzleList.Count; i++)
+            {
+                for (int j = 0; j < puzzleList[i].puzzlePieceList.Count; j++)
+                {
+                    if (puzzleList[i].puzzlePieceList[j].isGet)
+                    {
+                        puzzleList[i].button.Count++;
+                    }
+                }
+                
+            }
+            
+
+            return true;
+        }
+
+        return false;
+    }
 }

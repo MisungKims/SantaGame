@@ -521,7 +521,8 @@ MonoBehaviour:
   rewardText: {fileID: 7732777178090563106}
   getRewardButton: {fileID: 7732777178470852467}
   rewardImage: {fileID: 7732777178759350213}
-  questType: 0
+  isSuccess: 0
+  isGetReward: 0
   rewardType: 0
 --- !u!1 &7732777178470852477
 GameObject:

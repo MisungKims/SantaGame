@@ -7,16 +7,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 /// TODO : 인스펙터에서 우체국으로 이동하기
 
 #region 구조체
-public struct PostStruct
+[System.Serializable]
+public class PostStruct
 {
     public string name;
     public string content;
     public int giftIndex;
+    public bool isRead;
+
+    public PostStruct(string name, string content, int giftIndex, bool isRead)
+    {
+        this.name = name;
+        this.content = content;
+        this.giftIndex = giftIndex;
+        this.isRead = isRead;
+    }
 }
+
 #endregion
 
 public class PostOfficeManager : MonoBehaviour
@@ -30,7 +42,10 @@ public class PostOfficeManager : MonoBehaviour
     }
 
     // CSV 파일에서 가져올 전체 편지 리스트
-    private List<PostStruct> postList = new List<PostStruct>();     
+    private List<PostStruct> postList = new List<PostStruct>();
+
+    
+    public List<PostStruct> havePostList = new List<PostStruct>();  // 우체통에 있는 편지 리스트
 
     // 편지 UI 생성
     [SerializeField]
@@ -67,11 +82,14 @@ public class PostOfficeManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        waitForSeconds = new WaitForSeconds(GameManager.Instance.dayCount * 7);     // 다음 달이 될 때마다 편지를 전송하기 위함
+        //waitForSeconds = new WaitForSeconds(GameManager.Instance.dayCount * 7);     // 다음 달이 될 때마다 편지를 전송하기 위함
+        waitForSeconds = new WaitForSeconds(3f);     // 다음 달이 될 때마다 편지를 전송하기 위함
 
         SetTransform();
 
         ReadCSV();
+
+        LoadData();
     }
 
     private void Start()
@@ -125,11 +143,12 @@ public class PostOfficeManager : MonoBehaviour
 
         for (int i = 0; i < data.Count; i++)
         {
-            PostStruct newPost;
-            newPost.name = data[i]["수신"].ToString();
-            newPost.content = data[i]["내용"].ToString();
-            newPost.giftIndex = (int)data[i]["선물 인덱스"];
-
+            PostStruct newPost = new PostStruct
+            (data[i]["수신"].ToString(),
+            data[i]["내용"].ToString(),
+            (int)data[i]["선물 인덱스"],
+            false);
+           
             postList.Add(newPost);
         }
     }
@@ -147,7 +166,15 @@ public class PostOfficeManager : MonoBehaviour
             int randIndex = Random.Range(0, postList.Count);        // 랜덤으로 편지 내용을 정함
             if (postUIList.Count < maximum)          // 편지함이 차지 않았을 때만 생성
             {
-                PostOfficeInstance(postList[randIndex]);
+                PostStruct postStruct = new PostStruct(
+                    postList[randIndex].name,
+                    postList[randIndex].content,
+                    postList[randIndex].giftIndex,
+                    false);
+
+                havePostList.Add(postStruct);
+                
+                PostOfficeInstance(havePostList.Count - 1, postStruct);
             }
         }
     }
@@ -155,14 +182,15 @@ public class PostOfficeManager : MonoBehaviour
     /// <summary>
     /// 편지 인스턴스 생성
     /// </summary>
-    void PostOfficeInstance(PostStruct post)
+    void PostOfficeInstance(int index, PostStruct post)
     {
         PostObject newObj = ObjectPoolingManager.Instance.Get(EObjectFlag.post).GetComponent<PostObject>();
         
         newObj.PostName = post.name;
         newObj.PostConent = post.content;
         newObj.transform.GetComponent<RectTransform>().anchoredPosition = UITransformList[0];       // 새로온 편지는 맨 상단으로 가도록
-       
+        newObj.listIndex = index;
+        
         Gift gift = GiftManager.Instance.giftList[post.giftIndex];
         newObj.gift = gift;
 
@@ -175,7 +203,7 @@ public class PostOfficeManager : MonoBehaviour
         parentRectTransform.sizeDelta = parentSizeList[postUIList.Count];
 
         postUIList.Add(newObj);
-
+       
         // 인벤토리가 열려있고, 위시리스트에 추가한 선물이 인벤토리에 있었으면 인벤토리 새로고침
         if (UIManager.Instance.inventoryPanel.activeSelf && gift.inventoryIndex > -1)
         {
@@ -192,6 +220,7 @@ public class PostOfficeManager : MonoBehaviour
         ObjectPoolingManager.Instance.Set(postUIList[index].gameObject, EObjectFlag.post);        // 오브젝트 풀에 돌려줌
 
         postUIList.RemoveAt(index);
+        havePostList.RemoveAt(index);
 
         // UI 배치를 다시
         for (int i = 0; i < postUIList.Count; i++)
@@ -206,4 +235,63 @@ public class PostOfficeManager : MonoBehaviour
         }
     }
     #endregion
+
+    //앱의 활성화 상태를 저장하는 변수
+    bool isPaused = false;
+
+    void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            isPaused = true;
+
+            SaveData();         // 앱이 비활성화되었을 때 데이터 저장
+        }
+
+        else
+        {
+            if (isPaused)
+            {
+                isPaused = false;
+                /* 앱이 활성화 되었을 때 처리 */
+            }
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        SaveData();         // 앱 종료 시 데이터 저장
+    }
+
+    /// <summary>
+    /// 데이터 저장
+    /// </summary>
+    void SaveData()
+    {
+        string jdata = JsonUtility.ToJson(new Serialization<PostStruct>(havePostList));
+        File.WriteAllText(Application.dataPath + "/Resources/PostOfficeListData.json", jdata);
+    }
+
+    /// <summary>
+    /// 데이터 로드
+    /// </summary>
+    /// <returns>불러오기 성공 여부</returns>
+    public bool LoadData()
+    {
+        FileInfo fileInfo = new FileInfo(Application.dataPath + "/Resources/PostOfficeListData.json");
+        if (fileInfo.Exists)
+        {
+            string jdata = File.ReadAllText(Application.dataPath + "/Resources/PostOfficeListData.json");
+
+            havePostList = JsonUtility.FromJson<Serialization<PostStruct>>(jdata).target;
+            for (int i = 0; i < havePostList.Count; i++)
+            {
+                PostOfficeInstance(i, havePostList[i]);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
 }

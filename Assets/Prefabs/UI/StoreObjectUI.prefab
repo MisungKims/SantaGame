@@ -1262,8 +1262,27 @@ MonoBehaviour:
   santaPriceText: {fileID: 1955002266735413144}
   efficiencyText: {fileID: 1955002266712565914}
   santaImage: {fileID: 7865596560880450401}
+  storeObject:
+    desc: 
+    unlockLevel: 0
+    second: 0
+    buildingName: 
+    buildingLevel: 0
+    buildingPrice: 
+    multiplyBuildingPrice: 0
+    incrementGold: 
+    buildingSprite: {fileID: 0}
+    santaName: 
+    santaLevel: 0
+    santaPrice: 
+    multiplySantaPrice: 0
+    santaEfficiency: 0
+    santaSprite: {fileID: 0}
+    prerequisites: 
+    isGetPrerequisites: 0
   index: 0
   isBuyBuilding: 0
+  isBuySanta: 0
 --- !u!1 &1955002267206904318
 GameObject:
   m_ObjectHideFlags: 0

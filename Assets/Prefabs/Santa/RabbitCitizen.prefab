@@ -1,35 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6484347709639911619
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5118749723218474195}
-  m_Layer: 0
-  m_Name: CameraPos
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5118749723218474195
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6484347709639911619}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 10, z: -25}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 7791495445768499683}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7796942108244347345
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,7 +376,6 @@ Transform:
   - {fileID: 7791776839392179689}
   - {fileID: 7791573619966610163}
   - {fileID: 7799872093728092703}
-  - {fileID: 5118749723218474195}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -426,19 +395,9 @@ MonoBehaviour:
   nav: {fileID: -8659168409574597642}
   isTouch: 0
   rabbitMat: {fileID: 7914683007052765767}
-  materials:
-  - {fileID: 2100000, guid: 85e1d4e0bef11c44993f6bd97d160f78, type: 2}
-  - {fileID: 2100000, guid: b1f405594d254064baf0a153d52850c1, type: 2}
-  - {fileID: 2100000, guid: 9edd23eed4189454587a5d6b6092a185, type: 2}
-  - {fileID: 2100000, guid: d4fc16eb0238c4041b81d5a13ddcfef2, type: 2}
-  - {fileID: 2100000, guid: bd1269658db2b5344be14a334492c28a, type: 2}
-  - {fileID: 2100000, guid: 216c56202c691fb4796142205d46ac31, type: 2}
-  - {fileID: 2100000, guid: 68516bc38731ffd4aa4b06ac12131e2e, type: 2}
-  - {fileID: 2100000, guid: 0e2adbba9bfb82148865ccd4e19b34f0, type: 2}
-  - {fileID: 2100000, guid: 43bf47c888f70144ab301be0160be48d, type: 2}
-  - {fileID: 2100000, guid: 2e21923c9ac0a56429a2992570bf32d4, type: 2}
-  - {fileID: 2100000, guid: a27adfefe87144c4fa38ffa708e3f911, type: 2}
-  - {fileID: 2100000, guid: 2a5fd24aa4a80634789891ff64feb45e, type: 2}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!95 &7882312169074711633
 Animator:
   serializedVersion: 3
@@ -449,7 +408,7 @@ Animator:
   m_GameObject: {fileID: 7797250450615995639}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 49afdd6a5de3005468e28c1ebef7f43c, type: 3}
-  m_Controller: {fileID: 9100000, guid: 62cad47184f75014093366aa06fe8626, type: 2}
+  m_Controller: {fileID: 9100000, guid: 09e13fea3d8a8e94a8b0c05f984a2f3b, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

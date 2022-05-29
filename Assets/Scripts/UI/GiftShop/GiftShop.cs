@@ -202,7 +202,7 @@ public class GiftShop : MonoBehaviour
     /// </summary>
     void GetRandomGift()
     {
-        DailyQuestManager.Instance.Success(questID);        // 퀘스트 성공
+        QuestManager.Instance.Success(questID);        // 퀘스트 성공
 
         giftManager.ReceiveRandomGift();
     }

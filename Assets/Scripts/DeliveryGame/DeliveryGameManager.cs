@@ -31,16 +31,6 @@ public class DeliveryGameManager : MonoBehaviour
     [SerializeField]
     private Image[] lifeImages;
 
-    [SerializeField]
-    private GameObject deliveryGame;
-
-    [SerializeField]
-    private Canvas villiageCanvas;
-
-    [SerializeField]
-    private Canvas villiageWorldCanvas;
-
-
     private int life;
     public int Life
     {
@@ -188,7 +178,7 @@ public class DeliveryGameManager : MonoBehaviour
         objectPoolingManager = ObjectPoolingManager.Instance;
     }
 
-    void Start()
+    void OnEnable()
     {
         startWindow.gameObject.SetActive(true);     // 시작 창 보여줌
         resultWindow.gameObject.SetActive(false);
@@ -383,12 +373,7 @@ public class DeliveryGameManager : MonoBehaviour
     {
         soundManager.PlayBGM(EBgmType.main);
 
-        UIManager.Instance.SetisOpenPanel(false);
-
-        UIManager.Instance.mainPanel.SetActive(true);
-        deliveryGame.SetActive(false);
-        villiageCanvas.enabled = true;
-        villiageWorldCanvas.enabled = false;
+        GameManager.Instance.EndDeliveryGame();
     }
 
     ///// <summary>

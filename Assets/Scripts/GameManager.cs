@@ -11,7 +11,32 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Text;
+using System.IO;
 
+[System.Serializable]
+public class Serialization<T>
+{
+    public Serialization(List<T> _target) => target = _target;
+    public List<T> target;
+}
+
+public class SaveData
+{
+    public int level;
+    public float gauge;
+    public string gold;
+    public string carrot;
+    public int dia;
+    public int citizenCount;
+    public int day;
+    public int month;
+    public int year;
+
+    public string attendanceDate;
+    public string initQuestDate;
+
+    public string lastSaveDate;
+}
 
 public class GameManager : MonoBehaviour
 {
@@ -29,6 +54,9 @@ public class GameManager : MonoBehaviour
             return instance;
         }
     }
+
+    // 데이터가 저장될 경로
+   // string path = Application.dataPath + "/Resources/MyData.json";
 
     //[Header("---------- UI 변수")]
     //[SerializeField]
@@ -89,7 +117,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private BigInteger myGold = 3560000;
+    private BigInteger myGold;
     public BigInteger MyGold
     {
         get { return myGold; }
@@ -100,7 +128,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private BigInteger myCarrots = 13000;
+    private BigInteger myCarrots;
     public BigInteger MyCarrots
     {
         get { return myCarrots; }
@@ -113,7 +141,7 @@ public class GameManager : MonoBehaviour
 
   
 
-    private int myDia = 0;
+    private int myDia;
     public int MyDia
     {
         get { return myDia; }
@@ -177,12 +205,19 @@ public class GameManager : MonoBehaviour
 
     public float goldEfficiency = 1.0f;         // 토끼 주민 초대 시 증가할 효율
 
-    
+    public string attendanceDate;              // 마지막으로 출석 보상을 받은 날짜
+
+    public string initQuestDate;            // 퀘스트를 초기화한 날짜
+
     private WaitForSeconds waitForSeconds;      // 캐싱
 
-    public int questid;     // 나중에 지워야 할 것
+    [SerializeField]
+    private GameObject deliveryGame;
 
-  
+    [SerializeField]
+    private GameObject vaillage;
+
+
     #endregion
 
     /* public void SuccessQuest()
@@ -232,6 +267,62 @@ public class GameManager : MonoBehaviour
     {
         myCarrots += amount;
     }
+
+    public void StartDeliveryGame()
+    {
+        deliveryGame.SetActive(true);
+        vaillage.SetActive(false);
+    }
+
+    public void EndDeliveryGame()
+    {
+        vaillage.SetActive(true);
+        deliveryGame.SetActive(false);
+    }
+
+    public void SaveData()
+    {
+        SaveData data = new SaveData();
+        data.level = Level;
+        data.gauge = Gauge;
+        data.gold = GoldManager.ExpressUnitOfGold(MyGold);
+        data.carrot = GoldManager.ExpressUnitOfGold(MyCarrots);
+        data.dia = MyDia;
+        data.citizenCount = citizenCount;
+        data.year = year;
+        data.month = month;
+        data.day = day;
+        data.attendanceDate = attendanceDate;
+        data.initQuestDate = initQuestDate;
+        data.lastSaveDate = DateTime.Now.ToString("yyyy.MM.dd");
+
+        File.WriteAllText(Application.dataPath + "/Resources/MyData.json", JsonUtility.ToJson(data));
+    }
+    
+    public bool LoadData()
+    {
+        FileInfo fileInfo = new FileInfo(Application.dataPath + "/Resources/MyData.json");
+        if (fileInfo.Exists)
+        {
+            string dataStr = File.ReadAllText(Application.dataPath + "/Resources/MyData.json");
+            SaveData data = JsonUtility.FromJson<SaveData>(dataStr);
+            Level = data.level;
+            Gauge = data.gauge;
+            MyGold = GoldManager.UnitToBigInteger(data.gold);
+            MyCarrots = GoldManager.UnitToBigInteger(data.carrot);
+            MyDia = data.dia;
+            CitizenCount = data.citizenCount;
+            year = data.year;
+            month = data.month;
+            day = data.day;
+            attendanceDate = data.attendanceDate;
+            initQuestDate = data.initQuestDate;
+
+            return true;
+        }
+
+        return false;
+    }
     #endregion
 
     #region 코루틴
@@ -261,7 +352,7 @@ public class GameManager : MonoBehaviour
 
         float goalGuage = gauge + amount;
 
-        while (gauge < goalGuage)
+        while (gauge < goalGuage && gauge < 100)
         {
             Gauge += 0.1f;
 
@@ -296,13 +387,22 @@ public class GameManager : MonoBehaviour
                 Destroy(this.gameObject);
         }
 
-        Level = 20;
-        Gauge = 10;
-        CitizenCount = 0;
-        Day = 1;
-        MyGold = myGold;
-        MyCarrots = myCarrots;
-        MyDia = myDia;
+        // 데이터 로드
+        if (!LoadData())
+        {
+            // 로드 실패시 초기값 설정
+            Level = 1;
+            Gauge = 0;
+            CitizenCount = 0;
+            Day = 1;
+            MyGold = 1000;
+            MyCarrots = 1000;
+            MyDia = 0;
+            year = 0;
+            month = 1;
+            day = 1;
+        }
+       
 
         waitForSeconds = new WaitForSeconds(dayCount);
 
@@ -312,8 +412,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         StartCoroutine(DateCounting());
-
-        StartCoroutine(IncreaseGaugeCorou(20f));
 
         SoundManager.Instance.PlayBGM(EBgmType.main);
 
@@ -335,4 +433,32 @@ public class GameManager : MonoBehaviour
 
     }
 
+
+
+    //앱의 활성화 상태를 저장하는 변수
+    bool isPaused = false;
+
+    void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            isPaused = true;
+
+            SaveData();         // 앱이 비활성화되었을 때 데이터 저장
+        }
+
+        else
+        {
+            if (isPaused)
+            {
+                isPaused = false;
+                /* 앱이 활성화 되었을 때 처리 */
+            }
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        SaveData();         // 앱 종료 시 데이터 저장
+    }
 }
