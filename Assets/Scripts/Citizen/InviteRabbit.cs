@@ -12,15 +12,20 @@ using UnityEngine.UI;
 public class InviteRabbit : MonoBehaviour
 {
     #region 변수
+    // 싱글톤
+    private static InviteRabbit instance;
+    public static InviteRabbit Instance
+    {
+        get { return instance; }
+    }
+
     // UI 변수
     [SerializeField]
     private Text priceText;
     [SerializeField]
     private Text citizenCountText;
-    [SerializeField]
-    private GameObject rabbit;
-    [SerializeField]
-    private GameObject rabbitGroup;
+    public GameObject rabbit;
+    public GameObject rabbitGroup;
 
     // 프로퍼티
     private string price = "100";
@@ -53,6 +58,16 @@ public class InviteRabbit : MonoBehaviour
     #region 유니티 함수
     private void Awake()
     {
+        if (instance == null)
+            instance = this;
+        else
+        {
+            if (instance != null)
+            {
+                Destroy(gameObject);
+            }
+        }
+
         gameManager = GameManager.Instance;
         priceText.text = price;
     }
@@ -76,7 +91,11 @@ public class InviteRabbit : MonoBehaviour
 
         this.gameObject.SetActive(false);   // 토끼 초대창 닫기
 
-        GameObject.Instantiate(rabbit, rabbitGroup.transform).GetComponent<RabbitCitizen>().SetCamTargetThis();    // 토끼 주민 생성 후 카메라의 타깃 설정
+        // 토끼 주민 생성 후 카메라의 타깃으로 설정
+        RabbitCitizen rabbitCitizen = GameObject.Instantiate(rabbit, rabbitGroup.transform).GetComponent<RabbitCitizen>();
+        CitizenRabbitManager.Instance.rabbitCitizens.Add(rabbitCitizen);
+
+        rabbitCitizen.SetCamTargetThis();
 
         gameManager.MyCarrots -= GoldManager.UnitToBigInteger(price);  // 초대 비용 지불
 
@@ -86,6 +105,14 @@ public class InviteRabbit : MonoBehaviour
 
         Price = GoldManager.MultiplyUnit(price, magnification);
         magnification += 0.5f;
+
+        int rand = Random.Range(0, 12);
+        rabbitCitizen.rabbitMat.material = CitizenRabbitManager.Instance.materials[rand];       // 토끼의 Material을 랜덤으로 설정
+
+
+        Citizen citizen = new Citizen(CitizenRabbitManager.Instance.materials[rand], rabbitCitizen.transform.position);
+        CitizenRabbitManager.Instance.citizenList.Add(citizen);
     }
+
     #endregion
 }

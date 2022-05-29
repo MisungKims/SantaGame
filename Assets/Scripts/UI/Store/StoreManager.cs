@@ -7,7 +7,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using System.IO;
+
+//[System.Serializable]
+//public class StoreData
+//{
+
+//}
 
 public class StoreManager : MonoBehaviour
 {
@@ -25,6 +31,9 @@ public class StoreManager : MonoBehaviour
 
     [HideInInspector]
     public List<StoreObject> storeObjectList = new List<StoreObject>();
+
+   // private List<StoreData> storeDatas = new List<StoreData>();
+    
 
     // UI ¹èÄ¡
     private RectTransform rectTransform;
@@ -95,16 +104,26 @@ public class StoreManager : MonoBehaviour
         copiedStoreObject.buildingImage.sprite = newObject.buildingSprite;
         copiedStoreObject.santaImage.sprite = newObject.santaSprite;
 
+
+        if (newObject.buildingLevel > 0)
+        {
+            copiedStoreObject.isBuyBuilding = true;
+        }
+
+        if (newObject.santaLevel > 0)
+        {
+            copiedStoreObject.isBuySanta = true;
+        }
+
         //RectTransform objRect = copiedStoreObject.buildingImage.transform.GetComponent<RectTransform>();
         //RectTransform ImgRect = buildingImages[i].transform.GetComponent<RectTransform>();
-       // objRect.sizeDelta = ImgRect.sizeDelta;
+        // objRect.sizeDelta = ImgRect.sizeDelta;
 
-        
 
-       // objRect = copiedStoreObject.santaImage.transform.GetComponent<RectTransform>();
-       // ImgRect = santaImages[i].transform.GetComponent<RectTransform>();
-       // objRect.sizeDelta = ImgRect.sizeDelta;
 
+        // objRect = copiedStoreObject.santaImage.transform.GetComponent<RectTransform>();
+        // ImgRect = santaImages[i].transform.GetComponent<RectTransform>();
+        // objRect.sizeDelta = ImgRect.sizeDelta;
 
         storeObjectList.Add(copiedStoreObject);
     }

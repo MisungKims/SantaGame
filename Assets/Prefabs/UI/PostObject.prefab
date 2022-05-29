@@ -497,6 +497,7 @@ MonoBehaviour:
   contentPreviewText: {fileID: 6554328222461830368}
   notificationImage: {fileID: 6554328223440749536}
   index: 0
+  listIndex: 0
   gift:
     giftType: 0
     giftGrade: 0

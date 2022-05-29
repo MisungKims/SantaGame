@@ -104,24 +104,33 @@ public class Building : MonoBehaviour
 
     #region 함수
 
-    /// <summary>
-    /// 건물 생성 시
-    /// </summary>
-    public void NewBuilding()
+    public void Init()
     {
         gameObject.SetActive(true);         // 건물이 보이도록
 
-        SetCamTargetThis();                 // 카메라가 건물을 바라보도록
-
-        Level = 1;
+        Level = Level;
         IncrementGold = IncrementGold;
 
         getGoldSlider.maxValue = (int)Second;
         StartCoroutine(Increment());        // 골드획득 시작
 
-        ObjectManager.Instance.unlockCount++;
-
         getGoldSlider.gameObject.SetActive(true);
+    }
+
+    /// <summary>
+    /// 건물 생성 시
+    /// </summary>
+    public void NewBuilding()
+    {
+        Init();
+
+        Level = 1;
+
+        SetCamTargetThis();                 // 카메라가 건물을 바라보도록
+
+        //Level = 1;
+       
+        ObjectManager.Instance.unlockCount++;
 
         gameManager.IncreaseGauge(5);       // 게이지 증가
     }
@@ -136,7 +145,7 @@ public class Building : MonoBehaviour
             return false;
         }
 
-        DailyQuestManager.Instance.Success(questID);        // 퀘스트 완료
+        QuestManager.Instance.Success(questID);        // 퀘스트 완료
 
         gameManager.MyGold -= GoldManager.UnitToBigInteger(BuildingPrice);  // 업그레이드 비용 지불
 

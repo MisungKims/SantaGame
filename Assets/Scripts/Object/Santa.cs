@@ -70,11 +70,16 @@ public class Santa : MonoBehaviour
 
     #region 함수
 
-    public void NewSanta()
+    public void Init()
     {
         gameObject.SetActive(true);
 
         Building.isAuto = true;     // 골드 자동화 시작
+    }
+
+    public void NewSanta()
+    {
+        Init();
 
         isInit = true;
 
@@ -98,7 +103,7 @@ public class Santa : MonoBehaviour
         
         if (!isInit)
         {
-            DailyQuestManager.Instance.Success(questID);        // 퀘스트 성공
+            QuestManager.Instance.Success(questID);        // 퀘스트 성공
         }
 
         gameManager.MyCarrots -= GoldManager.UnitToBigInteger(SantaPrice);          // 비용 지불

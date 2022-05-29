@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class Object
 {
     public string desc;                    // 건물의 설명
@@ -30,7 +31,9 @@ public class Object
 
     public string prerequisites;
 
-    public Object(string desc, int unlockLevel, int second, string buildingName, int buildingLevel, string buildingPrice, float multiplyBuildingPrice, string incrementGold, Sprite buildingSprite, string santaName, int santaLevel, string santaPrice, float multiplySantaPrice, int santaEfficiency, Sprite santaSprite, string prerequisites)
+    public bool isGetPrerequisites;
+
+    public Object(string desc, int unlockLevel, int second, string buildingName, int buildingLevel, string buildingPrice, float multiplyBuildingPrice, string incrementGold, Sprite buildingSprite, string santaName, int santaLevel, string santaPrice, float multiplySantaPrice, int santaEfficiency, Sprite santaSprite, string prerequisites, bool isGetPrerequisites)
     {
         this.desc = desc;
         this.unlockLevel = unlockLevel;
@@ -48,5 +51,6 @@ public class Object
         this.santaEfficiency = santaEfficiency;
         this.santaSprite = santaSprite;
         this.prerequisites = prerequisites;
+        this.isGetPrerequisites = isGetPrerequisites;
     }
 }

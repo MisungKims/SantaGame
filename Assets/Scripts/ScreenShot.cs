@@ -35,7 +35,7 @@ public class ScreenShot : MonoBehaviour
         string albumName = "BRUNCH";
         NativeGallery.SaveImageToGallery(texture, albumName, fileName, (success, path) =>
         {
-            DailyQuestManager.Instance.Success(questID);        // 퀘스트 완료
+            QuestManager.Instance.Success(questID);        // 퀘스트 완료
 
             Debug.Log(success);
             Debug.Log(path);

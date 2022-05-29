@@ -18,8 +18,7 @@ public class PostObject : MonoBehaviour
     private Text nameText;
     [SerializeField]
     private Text contentPreviewText;
-    [SerializeField]
-    private GameObject notificationImage;   // 새로온 편지가 있음을 알려주는 이미지
+    public GameObject notificationImage;   // 새로온 편지가 있음을 알려주는 이미지
 
     StringBuilder nameSb = new StringBuilder();
 
@@ -63,18 +62,20 @@ public class PostObject : MonoBehaviour
     // 스크립트
     private WritingPad writingPad;
 
-    // 그 외 변수
-    private bool isRead;    // 읽은 편지이면 true
-    public bool IsRead
-    {
-        set
-        {
-            isRead = value;
-            notificationImage.SetActive(!isRead);
-        }
-    }
+    //// 그 외 변수
+    //private bool isRead;    // 읽은 편지이면 true
+    //public bool IsRead
+    //{
+    //    set
+    //    {
+    //        isRead = value;
+    //        notificationImage.SetActive(!isRead);
+    //    }
+    //}
 
-    public int index;
+    public int index;           // 편지 목록창에서의 인덱스
+
+    public int listIndex;       // 편지 리스트에서의 인덱스
 
     public Gift gift;
 
@@ -85,10 +86,18 @@ public class PostObject : MonoBehaviour
     #region 유니티 함수
     public void Awake()
     {
-        if (isRead)
+        if (PostOfficeManager.Instance.havePostList.Count > listIndex)
         {
-            notificationImage.SetActive(false);
+            if (PostOfficeManager.Instance.havePostList[listIndex].isRead)
+            {
+                notificationImage.SetActive(false);
+            }
+            else
+            {
+                notificationImage.SetActive(true);
+            }
         }
+
 
         writingPad = PostOfficeManager.Instance.writingPad;
     }
@@ -100,15 +109,19 @@ public class PostObject : MonoBehaviour
     /// </summary>
     public void Read()
     {
-        if (!isRead)        // 편지를 처음 읽었을 때
+        if (!PostOfficeManager.Instance.havePostList[listIndex].isRead)        // 편지를 처음 읽었을 때
         {
-            IsRead = true;
+            //IsRead = true;
 
             gift.wishCount++;        // 선물을 위시리스트에 추가
 
-            DailyQuestManager.Instance.Success(questID);        // 퀘스트 성공
+            QuestManager.Instance.Success(questID);        // 퀘스트 성공
 
             GameManager.Instance.IncreaseGauge(3);      // 게이지 증가
+
+            PostOfficeManager.Instance.havePostList[listIndex].isRead = true;
+
+            notificationImage.SetActive(false);
         }
 
         writingPad.gameObject.SetActive(true);

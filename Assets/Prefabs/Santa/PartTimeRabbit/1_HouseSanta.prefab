@@ -352,7 +352,6 @@ GameObject:
   - component: {fileID: 4679710217066284}
   - component: {fileID: 7671090759199556231}
   - component: {fileID: 95643078736935582}
-  - component: {fileID: 7367604930557217374}
   m_Layer: 0
   m_Name: 1_HouseSanta
   m_TagString: Santa
@@ -409,20 +408,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!64 &7367604930557217374
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1466754928847416}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1475501890918282
 GameObject:
   m_ObjectHideFlags: 0

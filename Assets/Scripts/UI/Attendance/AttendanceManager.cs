@@ -9,13 +9,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.IO;
 
 #region 구조체
-public struct AttendanceStruct
+
+[System.Serializable]
+public class AttendanceStruct
 {
     public string rewardType;
     public string amount;
     public bool isGet;    // 출석 보상을 받았으면 true
+
+    public AttendanceStruct(string rewardType, string amount, bool isGet)
+    {
+        this.rewardType = rewardType;
+        this.amount = amount;
+        this.isGet = isGet;
+    }
 }
 #endregion
 
@@ -27,11 +37,9 @@ public class AttendanceManager : MonoBehaviour
     [SerializeField]
     private GameObject notificationImage;     // 출석 보상 알림 이미지      
 
-    [SerializeField]
-    private AttendanceObject[] attendanceObjects;       // UI 오브젝트를 담은 배열
+    public AttendanceObject[] attendanceObjects;       // UI 오브젝트를 담은 배열
 
-    // 그 외 변수
-    public string getRewardDate;              // 마지막으로 출석 보상을 받은 날짜
+    
 
     public List<AttendanceStruct> attendanceList = new List<AttendanceStruct>();   // CSV 파일에서 가져올 출석 보상 리스트
 
@@ -56,7 +64,12 @@ public class AttendanceManager : MonoBehaviour
             }
         }
 
-        ReadCSV();
+        //ReadCSV();
+
+        if (!LoadData())
+        {
+            ReadCSV();
+        }
     }
 
     private void Start()
@@ -64,6 +77,63 @@ public class AttendanceManager : MonoBehaviour
        StartCoroutine(SetNotificationImage());
     }
 
+    //앱의 활성화 상태를 저장하는 변수
+    bool isPaused = false;
+
+    void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            isPaused = true;
+
+            SaveData();         // 앱이 비활성화되었을 때 데이터 저장
+        }
+        else
+        {
+            if (isPaused)
+            {
+                isPaused = false;
+            }
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        SaveData();         // 앱 종료 시 데이터 저장
+    }
+
+    /// <summary>
+    /// 데이터 저장
+    /// </summary>
+    void SaveData()
+    {
+        string jdata = JsonUtility.ToJson(new Serialization<AttendanceStruct>(attendanceList));
+        File.WriteAllText(Application.dataPath + "/Resources/AttendacnceData.json", jdata);
+    }
+
+    /// <summary>
+    /// 데이터 로드
+    /// </summary>
+    /// <returns>불러오기 성공 여부</returns>
+    public bool LoadData()
+    {
+        FileInfo fileInfo = new FileInfo(Application.dataPath + "/Resources/AttendacnceData.json");
+        if (fileInfo.Exists)
+        {
+            string jdata = File.ReadAllText(Application.dataPath + "/Resources/AttendacnceData.json");
+
+            // 가져온 데이터로 UI 생성
+            attendanceList = JsonUtility.FromJson<Serialization<AttendanceStruct>>(jdata).target;
+            for (int i = 0; i < attendanceList.Count; i++)
+            {
+                AttendanceInstance(i, attendanceList[i]);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
     /// <summary>
     /// csv 리더를 통해 파일 가져오기
     /// </summary>
@@ -73,11 +143,12 @@ public class AttendanceManager : MonoBehaviour
 
         for (int i = 0; i < data.Count; i++)
         {
-            AttendanceStruct attendance;
-            attendance.rewardType = data[i]["보상"].ToString();
-            attendance.amount = data[i]["양"].ToString();
-            attendance.isGet = false;
-
+            AttendanceStruct attendance = new AttendanceStruct(
+                 data[i]["보상"].ToString(),
+                 data[i]["양"].ToString(),
+                 false
+                );
+            
             attendanceList.Add(attendance);
 
             AttendanceInstance(i, attendance);
@@ -109,7 +180,8 @@ public class AttendanceManager : MonoBehaviour
 
             RewardManager.GetReward(RewardManager.StringToRewardType(attendance.rewardType), attendance.amount);
 
-            getRewardDate = DateTime.Now.ToString("yyyy.MM.dd");      // 마지막 출석 보상 수령날짜를 오늘 날짜로 변경
+
+            GameManager.Instance.attendanceDate = DateTime.Now.ToString("yyyy.MM.dd");      // 마지막 출석 보상 수령날짜를 오늘 날짜로 변경
             notificationImage.SetActive(false);
 
             AttendanceStruct newAttandance = attendance;
@@ -140,7 +212,7 @@ public class AttendanceManager : MonoBehaviour
             return false;
 
         // 오늘 보상을 받았을 때 false 리턴
-        if (getRewardDate == DateTime.Now.ToString("yyyy.MM.dd"))
+        if (GameManager.Instance.attendanceDate == DateTime.Now.ToString("yyyy.MM.dd"))
             return false;
 
         return true;
@@ -153,13 +225,10 @@ public class AttendanceManager : MonoBehaviour
     {
         while (true)
         {
-            if (GameLoadManager.CurrentScene().name == "SantaVillage")
+            // 마지막 출석 보상 수령 날짜가 오늘 날짜와 다르면 현재 받을 출석 보상이 있으므로,
+            if (GameManager.Instance.attendanceDate != DateTime.Now.ToString("yyyy.MM.dd"))
             {
-                // 마지막 출석 보상 수령 날짜가 오늘 날짜와 다르면 현재 받을 출석 보상이 있으므로,
-                if (getRewardDate != DateTime.Now.ToString("yyyy.MM.dd"))
-                {
-                    notificationImage.SetActive(true);        // UI로 알려줌
-                }
+                notificationImage.SetActive(true);        // UI로 알려줌
             }
             yield return null;
         }

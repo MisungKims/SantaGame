@@ -13,14 +13,15 @@ using System;
 [System.Serializable]
 public class Slot : MonoBehaviour
 {
+    [SerializeField]
     private Image gradeImage;
-
+    [SerializeField]
     private Image giftimage;
-
+    [SerializeField]
     private Text gradeText;
-
-    private Text wishCountText;
-
+    //[SerializeField]
+    //private Text wishCountText;
+    [SerializeField]
     private Text amountText;
 
 
@@ -61,26 +62,25 @@ public class Slot : MonoBehaviour
         }
     }
 
-    private int wishCount;
-    public int WishCount
-    {
-        get { return wishCount; }
-        set
-        {
-            wishCount = value;
+    //private int wishCount;
+    //public int WishCount
+    //{
+    //    get { return wishCount; }
+    //    set
+    //    {
+    //        wishCount = value;
 
-            wishCountText.text = "/" + wishCount.ToString();
-        }
-    }
+    //        wishCountText.text = "/" + wishCount.ToString();
+    //    }
+    //}
 
-    private void Awake()
-    {
-        gradeImage = this.GetComponent<Image>();
-        giftimage = this.transform.GetChild(0).GetComponent<Image>();
-        gradeText = this.transform.GetChild(1).GetComponent<Text>();
-        wishCountText = this.transform.GetChild(2).GetComponent<Text>();
-        amountText = wishCountText.transform.GetChild(0).GetComponent<Text>();
-    }
+    //private void Awake()
+    //{
+    //    gradeImage = this.GetComponent<Image>();
+    //    giftimage = this.transform.GetChild(0).GetComponent<Image>();
+    //    gradeText = this.transform.GetChild(1).GetComponent<Text>();
+    //    amountText = this.transform.GetChild(2).GetComponent<Text>();
+    //}
 
 
     /// <summary>
@@ -100,7 +100,7 @@ public class Slot : MonoBehaviour
             SlotActive(true);
             GiftType = item.gift.giftType;
             GiftGrade = item.gift.giftGrade;
-            WishCount = item.gift.wishCount;
+           // WishCount = item.gift.wishCount;
         }
     }
 
@@ -117,6 +117,6 @@ public class Slot : MonoBehaviour
     {
         giftimage.gameObject.SetActive(value);
         gradeText.gameObject.SetActive(value);
-        wishCountText.gameObject.SetActive(value);
+        amountText.gameObject.SetActive(value);
     }
 }

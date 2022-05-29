@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.IO;
 
 [System.Serializable]
 public class GiftItem
@@ -60,6 +61,8 @@ public class Inventory : MonoBehaviour
         }
 
         uIManager = UIManager.Instance;
+
+        LoadData();
     }
     #endregion
 
@@ -148,6 +151,61 @@ public class Inventory : MonoBehaviour
         }
     }
 
-   
+
     #endregion
+
+    //앱의 활성화 상태를 저장하는 변수
+    bool isPaused = false;
+
+    void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            isPaused = true;
+
+            SaveData();         // 앱이 비활성화되었을 때 데이터 저장
+        }
+
+        else
+        {
+            if (isPaused)
+            {
+                isPaused = false;
+                /* 앱이 활성화 되었을 때 처리 */
+            }
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        SaveData();         // 앱 종료 시 데이터 저장
+    }
+
+    /// <summary>
+    /// 데이터 저장
+    /// </summary>
+    void SaveData()
+    {
+        string jdata = JsonUtility.ToJson(new Serialization<GiftItem>(giftItems));
+        File.WriteAllText(Application.dataPath + "/Resources/InventoryData.json", jdata);
+    }
+
+    /// <summary>
+    /// 데이터 로드
+    /// </summary>
+    /// <returns>불러오기 성공 여부</returns>
+    public bool LoadData()
+    {
+        FileInfo fileInfo = new FileInfo(Application.dataPath + "/Resources/InventoryData.json");
+        if (fileInfo.Exists)
+        {
+            string jdata = File.ReadAllText(Application.dataPath + "/Resources/InventoryData.json");
+
+            giftItems = JsonUtility.FromJson<Serialization<GiftItem>>(jdata).target;
+            
+            return true;
+        }
+
+        return false;
+    }
 }

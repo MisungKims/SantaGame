@@ -16,18 +16,16 @@ public class WishListObj : MonoBehaviour
 
     private Gift gift;
 
-    void Start()
+    void Awake()
     {
         gift = GiftManager.Instance.giftList[index];
 
         giftImg.sprite = gift.giftImage;
         giftName.text = gift.giftName;
-        wishCount.text = gift.wishCount.ToString();
     }
 
-    void Update()
+    void OnEnable()
     {
         wishCount.text = gift.wishCount.ToString();
     }
-
 }

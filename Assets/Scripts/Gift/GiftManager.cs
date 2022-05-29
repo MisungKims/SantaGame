@@ -8,6 +8,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class GiftManager : MonoBehaviour
 {
@@ -43,9 +44,12 @@ public class GiftManager : MonoBehaviour
 
         getRewardWindow = UIManager.Instance.getRewardWindow;
 
-        for (int i = 0; i < giftList.Count; i++)
+        if (!LoadData())
         {
-            giftList[i].inventoryIndex = -1;
+            for (int i = 0; i < giftList.Count; i++)
+            {
+                giftList[i].inventoryIndex = -1;
+            }
         }
     }
 
@@ -141,5 +145,58 @@ public class GiftManager : MonoBehaviour
         Inventory.Instance.AddItem(gift);       // 인벤토리에 저장
     }
     #endregion
+    //앱의 활성화 상태를 저장하는 변수
+    bool isPaused = false;
 
+    void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            isPaused = true;
+
+            SaveData();         // 앱이 비활성화되었을 때 데이터 저장
+        }
+
+        else
+        {
+            if (isPaused)
+            {
+                isPaused = false;
+                /* 앱이 활성화 되었을 때 처리 */
+            }
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        SaveData();         // 앱 종료 시 데이터 저장
+    }
+
+    /// <summary>
+    /// 데이터 저장
+    /// </summary>
+    void SaveData()
+    {
+        string jdata = JsonUtility.ToJson(new Serialization<Gift>(giftList));
+        File.WriteAllText(Application.dataPath + "/Resources/GiftData.json", jdata);
+    }
+
+    /// <summary>
+    /// 데이터 로드
+    /// </summary>
+    /// <returns>불러오기 성공 여부</returns>
+    public bool LoadData()
+    {
+        FileInfo fileInfo = new FileInfo(Application.dataPath + "/Resources/GiftData.json");
+        if (fileInfo.Exists)
+        {
+            string jdata = File.ReadAllText(Application.dataPath + "/Resources/GiftData.json");
+
+            giftList = JsonUtility.FromJson<Serialization<Gift>>(jdata).target;
+            
+            return true;
+        }
+
+        return false;
+    }
 }
