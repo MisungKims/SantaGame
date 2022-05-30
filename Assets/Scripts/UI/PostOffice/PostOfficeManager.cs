@@ -9,8 +9,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-/// TODO : 인스펙터에서 우체국으로 이동하기
-
 #region 구조체
 [System.Serializable]
 public class PostStruct
@@ -269,7 +267,7 @@ public class PostOfficeManager : MonoBehaviour
     void SaveData()
     {
         string jdata = JsonUtility.ToJson(new Serialization<PostStruct>(havePostList));
-        File.WriteAllText(Application.dataPath + "/Resources/PostOfficeListData.json", jdata);
+        File.WriteAllText(Application.persistentDataPath + "/PostOfficeListData.json", jdata);
     }
 
     /// <summary>
@@ -278,10 +276,10 @@ public class PostOfficeManager : MonoBehaviour
     /// <returns>불러오기 성공 여부</returns>
     public bool LoadData()
     {
-        FileInfo fileInfo = new FileInfo(Application.dataPath + "/Resources/PostOfficeListData.json");
+        FileInfo fileInfo = new FileInfo(Application.persistentDataPath + "/PostOfficeListData.json");
         if (fileInfo.Exists)
         {
-            string jdata = File.ReadAllText(Application.dataPath + "/Resources/PostOfficeListData.json");
+            string jdata = File.ReadAllText(Application.persistentDataPath + "/PostOfficeListData.json");
 
             havePostList = JsonUtility.FromJson<Serialization<PostStruct>>(jdata).target;
             for (int i = 0; i < havePostList.Count; i++)

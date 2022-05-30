@@ -13,6 +13,8 @@ using System;
 public class UIManager : MonoBehaviour
 {
     #region 변수
+    public Text text;
+
     private static UIManager instance;
     public static UIManager Instance
     {
@@ -30,12 +32,15 @@ public class UIManager : MonoBehaviour
     public GameObject giftShopPanel;        // 선물 가게 패널
     public GameObject inventoryPanel;       // 인벤토리 패널
     public GameObject postOfficePanel;       // 우체국 패널
+    public GetOfflineGoldWindow getOfflineGoldWindow;
     public PuzzleUI puzzlePanel;            // 퍼즐 패널
     
     public GameObject clickObjWindow;       // 클릭 오브젝트 창
     public GameObject InviteRabbitWindow;  // 토끼 초대 창
     public QuestionWindow questionWindow;
     public GetRewardWindow getRewardWindow; // 보상 획득 창
+
+
 
     
 
@@ -123,11 +128,14 @@ public class UIManager : MonoBehaviour
         alwaysVisiblePanel.SetActive(true);
     }
 
+
     /// <summary>
     /// 선물 가게 패널을 보여줌
     /// </summary>
     public void ShowGiftShopPanel()
     {
+        CameraMovement.Instance.canMove = false;
+
         SetisOpenPanel(true);
 
         giftShopPanel.SetActive(true);
@@ -143,6 +151,8 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void HideGiftShopPanel()
     {
+        CameraMovement.Instance.canMove = true;
+
         SetisOpenPanel(false);
 
         giftShopPanel.SetActive(false);
@@ -155,11 +165,12 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void ShowInventoryPanel()
     {
+        CameraMovement.Instance.canMove = false;
+
         SetisOpenPanel(true);
         inventoryPanel.SetActive(true);
 
         Inventory.Instance.RefreshInventory();
-
     }
 
     public void SetisOpenPanel(bool value)
@@ -167,6 +178,10 @@ public class UIManager : MonoBehaviour
         if (value)
         {
             SoundManager.Instance.PlaySoundEffect(ESoundEffectType.uiButton);       // 효과음 실행
+        }
+        else
+        {
+            CameraMovement.Instance.canMove = true;
         }
         
         isOpenPanel = value;

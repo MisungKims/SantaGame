@@ -187,7 +187,7 @@ public class Inventory : MonoBehaviour
     void SaveData()
     {
         string jdata = JsonUtility.ToJson(new Serialization<GiftItem>(giftItems));
-        File.WriteAllText(Application.dataPath + "/Resources/InventoryData.json", jdata);
+        File.WriteAllText(Application.persistentDataPath + "/InventoryData.json", jdata);
     }
 
     /// <summary>
@@ -196,10 +196,10 @@ public class Inventory : MonoBehaviour
     /// <returns>불러오기 성공 여부</returns>
     public bool LoadData()
     {
-        FileInfo fileInfo = new FileInfo(Application.dataPath + "/Resources/InventoryData.json");
+        FileInfo fileInfo = new FileInfo(Application.persistentDataPath + "/InventoryData.json");
         if (fileInfo.Exists)
         {
-            string jdata = File.ReadAllText(Application.dataPath + "/Resources/InventoryData.json");
+            string jdata = File.ReadAllText(Application.persistentDataPath + "/InventoryData.json");
 
             giftItems = JsonUtility.FromJson<Serialization<GiftItem>>(jdata).target;
             

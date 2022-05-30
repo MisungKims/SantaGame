@@ -95,6 +95,7 @@ public class InviteRabbit : MonoBehaviour
         RabbitCitizen rabbitCitizen = GameObject.Instantiate(rabbit, rabbitGroup.transform).GetComponent<RabbitCitizen>();
         CitizenRabbitManager.Instance.rabbitCitizens.Add(rabbitCitizen);
 
+        rabbitCitizen.name = CitizenRabbitManager.Instance.rabbitCitizens.Count.ToString();
         rabbitCitizen.SetCamTargetThis();
 
         gameManager.MyCarrots -= GoldManager.UnitToBigInteger(price);  // 초대 비용 지불
@@ -110,7 +111,7 @@ public class InviteRabbit : MonoBehaviour
         rabbitCitizen.rabbitMat.material = CitizenRabbitManager.Instance.materials[rand];       // 토끼의 Material을 랜덤으로 설정
 
 
-        Citizen citizen = new Citizen(CitizenRabbitManager.Instance.materials[rand], rabbitCitizen.transform.position);
+        Citizen citizen = new Citizen(rabbitCitizen.name, CitizenRabbitManager.Instance.materials[rand], rabbitCitizen.transform.position);
         CitizenRabbitManager.Instance.citizenList.Add(citizen);
     }
 

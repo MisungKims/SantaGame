@@ -25,6 +25,7 @@ public class PuzzleButton : MonoBehaviour
         set
         {
             count = value;
+
             countText.text = count.ToString();
         }
     }

@@ -19,6 +19,7 @@ public class PuzzleManager : MonoBehaviour
     private PuzzleUI puzzleUI;
     private GetRewardWindow getRewardWindow;
 
+    public List<PuzzleButton> puzzleButtons = new List<PuzzleButton>();
 
     // 싱글톤
     private static PuzzleManager instance;
@@ -84,7 +85,7 @@ public class PuzzleManager : MonoBehaviour
         puzzlePiece.isGet = true;
         puzzleList[(int)ePuzzle].puzzlePieceList[pieceIndex] = puzzlePiece;     // 해당 퍼즐 조각의 isGet을 true로 바꿈
 
-        puzzleList[(int)ePuzzle].button.Count++;
+        puzzleButtons[(int)ePuzzle].Count++;
 
         IsSuccess(ePuzzle);     // 퍼즐을 다 완성했는지 확인
 
@@ -192,7 +193,7 @@ public class PuzzleManager : MonoBehaviour
     void SaveData()
     {
         string jdata = JsonUtility.ToJson(new Serialization<Puzzle>(puzzleList));
-        File.WriteAllText(Application.dataPath + "/Resources/PuzzleData.json", jdata);
+        File.WriteAllText(Application.persistentDataPath + "/PuzzleData.json", jdata);
     }
 
     /// <summary>
@@ -201,10 +202,10 @@ public class PuzzleManager : MonoBehaviour
     /// <returns>불러오기 성공 여부</returns>
     public bool LoadData()
     {
-        FileInfo fileInfo = new FileInfo(Application.dataPath + "/Resources/PuzzleData.json");
+        FileInfo fileInfo = new FileInfo(Application.persistentDataPath + "/PuzzleData.json");
         if (fileInfo.Exists)
         {
-            string jdata = File.ReadAllText(Application.dataPath + "/Resources/PuzzleData.json");
+            string jdata = File.ReadAllText(Application.persistentDataPath + "/PuzzleData.json");
 
             puzzleList = JsonUtility.FromJson<Serialization<Puzzle>>(jdata).target;
             for (int i = 0; i < puzzleList.Count; i++)
@@ -213,7 +214,7 @@ public class PuzzleManager : MonoBehaviour
                 {
                     if (puzzleList[i].puzzlePieceList[j].isGet)
                     {
-                        puzzleList[i].button.Count++;
+                        puzzleButtons[i].Count++;
                     }
                 }
                 

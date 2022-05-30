@@ -151,7 +151,7 @@ public class QuestManager : MonoBehaviour
     void SaveData()
     {
         string jdata = JsonUtility.ToJson(new Serialization<Quest>(questList));
-        File.WriteAllText(Application.dataPath + "/Resources/QuestData.json", jdata);
+        File.WriteAllText(Application.persistentDataPath + "/QuestData.json", jdata);
     }
 
     /// <summary>
@@ -160,10 +160,10 @@ public class QuestManager : MonoBehaviour
     /// <returns>불러오기 성공 여부</returns>
     public bool LoadData()
     {
-        FileInfo fileInfo = new FileInfo(Application.dataPath + "/Resources/QuestData.json");
+        FileInfo fileInfo = new FileInfo(Application.persistentDataPath + "/QuestData.json");
         if (fileInfo.Exists)
         {
-            string jdata = File.ReadAllText(Application.dataPath + "/Resources/QuestData.json");
+            string jdata = File.ReadAllText(Application.persistentDataPath + "/QuestData.json");
 
             questList = JsonUtility.FromJson<Serialization<Quest>>(jdata).target;
             for (int i = 0; i < questList.Count; i++)

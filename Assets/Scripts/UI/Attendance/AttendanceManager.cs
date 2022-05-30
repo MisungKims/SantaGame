@@ -108,7 +108,7 @@ public class AttendanceManager : MonoBehaviour
     void SaveData()
     {
         string jdata = JsonUtility.ToJson(new Serialization<AttendanceStruct>(attendanceList));
-        File.WriteAllText(Application.dataPath + "/Resources/AttendacnceData.json", jdata);
+        File.WriteAllText(Application.persistentDataPath + "/AttendacnceData.json", jdata);
     }
 
     /// <summary>
@@ -117,10 +117,10 @@ public class AttendanceManager : MonoBehaviour
     /// <returns>불러오기 성공 여부</returns>
     public bool LoadData()
     {
-        FileInfo fileInfo = new FileInfo(Application.dataPath + "/Resources/AttendacnceData.json");
+        FileInfo fileInfo = new FileInfo(Application.persistentDataPath + "/AttendacnceData.json");
         if (fileInfo.Exists)
         {
-            string jdata = File.ReadAllText(Application.dataPath + "/Resources/AttendacnceData.json");
+            string jdata = File.ReadAllText(Application.persistentDataPath + "/AttendacnceData.json");
 
             // 가져온 데이터로 UI 생성
             attendanceList = JsonUtility.FromJson<Serialization<AttendanceStruct>>(jdata).target;

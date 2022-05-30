@@ -178,7 +178,7 @@ public class GiftManager : MonoBehaviour
     void SaveData()
     {
         string jdata = JsonUtility.ToJson(new Serialization<Gift>(giftList));
-        File.WriteAllText(Application.dataPath + "/Resources/GiftData.json", jdata);
+        File.WriteAllText(Application.persistentDataPath + "/GiftData.json", jdata);
     }
 
     /// <summary>
@@ -187,10 +187,10 @@ public class GiftManager : MonoBehaviour
     /// <returns>불러오기 성공 여부</returns>
     public bool LoadData()
     {
-        FileInfo fileInfo = new FileInfo(Application.dataPath + "/Resources/GiftData.json");
+        FileInfo fileInfo = new FileInfo(Application.persistentDataPath + "/GiftData.json");
         if (fileInfo.Exists)
         {
-            string jdata = File.ReadAllText(Application.dataPath + "/Resources/GiftData.json");
+            string jdata = File.ReadAllText(Application.persistentDataPath + "/GiftData.json");
 
             giftList = JsonUtility.FromJson<Serialization<Gift>>(jdata).target;
             
