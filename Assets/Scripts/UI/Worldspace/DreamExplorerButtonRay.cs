@@ -20,6 +20,7 @@ public class DreamExplorerButtonRay : ButtonRaycast
     {
         yield return new WaitForSeconds(0.13f);
 
+        CameraMovement.Instance.canMove = false;
         UIManager.Instance.SetisOpenPanel(true);
         UIManager.Instance.puzzlePanel.gameObject.SetActive(true);
     }

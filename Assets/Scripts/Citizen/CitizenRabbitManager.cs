@@ -26,11 +26,13 @@ public class goalObject
 [System.Serializable]
 public class Citizen
 {
+    public string name;
     public Material material;
     public Vector3 pos;
 
-    public Citizen(Material material, Vector3 pos)
+    public Citizen(string name, Material material, Vector3 pos)
     {
+        this.name = name;
         this.material = material;
         this.pos = pos;
     }
@@ -75,26 +77,26 @@ public class CitizenRabbitManager : MonoBehaviour
     }
 
     //앱의 활성화 상태를 저장하는 변수
-    //bool isPaused = false;
+    bool isPaused = false;
 
-    //void OnApplicationPause(bool pause)
-    //{
-    //    if (pause)
-    //    {
-    //        isPaused = true;
+    void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            isPaused = true;
 
-    //        //SaveData();         // 앱이 비활성화되었을 때 데이터 저장
-    //    }
+            SaveData();         // 앱이 비활성화되었을 때 데이터 저장
+        }
 
-    //    else
-    //    {
-    //        if (isPaused)
-    //        {
-    //            isPaused = false;
-    //            /* 앱이 활성화 되었을 때 처리 */
-    //        }
-    //    }
-    //}
+        else
+        {
+            if (isPaused)
+            {
+                isPaused = false;
+                /* 앱이 활성화 되었을 때 처리 */
+            }
+        }
+    }
 
     void OnApplicationQuit()
     {
@@ -108,11 +110,12 @@ public class CitizenRabbitManager : MonoBehaviour
     {
         for (int i = 0; i < citizenList.Count; i++)
         {
+            citizenList[i].name = rabbitCitizens[i].name;
             citizenList[i].pos = rabbitCitizens[i].transform.position;
         }
 
         string jdata = JsonUtility.ToJson(new Serialization<Citizen>(citizenList));
-        File.WriteAllText(Application.dataPath + "/Resources/CitizenData.json", jdata);
+        File.WriteAllText(Application.persistentDataPath + "/CitizenData.json", jdata);
     }
 
     /// <summary>
@@ -121,16 +124,17 @@ public class CitizenRabbitManager : MonoBehaviour
     /// <returns>불러오기 성공 여부</returns>
     public bool LoadData()
     {
-        FileInfo fileInfo = new FileInfo(Application.dataPath + "/Resources/CitizenData.json");
+        FileInfo fileInfo = new FileInfo(Application.persistentDataPath + "/CitizenData.json");
         if (fileInfo.Exists)
         {
-            string jdata = File.ReadAllText(Application.dataPath + "/Resources/CitizenData.json");
+            string jdata = File.ReadAllText(Application.persistentDataPath + "/CitizenData.json");
 
             citizenList = JsonUtility.FromJson<Serialization<Citizen>>(jdata).target;
             for (int i = 0; i < citizenList.Count; i++)
             {
                 RabbitCitizen rabbitCitizen = GameObject.Instantiate(rabbit, citizenList[i].pos, Quaternion.identity, rabbitGroup.transform).GetComponent<RabbitCitizen>();
                 rabbitCitizen.rabbitMat.material = citizenList[i].material;
+                rabbitCitizen.name = citizenList[i].name;
                 rabbitCitizens.Add(rabbitCitizen);
             }
 

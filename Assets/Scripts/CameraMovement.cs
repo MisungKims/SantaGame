@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+
 public class CameraMovement : MonoBehaviour
 {
     #region 전역 변수
@@ -41,28 +42,30 @@ public class CameraMovement : MonoBehaviour
     Vector3 chasingCamAngles;
     Vector3 basicCamAngles;
 
+    bool isSantaAngleStart = false;
+
     enum EChaseState { noChase, chaseSanta, chaseBuilding, endChase };         // 카메라의 상태
     EChaseState chaseState = EChaseState.noChase;
 
     [Header("---------- Move")]
-    private float moveSpeed = 0.06f;
+    private float moveSpeed = 1.2f;
     private Vector2 currentPos, previousPos;
     private Vector3 movePos;
-    private bool canMove = true;
+    public bool canMove = true;
 
     [Header("---------- Rotate")]
-    private float rotateSpeed = 1;
+    private float rotateSpeed = 18f;
 
-    private float minRotateX = -10f;                // 회전 시 x축의 Min 값
-    private float maxRotateX = 20f;                 // 회전 시 x축의 Max 값
+    //private float minRotateX = -10f;                // 회전 시 x축의 Min 값
+    //private float maxRotateX = 20f;                 // 회전 시 x축의 Max 값
 
-    private float minRotateY = -55f;                // 회전 시 y축의 Min 값
-    private float maxRotateY = 55f;                 // 회전 시 y축의 Max 값
+    //private float minRotateY = -55f;                // 회전 시 y축의 Min 값
+    //private float maxRotateY = 55f;                 // 회전 시 y축의 Max 값
 
     //private float mouseX;
     //private float mouseY;
-    private float touchX;
-    private float touchY;
+    //private float touchX;
+    //private float touchY;
 
     //Vector3 FirstPoint;
     //Vector3 SecondPoint;
@@ -93,33 +96,81 @@ public class CameraMovement : MonoBehaviour
 
     #region 카메라 움직임
 
+    // ui열릴때는 x
+    //moveSpeed너무 빠름
+    //
 
     /// <summary>
     /// 터치로 카메라를 움직임
     /// </summary>
     void CamMove()
     {
-        chaseState = EChaseState.noChase;
-
-        Touch touch = Input.GetTouch(0);        // 손가락 터치
-        if (touch.phase == TouchPhase.Began)    // 눌렸을 때
+        if (Input.GetMouseButtonDown(0))
         {
-            previousPos = touch.position - touch.deltaPosition;     // 터치에 대한 이전 값 위치 저장
+            previousPos = Input.mousePosition;      // 터치에 대한 이전 값 위치 저장
         }
-        else if (touch.phase == TouchPhase.Moved)   // 움직일 때
+        else if (Input.GetMouseButton(0))
         {
-            currentPos = touch.position - touch.deltaPosition;      // 터치에 대한 현재 값 위치 저장
+            currentPos = Input.mousePosition;
 
-            movePos = (Vector3)(previousPos - currentPos) * moveSpeed;  // 이전 값과 현재 값의 벡터 거리를 구하여
+            movePos = (Vector3)(previousPos - currentPos) * Time.deltaTime * moveSpeed;
 
-            cam.transform.Translate(movePos);                      // 카메라를 이동 시킴
-            //cam.transform.position = Vector3.Lerp(cam.transform.position, movePos, Time.deltaTime);
+            Vector3 pos = cam.transform.position + movePos;
 
-            previousPos = touch.position - touch.deltaPosition;
-        }
-        else if (touch.phase == TouchPhase.Ended)
-        {
+            if (pos.x < -15f)
+            {
+                Vector3 newPos = cam.transform.position;
+                newPos.x = -15f;
+                cam.transform.position = newPos;
 
+                return;
+            }
+            else if (pos.x > 30f)
+            {
+                Vector3 newPos = cam.transform.position;
+                newPos.x = 30f;
+                cam.transform.position = newPos;
+
+                return;
+            }
+            else if (pos.y < 10f)
+            {
+                Vector3 newPos = cam.transform.position;
+                newPos.y = 10f;
+                cam.transform.position = newPos;
+
+                return;
+            }
+            else if (pos.y > 20f)
+            {
+                Vector3 newPos = cam.transform.position;
+                newPos.y = 20f;
+                cam.transform.position = newPos;
+
+                return;
+            }
+            else if (pos.z > -10f)
+            {
+                Vector3 newPos = cam.transform.position;
+                newPos.z = -10f;
+                cam.transform.position = newPos;
+
+                return;
+            }
+            else if (pos.z < -31f)
+            {
+                Vector3 newPos = cam.transform.position;
+                newPos.z = -31f;
+                cam.transform.position = newPos;
+
+                return;
+            }
+            else
+            {
+                cam.transform.Translate(movePos);                      // 카메라를 이동 시킴
+            }
+
+            previousPos = Input.mousePosition;
         }
     }
 
@@ -128,39 +179,18 @@ public class CameraMovement : MonoBehaviour
     /// </summary>
     void CamRotate()
     {
-        //chaseState = EChaseState.noChase;
+        if (isSantaAngleStart) return;
 
-        //// 마우스로 회전
-        //if (Input.GetMouseButton(0))
-        //{
-        //    mouseX += Input.GetAxis("Mouse X");
-        //    mouseY += Input.GetAxis("Mouse Y") * -1;
-
-        //    Debug.Log("X : " + mouseX);
-
-        //    float xRot = Mathf.Clamp(transform.rotation.x + mouseY, minRotateX, maxRotateX);
-        //    float yRot = Mathf.Clamp(transform.rotation.y + mouseX, minRotateY, maxRotateY);
-
-        //    transform.rotation = Quaternion.Euler(new Vector3(xRot, yRot, 0) * rotateSpeed);
-        //}
-        //if (chaseState == ChaseState.chaseStart) chaseState = ChaseState.chasing;
-
-        //모바일에서 터치로 회전
-        if (Input.touchCount > 0)
+        // 마우스로 회전
+        if (Input.GetMouseButton(0))
         {
-            Touch touch = Input.GetTouch(0);
-            if (Input.GetTouch(0).phase == TouchPhase.Moved)
-            {
-                touchX += touch.deltaPosition.x;
-                touchY += touch.deltaPosition.y * -1;
+            Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) * Time.deltaTime * rotateSpeed;
+            Vector3 camAngle = transform.rotation.eulerAngles;
 
-                float xRot = Mathf.Clamp(transform.rotation.x + touchY, minRotateX, maxRotateX);
-                float yRot = Mathf.Clamp(transform.rotation.y + touchX, minRotateY, maxRotateY);
+            float yRot = camAngle.y + mouseDelta.x;
+            yRot = Mathf.Clamp(yRot, 0f, 5f);
 
-                transform.rotation = Quaternion.Euler(new Vector3(xRot, yRot, 0) * rotateSpeed);
-                //transform.RotateAround(chasingTarget.transform.position, new Vector3(xRot, yRot, 0), 10f);
-            }
-
+            transform.rotation = Quaternion.Euler(0, yRot, 0);
         }
     }
 
@@ -171,15 +201,19 @@ public class CameraMovement : MonoBehaviour
     float touchDeltaMag;
 
     float deltaMagnitudeDiff;
+
+    float zoomSpeed = 0.2f;
+
+    Touch touchZero;
+    Touch touchOne;
+
     /// <summary>
     /// 터치로 카메라 줌 인/줌 아웃
     /// </summary>
     void Zoom()
     {
-        chaseState = EChaseState.noChase;
-
-        Touch touchZero = Input.GetTouch(0); //첫번째 손가락 터치를 저장
-        Touch touchOne = Input.GetTouch(1); //두번째 손가락 터치를 저장
+        touchZero = Input.GetTouch(0); //첫번째 손가락 터치를 저장
+        touchOne = Input.GetTouch(1); //두번째 손가락 터치를 저장
 
         //터치에 대한 이전 위치값을 각각 저장함
         //처음 터치한 위치(touchZero.position)에서 이전 프레임에서의 터치 위치와 이번 프로임에서 터치 위치의 차이를 뺌
@@ -193,7 +227,7 @@ public class CameraMovement : MonoBehaviour
         // 거리 차이 구함(거리가 이전보다 크면(마이너스가 나오면)손가락을 벌린 상태_줌인 상태)
         deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
 
-        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, cam.fieldOfView + deltaMagnitudeDiff * perspectiveZoomSpeed, sensitive * Time.deltaTime);
+        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, cam.fieldOfView + deltaMagnitudeDiff * perspectiveZoomSpeed, sensitive * Time.deltaTime * zoomSpeed);
         cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, zoomMinValue, zoomMaxValue);
     }
 
@@ -201,29 +235,43 @@ public class CameraMovement : MonoBehaviour
     {
         if (canMove)
         {
-            if (Input.touchCount == 1)  // 한 손가락으로 터치 시 
+            if (Input.GetMouseButton(0))  // 한 손가락으로 터치 시 
             {
+                if (chaseState == EChaseState.endChase)
+                {
+                    chaseState = EChaseState.noChase;
+                }
+
                 if (chaseState == EChaseState.noChase)          // 추적 중이 아니면
                     CamMove();                                 // 카메라 이동
-                else if (chaseState == EChaseState.chaseSanta)      // 추적 중이면
-                    CamRotate();                               // 오브젝트를 중심으로 카메라 회전
+                //if (chaseState == EChaseState.chaseSanta)      // 추적 중이면
+                //    CamRotate();                               // 오브젝트를 중심으로 카메라 회전
             }
 
-            else if (Input.touchCount == 2) // 두 손가락으로 터치 시
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (Input.touchCount == 2) // 두 손가락으로 터치 시
             {
                 Zoom();                 // 줌 인/아웃
             }
+            else
+            {
+                if (Input.GetMouseButton(0))  // 한 손가락으로 터치 시 
+                {
+                    if (chaseState == EChaseState.endChase)
+                    {
+                        chaseState = EChaseState.noChase;
+                    }
 
-            //else  // PC에서 확인하기 위함
-            //{
-            //    if (chaseState == ChaseState.chasing)          // 추적할 타겟이 있으면
-            //        CamRotate();                    // 오브젝트를 중심으로 카메라 회전
-            //}
+                    if (chaseState == EChaseState.noChase)          // 추적 중이 아니면
+                        CamMove();                                 // 카메라 이동
+                }
+            }
+#endif
         }
     }
-    #endregion
+#endregion
 
-    #region 타깃 추적
+#region 타깃 추적
    
     /// <summary>
     /// 카메라가 산타를 따라다님
@@ -234,6 +282,8 @@ public class CameraMovement : MonoBehaviour
         chaseState = EChaseState.chaseSanta;    // 카메라의 상태 변경
 
         chasingTarget = obj;
+
+        isSantaAngleStart = true;
     }
 
 
@@ -270,14 +320,17 @@ public class CameraMovement : MonoBehaviour
     {
         while (true)
         {
-            if (chaseState == EChaseState.chaseSanta)       // 산타 추적 시 
+            if (isSantaAngleStart)       // 산타 추적 시 
             {
-                while (Vector3.Distance(cam.transform.eulerAngles, chasingCamAngles) > 0.05f && chaseState == EChaseState.chaseSanta)
+                while (Vector3.Distance(cam.transform.eulerAngles, chasingCamAngles) > 0.05f 
+                    && chaseState == EChaseState.chaseSanta
+                    && isSantaAngleStart)
                 {
                     cam.transform.eulerAngles = Vector3.Lerp(cam.transform.eulerAngles, chasingCamAngles, Time.deltaTime);
 
                     yield return null;
                 }
+                isSantaAngleStart = false;
             }
 
             else if (chaseState == EChaseState.endChase)     // 추적 종료 시 기본 카메라 앵글로 이동
@@ -317,15 +370,11 @@ public class CameraMovement : MonoBehaviour
             else if (chaseState == EChaseState.chaseBuilding)       // 건물을 추적할 때 건물의 cameraPos 위치로 이동
             {
                 targetPos = chasingTarget.position + buildingDistance.localPosition;
-                //targetPos = cam.transform.position;
-                //targetPos.x = chasingTarget.position.x + buildingDistance.localPosition.x;
-                //targetPos.z = chasingTarget.position.z + buildingDistance.localPosition.z;
+
                 while (Vector3.Distance(cam.transform.position, targetPos) > 0.05f && chaseState == EChaseState.chaseBuilding)
                 {
                     targetPos = chasingTarget.position + buildingDistance.localPosition;
-                    //targetPos = cam.transform.position;
-                    //targetPos.x = chasingTarget.position.x + buildingDistance.localPosition.x;
-                    //targetPos.z = chasingTarget.position.z + buildingDistance.localPosition.z;
+
                     cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos, Time.deltaTime * 1.6f);
 
                     yield return null;
@@ -338,9 +387,11 @@ public class CameraMovement : MonoBehaviour
                 while (Vector3.Distance(cam.transform.position, distance) > 0.05f && chaseState == EChaseState.endChase)
                 {
                     cam.transform.position = Vector3.Lerp(cam.transform.position, distance, Time.deltaTime * 1.6f);
+                    //transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime);
 
                     yield return null;
                 }
+                //transform.rotation = Quaternion.Euler(0, 0, 0);
                 if (chaseState == EChaseState.endChase) chaseState = EChaseState.noChase;
             }
 
@@ -379,70 +430,12 @@ public class CameraMovement : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 카메라의 FieldOfView를 조절하여 타겟을 향해 줌 인/줌 아웃
-    /// </summary>
-    /// <param name="fieldOfView">조절할 Field Of View</param>
-    /// <returns></returns>
-    //IEnumerator ChangeFieldOfView(float fieldOfView, EChaseState state)
-    //{
-    //    while (Mathf.Abs(cam.fieldOfView - fieldOfView) > 0.05f && chaseState == state)
-    //    {
-    //        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, fieldOfView, Time.deltaTime * 1.6f);          // 타겟을 향해 줌인
+#endregion
 
-    //        yield return null;
-    //    }
-    //}
-
-    ///// <summary>
-    ///// 카메라의 앵글을 조절
-    ///// </summary>
-    ///// <param name="angle">조절할 각도</param>
-    ///// <returns></returns>
-    //IEnumerator ChangeAngles(Vector3 angle, EChaseState state)
-    //{
-    //    while (Vector3.Distance(cam.transform.eulerAngles, angle) > 0.05f && chaseState == state)
-    //    {
-    //        cam.transform.eulerAngles = Vector3.Lerp(cam.transform.eulerAngles, angle, Time.deltaTime);
-
-    //        yield return null;
-    //    }
-    //}
-
-    ///// <summary>
-    ///// 카메라의 위치를 조정
-    ///// </summary>
-    ///// <returns></returns>
-    //IEnumerator SetCamPos(Vector3 targetPos, bool isFix, EChaseState state)
-    //{
-    //    // 카메라가 타깃을 따라 움직이지 않을 때
-    //    if(isFix)
-    //    {
-    //        while (Vector3.Distance(cam.transform.position, targetPos) > 0.05f && chaseState == state)
-    //        {
-    //            cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos, Time.deltaTime * 1.6f);
-
-    //            yield return null;
-    //        }
-    //    }
-    //    // 카메라가 타깃을 따라 움직일 때
-    //    else
-    //    {
-    //        while (chaseState == EChaseState.chasing)
-    //        {
-    //            cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos + chasingTarget.position, Time.deltaTime);
-
-    //            yield return null;
-    //        }
-    //    }
-    //}
-
-    #endregion
-
-    #endregion
+#endregion
 
 
-    #region 유니티 함수
+#region 유니티 함수
 
     private void Awake()
     {
@@ -483,6 +476,6 @@ public class CameraMovement : MonoBehaviour
     {
         CameraMove();       // 카메라의 움직임
     }
-    #endregion
+#endregion
 }
 

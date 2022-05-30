@@ -311,7 +311,6 @@ public class RabbitCitizen : MonoBehaviour
     }
     #endregion
 
-    /// TODO : 건물 배치 후 각 건물 위치 리스트에 넣기
     #region 함수
     
     

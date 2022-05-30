@@ -83,6 +83,7 @@ public class Santa : MonoBehaviour
 
         isInit = true;
 
+        Level = 0;
         Upgrade();
 
         isInit = false;

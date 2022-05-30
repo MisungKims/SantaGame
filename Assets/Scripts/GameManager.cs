@@ -35,7 +35,7 @@ public class SaveData
     public string attendanceDate;
     public string initQuestDate;
 
-    public string lastSaveDate;
+    public string lastConnectionTime;
 }
 
 public class GameManager : MonoBehaviour
@@ -209,6 +209,8 @@ public class GameManager : MonoBehaviour
 
     public string initQuestDate;            // 퀘스트를 초기화한 날짜
 
+    public string lastConnectionTime;       // 마지막으로 접속한 시간
+
     private WaitForSeconds waitForSeconds;      // 캐싱
 
     [SerializeField]
@@ -217,6 +219,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject vaillage;
 
+    public string dataPath;
 
     #endregion
 
@@ -294,17 +297,19 @@ public class GameManager : MonoBehaviour
         data.day = day;
         data.attendanceDate = attendanceDate;
         data.initQuestDate = initQuestDate;
-        data.lastSaveDate = DateTime.Now.ToString("yyyy.MM.dd");
+        data.lastConnectionTime = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
 
-        File.WriteAllText(Application.dataPath + "/Resources/MyData.json", JsonUtility.ToJson(data));
+        File.WriteAllText(Application.persistentDataPath + "/MyData.json", JsonUtility.ToJson(data));
     }
     
     public bool LoadData()
     {
-        FileInfo fileInfo = new FileInfo(Application.dataPath + "/Resources/MyData.json");
+        FileInfo fileInfo = new FileInfo(Application.persistentDataPath + "/MyData.json");
+
         if (fileInfo.Exists)
         {
-            string dataStr = File.ReadAllText(Application.dataPath + "/Resources/MyData.json");
+            string dataStr = File.ReadAllText(Application.persistentDataPath + "/MyData.json");
+
             SaveData data = JsonUtility.FromJson<SaveData>(dataStr);
             Level = data.level;
             Gauge = data.gauge;
@@ -317,15 +322,16 @@ public class GameManager : MonoBehaviour
             day = data.day;
             attendanceDate = data.attendanceDate;
             initQuestDate = data.initQuestDate;
+            lastConnectionTime = data.lastConnectionTime;
 
             return true;
         }
 
         return false;
     }
-    #endregion
+#endregion
 
-    #region 코루틴
+#region 코루틴
     /// <summary>
     /// 날짜 세기
     /// </summary>
@@ -367,13 +373,13 @@ public class GameManager : MonoBehaviour
             LevelUp();
     }
 
-    #endregion
+#endregion
 
 
 
-    #region 유니티 함수
+#region 유니티 함수
 
-    #endregion
+#endregion
     private void Awake()
     {
         if (instance == null)
@@ -401,8 +407,10 @@ public class GameManager : MonoBehaviour
             year = 0;
             month = 1;
             day = 1;
+            lastConnectionTime = "";
         }
-       
+
+        dataPath = Application.persistentDataPath + "/MyData.json";
 
         waitForSeconds = new WaitForSeconds(dayCount);
 

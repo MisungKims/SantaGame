@@ -8,6 +8,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System;
+using System.Numerics;
+using Random = UnityEngine.Random;
 
 public class ObjectManager : MonoBehaviour
 {
@@ -58,6 +61,11 @@ public class ObjectManager : MonoBehaviour
         SetSanta();
     }
 
+    private void Start()
+    {
+        OfflineTime();
+    }
+
     /// <summary>
     /// csv 리더를 통해 StoreData 파일 가져오기
     /// </summary>
@@ -101,12 +109,8 @@ public class ObjectManager : MonoBehaviour
                 );
 
             objectList.Add(newObject);
-
-            //buildingList[i].buildingObj = objectList[i];
         }
     }
-    /// TODO : 하이라키에서 다 셋팅 후에 밑에꺼 위로 올리기
-
     /// <summary>
     /// 건물의 값 초기화
     /// </summary>
@@ -141,6 +145,82 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 오프라인 시간 동안 얻은 보상을 계산
+    /// </summary>
+    public void OfflineTime()
+    {
+        if (GameManager.Instance.lastConnectionTime.Equals(""))
+        {
+            return;
+        }
+
+        DateTime lastConnectionTime = DateTime.ParseExact(GameManager.Instance.lastConnectionTime, "yyyy-MM-dd-HH-mm-ss",
+                    System.Globalization.CultureInfo.InvariantCulture); // DateTime 으로 변환
+
+        TimeSpan timeDiff = DateTime.Now - lastConnectionTime;
+        int diffSec = timeDiff.Seconds;
+        double diffTotalSeconds = timeDiff.TotalSeconds;
+
+        //Debug.Log(DateTime.Now);
+        //Debug.Log(lastConnectionTime);
+        //Debug.Log(diffTotalSeconds);
+
+        if (diffTotalSeconds > 21600)       // 최대 360분
+        {
+            diffTotalSeconds = 21600;
+        }
+
+        if (diffTotalSeconds < 60)
+        {
+            UIManager.Instance.getOfflineGoldWindow.timeText.text = ((int)diffTotalSeconds).ToString() + " sec";
+        }
+        else
+        {
+            UIManager.Instance.getOfflineGoldWindow.timeText.text = (diffTotalSeconds / 60).ToString("F0") + " min";
+        }
+
+
+        // 골드 획득
+        BigInteger goldAmount = 0;
+        for (int i = 0; i < objectList.Count; i++)
+        {
+            if (objectList[i].santaLevel > 0)       // 골드 생산 자동화된 건물이라면
+            {
+                int count = (int)((float)diffTotalSeconds / objectList[i].second);      // 오프라인 시간동안 몇번 골드를 획득했는지 계산
+                string multiple = GoldManager.MultiplyUnit(objectList[i].incrementGold, count);
+
+                goldAmount += GoldManager.UnitToBigInteger(multiple);
+            }
+        }
+
+        GameManager.Instance.MyGold += goldAmount;
+        UIManager.Instance.getOfflineGoldWindow.goldText.text = GoldManager.ExpressUnitOfGold(goldAmount);
+
+        // 당근 획득
+        BigInteger carrotAmount = 0;
+        carrotAmount = 0;
+        for (int i = 0; i < CitizenRabbitManager.Instance.rabbitCitizens.Count; i++)            // 생성된 토끼 주민 수 만큼
+        {
+            int count = (int)((float)diffTotalSeconds / Random.Range(50.0f, 70.0f));      // 오프라인 시간동안 몇번 당근을 획득했는지 계산
+            string multiple = GoldManager.MultiplyUnit("100.0A", count);
+
+            carrotAmount += GoldManager.UnitToBigInteger(multiple);
+        }
+        GameManager.Instance.MyCarrots += carrotAmount;
+        UIManager.Instance.getOfflineGoldWindow.carrotText.text = GoldManager.ExpressUnitOfGold(carrotAmount);
+
+        // 보상을 얻지 못했으면 return
+        if (GoldManager.ExpressUnitOfGold(goldAmount).Equals("0.0 ") && GoldManager.ExpressUnitOfGold(carrotAmount).Equals("0.0 "))
+        {
+            return;
+        }
+
+        UIManager.Instance.getOfflineGoldWindow.gameObject.SetActive(true);
+        UIManager.Instance.SetisOpenPanel(true);
+        CameraMovement.Instance.canMove = false;
+    }
+
     //앱의 활성화 상태를 저장하는 변수
     bool isPaused = false;
 
@@ -158,7 +238,9 @@ public class ObjectManager : MonoBehaviour
             if (isPaused)
             {
                 isPaused = false;
+
                 /* 앱이 활성화 되었을 때 처리 */
+                OfflineTime();
             }
         }
     }
@@ -174,7 +256,7 @@ public class ObjectManager : MonoBehaviour
     void SaveData()
     {
         string jdata = JsonUtility.ToJson(new Serialization<Object>(objectList));
-        File.WriteAllText(Application.dataPath + "/Resources/ObjectData.json", jdata);
+        File.WriteAllText(Application.persistentDataPath + "/ObjectData.json", jdata);
     }
 
     /// <summary>
@@ -183,10 +265,10 @@ public class ObjectManager : MonoBehaviour
     /// <returns>불러오기 성공 여부</returns>
     public bool LoadData()
     {
-        FileInfo fileInfo = new FileInfo(Application.dataPath + "/Resources/ObjectData.json");
+        FileInfo fileInfo = new FileInfo(Application.persistentDataPath + "/ObjectData.json");
         if (fileInfo.Exists)
         {
-            string jdata = File.ReadAllText(Application.dataPath + "/Resources/ObjectData.json");
+            string jdata = File.ReadAllText(Application.persistentDataPath + "/ObjectData.json");
 
             objectList = JsonUtility.FromJson<Serialization<Object>>(jdata).target;
 

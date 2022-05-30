@@ -20,6 +20,7 @@ public class PostOfficeButtonRay : ButtonRaycast
     {
         yield return new WaitForSeconds(0.13f);
 
+        CameraMovement.Instance.canMove = false;
         UIManager.Instance.SetisOpenPanel(true);
         UIManager.Instance.postOfficePanel.SetActive(true);
     }
