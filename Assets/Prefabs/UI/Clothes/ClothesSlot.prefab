@@ -130,12 +130,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clothesImage: {fileID: 6056177759981747469}
   checkImage: {fileID: 6056177758219664289}
+  button: {fileID: 4703662491724258171}
   rabbitCitizen: {fileID: 0}
   clothes:
-    name: 
+    flag: 0
+    clothesName: 
     image: {fileID: 0}
-    totalAmount: 0
-    wearingCount: 0
+    clothesPrefabs: {fileID: 0}
+    clothesInfo:
+      totalAmount: 0
+      wearingCount: 0
+    pos: {x: 0, y: 0, z: 0}
+    rot: {x: 0, y: 0, z: 0}
+    scale: {x: 0, y: 0, z: 0}
 --- !u!222 &6056177759374360324
 CanvasRenderer:
   m_ObjectHideFlags: 0

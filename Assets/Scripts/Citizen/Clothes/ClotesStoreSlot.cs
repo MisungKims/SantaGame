@@ -1,0 +1,83 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class ClotesStoreSlot : MonoBehaviour
+{
+    [SerializeField]
+    private Text clothesNameText;
+    [SerializeField]
+    private Image clothesImage;
+    [SerializeField]
+    private Text priceText;
+
+    private string clothesName;         // ø ¿« ¿Ã∏ß
+    public string ClothesName
+    {
+        set
+        {
+            clothesName = value;
+            clothesNameText.text = clothesName;
+        }
+    }
+    Button button;
+   
+    private int price;                 // ø ¿« ∞°∞›
+    public int Price
+    {
+        set
+        {
+            price = value;
+            priceText.text = price.ToString();
+        }
+    }
+
+    public Clothes clothes;
+
+    [SerializeField]
+    private RabbitModel model;
+
+
+    public void Init(Clothes clothes)
+    {
+        this.clothes = clothes;
+        clothesName = clothes.clothesName;
+        clothesImage.sprite = clothes.image;
+        price = clothes.price;
+
+    }
+
+    /// <summary>
+    /// ∏µ®ø°∞‘ ø ¿ª ¿‘«Ù∫Ω (¿ŒΩ∫∆Â≈Õø°º≠ »£√‚)
+    /// </summary>
+    public void Wear()
+    {
+        if (model.clothes != clothes)       // ø ¿ª ¿‘¡ˆ æ ∞≈≥™ ¥Ÿ∏• ø ¿ª ¿‘∞Ì ¿÷¿ª ∂ßø°¥¬ ø ¿ª ¿‘»˚
+        {
+            if (model.clothes.clothesName != null && !model.clothes.clothesName.Equals(""))
+            {
+                model.PutOff();
+            }
+            model.PutOn(clothes);
+        }
+        else         // «ÿ¥Á ΩΩ∑‘¿« ø ¿ª ¿‘∞Ì ¿÷æ˙¥Ÿ∏È ø ¿ª π˛±Ë
+        {
+            model.PutOff();         
+        }
+    }
+
+    /// <summary>
+    /// ø ¿ª ±∏¿‘«‘ (¿ŒΩ∫∆Â≈Õø°º≠ »£√‚)
+    /// </summary>
+    public void Buy()
+    {
+        if (GameManager.Instance.MyDia >= price)
+        {
+            GameManager.Instance.MyDia -= price;
+
+            ClothesManager.Instance.GetClothes(clothes);
+        }
+        
+    }
+}

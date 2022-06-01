@@ -65,6 +65,7 @@ public class RabbitCitizen : MonoBehaviour
     int preGoal = -1;
 
     public Clothes clothes = null;      // ¡÷πŒ¿« ø (ƒ⁄µ≈€)
+    private GameObject clothesObj;
 
     public Transform clothesParent;    // ø  ø¿∫Í¡ß∆Æ¿« ∫Œ∏
 
@@ -411,11 +412,21 @@ public class RabbitCitizen : MonoBehaviour
     /// ø ¿ª ¿‘¿Ω
     /// </summary>
     /// <param name="clothes">¿‘»˙ ø </param>
-    public void PutOn(Clothes clothes)
+    public bool PutOn(Clothes clothes)
     {
-        this.clothes = ObjectPoolingManager.Instance.Get(clothes.flag, clothesParent);
-        this.clothes.transform.localPosition = clothes.pos;
-        this.clothes.transform.localEulerAngles = clothes.rot;
+        if (clothes != null)
+        {
+            this.clothes = clothes;
+
+            clothesObj = ObjectPoolingManager.Instance.Get(clothes.flag, clothesParent);
+            clothesObj.transform.localPosition = clothes.pos;
+            clothesObj.transform.localEulerAngles = clothes.rot;
+            clothesObj.transform.localScale = clothes.scale;
+
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -423,7 +434,8 @@ public class RabbitCitizen : MonoBehaviour
     /// </summary>
     public void PutOff()
     {
-        this.clothes = null;
+        ObjectPoolingManager.Instance.Set(clothesObj, clothes.flag);
+        clothes = null;
     }
 
     /// <summary>
