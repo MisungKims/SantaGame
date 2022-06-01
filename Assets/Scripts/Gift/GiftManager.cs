@@ -15,6 +15,8 @@ public class GiftManager : MonoBehaviour
     #region º¯¼ö
     public List<Gift> giftList = new List<Gift>();
 
+    public List<Sprite> giftSprites = new List<Sprite>();
+
     int totalWeight = 0;
 
     // Ä³½Ì
@@ -193,7 +195,11 @@ public class GiftManager : MonoBehaviour
             string jdata = File.ReadAllText(Application.persistentDataPath + "/GiftData.json");
 
             giftList = JsonUtility.FromJson<Serialization<Gift>>(jdata).target;
-            
+            for (int i = 0; i < giftList.Count; i++)
+            {
+                giftList[i].giftImage = giftSprites[i];
+            }
+
             return true;
         }
 

@@ -70,6 +70,9 @@ public class PostOfficeManager : MonoBehaviour
     // 그 외 변수
     public int maximum;        // 편지함 맥시멈
 
+    [SerializeField]
+    private ObjectPoolingManager ObjectPoolingManager;
+
     #endregion
 
     #region 유니티 함수
@@ -188,7 +191,7 @@ public class PostOfficeManager : MonoBehaviour
         newObj.PostConent = post.content;
         newObj.transform.GetComponent<RectTransform>().anchoredPosition = UITransformList[0];       // 새로온 편지는 맨 상단으로 가도록
         newObj.listIndex = index;
-        
+
         Gift gift = GiftManager.Instance.giftList[post.giftIndex];
         newObj.gift = gift;
 
@@ -207,6 +210,7 @@ public class PostOfficeManager : MonoBehaviour
         {
             Inventory.Instance.RefreshInventory();
         }
+
     }
 
     /// <summary>

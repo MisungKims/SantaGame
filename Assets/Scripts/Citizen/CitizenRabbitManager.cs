@@ -133,6 +133,11 @@ public class CitizenRabbitManager : MonoBehaviour
             for (int i = 0; i < citizenList.Count; i++)
             {
                 RabbitCitizen rabbitCitizen = GameObject.Instantiate(rabbit, citizenList[i].pos, Quaternion.identity, rabbitGroup.transform).GetComponent<RabbitCitizen>();
+                if (citizenList[i].material == null)
+                {
+                    int rand = Random.Range(0, 12);
+                    citizenList[i].material = materials[rand];
+                }
                 rabbitCitizen.rabbitMat.material = citizenList[i].material;
                 rabbitCitizen.name = citizenList[i].name;
                 rabbitCitizens.Add(rabbitCitizen);

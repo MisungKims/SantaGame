@@ -67,6 +67,7 @@ public class RewardManager : MonoBehaviour
                 break;
 
             case ERewardType.clothesBox:
+                ClothesManager.Instance.GetRandomClothes();
                 break;
 
             case ERewardType.carrot:
