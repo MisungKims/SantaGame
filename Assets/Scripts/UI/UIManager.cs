@@ -27,7 +27,7 @@ public class UIManager : MonoBehaviour
     public GameObject mainPanel;
     public GameObject alwaysVisiblePanel;
     public GameObject cameraPanel;          // 카메라 패널
-    public GameObject citizenPanel;         // 주민 패널
+    public CitizenPanel citizenPanel;         // 주민 패널
     public GameObject storePanel;        // 상점 패널
     public GameObject giftShopPanel;        // 선물 가게 패널
     public GameObject inventoryPanel;       // 인벤토리 패널
@@ -88,10 +88,11 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// 주민 패널 보여줌
     /// </summary>
-    public void ShowCitizenPanel()
+    public void ShowCitizenPanel(RabbitCitizen rabbitCitizen)
     {
         mainPanel.SetActive(false);
-        citizenPanel.SetActive(true);
+        citizenPanel.rabbitCitizen = rabbitCitizen;
+        citizenPanel.gameObject.SetActive(true);
 
         if (InviteRabbitWindow.activeSelf) InviteRabbitWindow.SetActive(false);
     }
@@ -102,7 +103,8 @@ public class UIManager : MonoBehaviour
     public void HideCitizenPanel()
     {
         mainPanel.SetActive(true);
-        citizenPanel.SetActive(false);
+        citizenPanel.rabbitCitizen = null;
+        citizenPanel.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -115,7 +117,7 @@ public class UIManager : MonoBehaviour
         alwaysVisiblePanel.SetActive(false);
 
         if (InviteRabbitWindow.activeSelf) InviteRabbitWindow.SetActive(false);
-        if (citizenPanel.activeSelf) citizenPanel.SetActive(false);
+        if (citizenPanel.gameObject.activeSelf) citizenPanel.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -143,7 +145,7 @@ public class UIManager : MonoBehaviour
         //alwaysVisiblePanel.SetActive(false);
 
         if (InviteRabbitWindow.activeSelf) InviteRabbitWindow.SetActive(false);
-        if (citizenPanel.activeSelf) citizenPanel.SetActive(false);
+        if (citizenPanel.gameObject.activeSelf) citizenPanel.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -177,6 +179,7 @@ public class UIManager : MonoBehaviour
     {
         if (value)
         {
+            CameraMovement.Instance.canMove = false;
             SoundManager.Instance.PlaySoundEffect(ESoundEffectType.uiButton);       // 효과음 실행
         }
         else

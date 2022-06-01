@@ -100,8 +100,10 @@ public class StoreManager : MonoBehaviour
         copiedStoreObject.index = i;
         copiedStoreObject.storeObject = newObject;
 
+        
+
         // 상점 오브젝트의 이미지 설정
-        copiedStoreObject.buildingImage.sprite = newObject.buildingSprite;
+        copiedStoreObject.buildingImage.sprite = newObject.buildingSprite;      //오류 이렇게 하지말기 (오브젝트 매니저에서 가져오기)
         copiedStoreObject.santaImage.sprite = newObject.santaSprite;
 
 

@@ -109,6 +109,13 @@ public class ObjectManager : MonoBehaviour
                 );
 
             objectList.Add(newObject);
+
+
+            if (objectList[i].santaSprite == null)
+            {
+                objectList[i].santaSprite = santaSprites[i];
+            }
+
         }
     }
     /// <summary>
@@ -125,6 +132,8 @@ public class ObjectManager : MonoBehaviour
             {
                 buildingList[i].Init();
             }
+
+           
         }
     }
 
@@ -142,6 +151,8 @@ public class ObjectManager : MonoBehaviour
             {
                 santaList[i].Init();
             }
+
+           
         }
     }
 
@@ -271,6 +282,14 @@ public class ObjectManager : MonoBehaviour
             string jdata = File.ReadAllText(Application.persistentDataPath + "/ObjectData.json");
 
             objectList = JsonUtility.FromJson<Serialization<Object>>(jdata).target;
+
+            for (int i = 0; i < objectList.Count; i++)
+            {
+                objectList[i].buildingSprite = buildingSprites[i];
+                objectList[i].santaSprite = santaSprites[i];
+            }
+            
+
 
             return true;
         }
