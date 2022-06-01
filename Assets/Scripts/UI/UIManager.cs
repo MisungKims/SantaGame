@@ -27,14 +27,16 @@ public class UIManager : MonoBehaviour
     public GameObject mainPanel;
     public GameObject alwaysVisiblePanel;
     public GameObject cameraPanel;          // 카메라 패널
-    public CitizenPanel citizenPanel;         // 주민 패널
     public GameObject storePanel;        // 상점 패널
     public GameObject giftShopPanel;        // 선물 가게 패널
     public GameObject inventoryPanel;       // 인벤토리 패널
     public GameObject postOfficePanel;       // 우체국 패널
+    public GameObject clothesStoreObject;       // 옷가게 오브젝트
+    public GameObject clothesStorePanel;         // 옷가게 패널
     public GetOfflineGoldWindow getOfflineGoldWindow;
     public PuzzleUI puzzlePanel;            // 퍼즐 패널
-    
+    public CitizenPanel citizenPanel;         // 주민 패널
+
     public GameObject clickObjWindow;       // 클릭 오브젝트 창
     public GameObject InviteRabbitWindow;  // 토끼 초대 창
     public QuestionWindow questionWindow;
@@ -130,6 +132,40 @@ public class UIManager : MonoBehaviour
         alwaysVisiblePanel.SetActive(true);
     }
 
+    public void ShowStorePanel()
+    {
+        SetisOpenPanel(true);
+
+        storePanel.SetActive(true);
+
+        if (InviteRabbitWindow.activeSelf) InviteRabbitWindow.SetActive(false);
+        if (clickObjWindow.activeSelf) clickObjWindow.SetActive(false);
+    }
+
+    public void HideStorePanel()
+    {
+        SetisOpenPanel(false);
+
+        storePanel.SetActive(false);
+    }
+
+    public void ShowClothesStore()
+    {
+        SetisOpenPanel(true);
+        clothesStoreObject.SetActive(true);
+        clothesStorePanel.SetActive(true);
+        mainPanel.SetActive(false);
+
+        if (InviteRabbitWindow.activeSelf) InviteRabbitWindow.SetActive(false);
+    }
+
+    public void HideClothesStore()
+    {
+        SetisOpenPanel(false);
+        clothesStoreObject.SetActive(false);
+        clothesStorePanel.SetActive(false);
+        mainPanel.SetActive(true);
+    }
 
     /// <summary>
     /// 선물 가게 패널을 보여줌

@@ -15,6 +15,9 @@ public class PuzzleManager : MonoBehaviour
     #region 변수
     public List<Puzzle> puzzleList = new List<Puzzle>();    // 퍼즐의 모든 정보를 담고 있는 리스트
 
+    [SerializeField]
+    private List<Sprite> puzzleImageList = new List<Sprite>();
+
     // 캐싱
     private PuzzleUI puzzleUI;
     private GetRewardWindow getRewardWindow;
@@ -210,6 +213,8 @@ public class PuzzleManager : MonoBehaviour
             puzzleList = JsonUtility.FromJson<Serialization<Puzzle>>(jdata).target;
             for (int i = 0; i < puzzleList.Count; i++)
             {
+                puzzleList[i].puzzleImage = puzzleImageList[i];
+
                 for (int j = 0; j < puzzleList[i].puzzlePieceList.Count; j++)
                 {
                     if (puzzleList[i].puzzlePieceList[j].isGet)

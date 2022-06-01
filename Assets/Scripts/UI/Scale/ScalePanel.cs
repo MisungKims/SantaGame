@@ -15,7 +15,20 @@ public class ScalePanel : MonoBehaviour
     private Vector3 oneScale = new Vector3(1, 1, 1);
 
     [SerializeField]
+    private Vector3 anotherScale;
+
+    public bool anotherVector = false;
+
+    [SerializeField]
     private float speed = 15f;
+
+    private void Awake()
+    {
+        if (anotherVector)
+        {
+            oneScale = anotherScale;
+        }
+    }
 
     private void OnEnable()
     {

@@ -428,7 +428,17 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   rabbitMat: {fileID: 7914683007052765767}
-  clothes: {fileID: 0}
+  clothes:
+    flag: 0
+    clothesName: 
+    image: {fileID: 0}
+    clothesPrefabs: {fileID: 0}
+    clothesInfo:
+      totalAmount: 0
+      wearingCount: 0
+    pos: {x: 0, y: 0, z: 0}
+    rot: {x: 0, y: 0, z: 0}
+    scale: {x: 0, y: 0, z: 0}
   clothesParent: {fileID: 5342152472306939305}
 --- !u!95 &7882312169074711633
 Animator:

@@ -13,7 +13,6 @@ public class ButtonRaycast : ClickScale
     
     protected virtual void Touched()
     {
-       
         StartCoroutine(ScaleDown());
     }
 

@@ -1,7 +1,7 @@
 /**
  * @brief 오브젝트 풀링
  * @author 김미성
- * @date 22-04-27
+ * @date 22-06-01
  */
 
 using System.Collections;
@@ -40,7 +40,9 @@ public class ObjectPoolingManager : MonoBehaviour
     [SerializeField]
     private Transform clothesParent;
 
-    public List<Queue<Clothes>> clothesQueue = new List<Queue<Clothes>>();
+    public List<Queue<GameObject>> clothesQueue = new List<Queue<GameObject>>();
+
+    
     //public Queue<GameObject> clothesQueue = new Queue<GameObject>();   // 오브젝트들을 담을 큐
 
     #endregion
@@ -90,10 +92,10 @@ public class ObjectPoolingManager : MonoBehaviour
     {
         for (int index = 0; index < ClothesManager.Instance.clothesList.Count; index++)
         {
-            clothesQueue.Add(new Queue<Clothes>());
+            clothesQueue.Add(new Queue<GameObject>());
             for (int i = 0; i < 5; i++)
             {
-                Clothes tempGb = Clothes.Instantiate(ClothesManager.Instance.clothesList[index], clothesParent);
+                GameObject tempGb = GameObject.Instantiate(ClothesManager.Instance.clothesList[index].clothesPrefabs, clothesParent);
                 tempGb.name = i.ToString();
                 tempGb.gameObject.SetActive(false);
                 clothesQueue[index].Enqueue(tempGb);
@@ -137,10 +139,10 @@ public class ObjectPoolingManager : MonoBehaviour
     /// <summary>
     /// 오브젝트를 반환
     /// </summary>
-    public Clothes Get(EClothesFlag flag, Transform parent)
+    public GameObject Get(EClothesFlag flag, Transform parent)
     {
         int index = (int)flag;
-        Clothes tempGb;
+        GameObject tempGb;
 
         if (clothesQueue[index].Count > 0)             // 큐에 게임 오브젝트가 남아 있을 때
         {
@@ -150,7 +152,7 @@ public class ObjectPoolingManager : MonoBehaviour
         }
         else         // 큐에 더이상 없으면 새로 생성
         {
-            tempGb = Clothes.Instantiate(ClothesManager.Instance.clothesList[index], parent);
+            tempGb = GameObject.Instantiate(ClothesManager.Instance.clothesList[index].clothesPrefabs, parent);
         }
 
         return tempGb;
@@ -160,10 +162,10 @@ public class ObjectPoolingManager : MonoBehaviour
     /// <summary>
     /// 다 쓴 오브젝트를 큐에 돌려줌
     /// </summary>
-    public void Set(Clothes gb, EClothesFlag flag)
+    public void Set(GameObject gb, EClothesFlag flag)
     {
         int index = (int)flag;
-        gb.gameObject.SetActive(false);
+        gb.SetActive(false);
         gb.transform.SetParent(clothesParent);
 
         clothesQueue[index].Enqueue(gb);
