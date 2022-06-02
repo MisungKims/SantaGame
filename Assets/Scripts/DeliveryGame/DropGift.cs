@@ -75,9 +75,9 @@ public class DropGift : MonoBehaviour
             gift = chimney.gift;
 
             inventory.RemoveItem(gift, false);       // 인벤토리에서 제거
-            if (gift.wishCount > 0)                     // 위시리스트에 있었던 것들은 위시카운트 감소
+            if (gift.giftInfo.wishCount > 0)                     // 위시리스트에 있었던 것들은 위시카운트 감소
             {
-                gift.wishCount--;
+                gift.giftInfo.wishCount--;
                 deliveryGameManager.wishCount++;
             }
 

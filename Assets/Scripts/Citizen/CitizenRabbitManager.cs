@@ -23,29 +23,35 @@ public class goalObject
     public bool isUse;          // 다른 주민이 이미 사용 중인가?
 }
 
+
 [System.Serializable]
-public class Citizen
+public class Citizen            // 저장하려는 변수들
 {
     public string name;
-    public Material material;
+    public int materiaIdx;
+    public int clothesIdx;
     public Vector3 pos;
 
-    public Citizen(string name, Material material, Vector3 pos)
+    public Citizen(string name, int materiaIdx, int clothesIdx, Vector3 pos)
     {
         this.name = name;
-        this.material = material;
+        this.materiaIdx = materiaIdx;
+        this.clothesIdx = clothesIdx;
         this.pos = pos;
     }
 }
 
 public class CitizenRabbitManager : MonoBehaviour
 {
-
+    #region 변수
     public List<goal> goalPositions = new List<goal>();       // 주민이 갈 수 있는 건물의 위치 리스트
 
-    public List<Citizen> citizenList = new List<Citizen>();
+    public List<Citizen> citizenList = new List<Citizen>();     // 주민의 정보를 담고있는 리스트
 
+    [HideInInspector]
     public List<RabbitCitizen> rabbitCitizens = new List<RabbitCitizen>();
+    
+    //public List<Transform> rabbitCitizens = new List<Transform>();
 
     // 싱글톤
     private static CitizenRabbitManager instance;
@@ -56,10 +62,12 @@ public class CitizenRabbitManager : MonoBehaviour
 
     public Material[] materials;
 
-    public GameObject rabbit;
+    public RabbitCitizen rabbit;
     public GameObject rabbitGroup;
 
     public Transform zeroPos;
+    #endregion
+
 
     public void Awake()
     {
@@ -110,7 +118,17 @@ public class CitizenRabbitManager : MonoBehaviour
     {
         for (int i = 0; i < citizenList.Count; i++)
         {
-            citizenList[i].name = rabbitCitizens[i].name;
+            // 주민의 옷 정보 저장
+            if (rabbitCitizens[i].isWearing)
+            {
+                citizenList[i].clothesIdx = (int)rabbitCitizens[i].clothes.flag;
+            }
+            else
+            {
+                citizenList[i].clothesIdx = -1;
+            }
+            
+            // 주민의 위치 저장
             citizenList[i].pos = rabbitCitizens[i].transform.position;
         }
 
@@ -132,14 +150,16 @@ public class CitizenRabbitManager : MonoBehaviour
             citizenList = JsonUtility.FromJson<Serialization<Citizen>>(jdata).target;
             for (int i = 0; i < citizenList.Count; i++)
             {
-                RabbitCitizen rabbitCitizen = GameObject.Instantiate(rabbit, citizenList[i].pos, Quaternion.identity, rabbitGroup.transform).GetComponent<RabbitCitizen>();
-                if (citizenList[i].material == null)
-                {
-                    int rand = Random.Range(0, 12);
-                    citizenList[i].material = materials[rand];
-                }
-                rabbitCitizen.rabbitMat.material = citizenList[i].material;
+                // 저장된 데이터를 불러와 토끼 주민 생성
+
+                RabbitCitizen rabbitCitizen = RabbitCitizen.Instantiate(rabbit, citizenList[i].pos, Quaternion.identity, rabbitGroup.transform);
+                
+                rabbitCitizen.rabbitMat.material = materials[citizenList[i].materiaIdx];
                 rabbitCitizen.name = citizenList[i].name;
+                if (citizenList[i].clothesIdx > -1)
+                {
+                    rabbitCitizen.PutOn(ClothesManager.Instance.clothesList[citizenList[i].clothesIdx]);
+                }
                 rabbitCitizens.Add(rabbitCitizen);
             }
 

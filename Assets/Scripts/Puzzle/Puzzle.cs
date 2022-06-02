@@ -15,7 +15,6 @@ public class Puzzle
     public Sprite puzzleImage;
     public int line;
     public List<PuzzlePiece> puzzlePieceList = new List<PuzzlePiece>();
-    //public PuzzleButton button;
     public bool isSuccess;
 
     public Puzzle(Sprite puzzleImage, int line, List<PuzzlePiece> puzzlePieceList, bool isSuccess)
@@ -23,13 +22,12 @@ public class Puzzle
         this.puzzleImage = puzzleImage;
         this.line = line;
         this.puzzlePieceList = puzzlePieceList;
-        //this.button = button;
         this.isSuccess = isSuccess;
     }
 }
 
 [System.Serializable]
-public struct PuzzlePiece
+public class PuzzlePiece
 {
    // public int index;
     public Sprite pieceImage;

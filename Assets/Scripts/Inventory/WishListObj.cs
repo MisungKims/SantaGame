@@ -26,6 +26,6 @@ public class WishListObj : MonoBehaviour
 
     void OnEnable()
     {
-        wishCount.text = gift.wishCount.ToString();
+        wishCount.text = gift.giftInfo.wishCount.ToString();
     }
 }

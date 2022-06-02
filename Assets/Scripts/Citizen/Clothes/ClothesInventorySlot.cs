@@ -44,7 +44,7 @@ public class ClothesInventorySlot : MonoBehaviour
         this.clothes = clothes;
         ClothesName = clothes.clothesName;
         clothesImage.sprite = clothes.image;
-        Amount = clothes.totalAmount;
+        Amount = clothes.clothesInfo.totalAmount;
     }
 
     /// <summary>

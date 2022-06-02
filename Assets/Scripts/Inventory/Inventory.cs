@@ -15,6 +15,7 @@ public class GiftItem
 {
     public Gift gift;
     public int amount;
+    public int giftType;
 
     public GiftItem(Gift gift, int amount)
     {
@@ -42,8 +43,6 @@ public class Inventory : MonoBehaviour
         get { return instance; }
     }
 
-    // 캐싱
-    UIManager uIManager;
     #endregion
 
     #region 유니티 함수
@@ -60,8 +59,6 @@ public class Inventory : MonoBehaviour
                 Destroy(this.gameObject);
         }
 
-        uIManager = UIManager.Instance;
-
         LoadData();
     }
     #endregion
@@ -75,7 +72,7 @@ public class Inventory : MonoBehaviour
     {
         count++;
 
-        int giftInvIndex = gift.inventoryIndex;
+        int giftInvIndex = gift.giftInfo.inventoryIndex;
 
         if (giftInvIndex > -1)          // 이미 인벤토리에 있는 선물이라면
         {
@@ -84,7 +81,7 @@ public class Inventory : MonoBehaviour
         }
         else
         {
-            gift.inventoryIndex = giftItems.Count;
+            gift.giftInfo.inventoryIndex = giftItems.Count;
             giftItems.Add(new GiftItem(gift, 1));       // 인벤토리에 없다면 새로 생성
             //UIManager.Instance.slots[giftItems.Count - 1].SetSlot(giftItems[giftItems.Count - 1]);     // 슬롯에 저장
         }
@@ -98,7 +95,7 @@ public class Inventory : MonoBehaviour
     public void RemoveItem(Gift gift, bool isUseSlot)
     {
         count--;
-        int giftInvIndex = gift.inventoryIndex;
+        int giftInvIndex = gift.giftInfo.inventoryIndex;
 
         if (giftInvIndex > -1)                          // 인벤토리에 아이템이 있을 때
         {
@@ -108,13 +105,13 @@ public class Inventory : MonoBehaviour
             if (giftItems[giftInvIndex].amount <= 0)    // 수량이 0 이하이면 인벤토리에서 완전 제거
             {
                 giftItems.RemoveAt(giftInvIndex);
-                gift.inventoryIndex = -1;
+                gift.giftInfo.inventoryIndex = -1;
 
                 if (giftItems.Count > 0)    // 제거 후 인벤토리에 다른 아이템이 있으면 UI 재배치
                 {
                     for (int i = giftInvIndex; i < giftItems.Count; i++)
                     {
-                        giftItems[i].gift.inventoryIndex -= 1;          // 제거한 슬롯의 뒤에 있는 슬롯을 앞으로 한 칸씩 당김
+                        giftItems[i].gift.giftInfo.inventoryIndex -= 1;          // 제거한 슬롯의 뒤에 있는 슬롯을 앞으로 한 칸씩 당김
                         //UIManager.Instance.slots[giftItems[i].gift.inventoryIndex].SetSlot(giftItems[giftItems[i].gift.inventoryIndex]);
                     }
                    if(isUseSlot) slots[giftItems.Count].SetEmpty();          // 한 칸씩 당기면 맨 뒤의 슬롯은 필요없으므로 비워둠
@@ -202,7 +199,11 @@ public class Inventory : MonoBehaviour
             string jdata = File.ReadAllText(Application.persistentDataPath + "/InventoryData.json");
 
             giftItems = JsonUtility.FromJson<Serialization<GiftItem>>(jdata).target;
-            
+            for (int i = 0; i < giftItems.Count; i++)
+            {
+                giftItems[i].gift = GiftManager.Instance.giftList[(int)giftItems[i].gift.giftType];
+            }
+
             return true;
         }
 

@@ -80,38 +80,44 @@ public class InviteRabbit : MonoBehaviour
 
     #region 함수
     /// <summary>
-    /// 토끼를 초대 (인스펙터에서 호출)
+    /// 토끼를 초대 (새로운 토끼 생성) (인스펙터에서 호출)
     /// </summary>
     public void Invite()
     {
-        if (!GoldManager.CompareBigintAndUnit(gameManager.MyCarrots, price))    // 지불할 당근이 없다면 return
+        // 지불할 당근이 없다면 return
+        if (!GoldManager.CompareBigintAndUnit(gameManager.MyCarrots, price))    
         {
             return;
         }
 
-        this.gameObject.SetActive(false);   // 토끼 초대창 닫기
+        // 토끼 초대창 닫기
+        this.gameObject.SetActive(false);   
 
         // 토끼 주민 생성 후 카메라의 타깃으로 설정
         RabbitCitizen rabbitCitizen = GameObject.Instantiate(rabbit, rabbitGroup.transform).GetComponent<RabbitCitizen>();
         CitizenRabbitManager.Instance.rabbitCitizens.Add(rabbitCitizen);
-
         rabbitCitizen.name = CitizenRabbitManager.Instance.rabbitCitizens.Count.ToString();
         rabbitCitizen.SetCamTargetThis();
 
-        gameManager.MyCarrots -= GoldManager.UnitToBigInteger(price);  // 초대 비용 지불
+        // 초대 비용 지불
+        gameManager.MyCarrots -= GoldManager.UnitToBigInteger(price);  
 
-        Count = ++gameManager.CitizenCount + 1;
+        // 토끼 주민 수 증가
+        Count = ++gameManager.CitizenCount + 1;         
 
-        gameManager.goldEfficiency *= 1.5f;     // 효율 증가
+        // 효율 증가
+        gameManager.goldEfficiency *= 1.5f;             
 
-        Price = GoldManager.MultiplyUnit(price, magnification);
+        // 토끼 초대 가격 증가
+        Price = GoldManager.MultiplyUnit(price, magnification);     
         magnification += 0.5f;
 
+        // 토끼의 Material을 랜덤으로 설정
         int rand = Random.Range(0, 12);
-        rabbitCitizen.rabbitMat.material = CitizenRabbitManager.Instance.materials[rand];       // 토끼의 Material을 랜덤으로 설정
+        rabbitCitizen.rabbitMat.material = CitizenRabbitManager.Instance.materials[rand];       
 
-
-        Citizen citizen = new Citizen(rabbitCitizen.name, CitizenRabbitManager.Instance.materials[rand], rabbitCitizen.transform.position);
+        // 토끼의 정보를 저장할 새 인스턴스 생성
+        Citizen citizen = new Citizen(rabbitCitizen.name, rand, -1, rabbitCitizen.transform.position);
         CitizenRabbitManager.Instance.citizenList.Add(citizen);
     }
 

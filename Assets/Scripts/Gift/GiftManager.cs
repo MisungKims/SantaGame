@@ -15,7 +15,10 @@ public class GiftManager : MonoBehaviour
     #region 변수
     public List<Gift> giftList = new List<Gift>();
 
-    public List<Sprite> giftSprites = new List<Sprite>();
+    [HideInInspector]
+    public List<GiftInfo> giftInfoList = new List<GiftInfo>();      // 저장할 데이터
+
+    //public List<Sprite> giftSprites = new List<Sprite>();
 
     int totalWeight = 0;
 
@@ -48,10 +51,8 @@ public class GiftManager : MonoBehaviour
 
         if (!LoadData())
         {
-            for (int i = 0; i < giftList.Count; i++)
-            {
-                giftList[i].inventoryIndex = -1;
-            }
+            // 데이터 로드에 실패 시 데이터 초기화
+            InitData();
         }
     }
 
@@ -86,48 +87,6 @@ public class GiftManager : MonoBehaviour
         return null;
     }
 
-    ///// <summary>
-    ///// 위시 리스트에 추가된 선물을 랜덤으로 반환
-    ///// </summary>
-    ///// <returns></returns>
-    //public Gift RandomWishListGift()
-    //{
-    //    if (!IsHaveWishList())       // 위시리스트가 비어있을 때
-    //    {
-    //        return null;
-    //    }
-
-    //    Gift gift = RandomGift();
-    //    if (gift.wishCount > 0)     // 랜덤으로 가져온 선물이 위시리스트에 있을 때 반환
-    //    {
-    //        return gift;
-    //    }
-    //    else
-    //    {
-    //        return RandomWishListGift();
-    //    }
-    //}
-
-    ///// <summary>
-    ///// 위시리스트에 모든 선물이 없으면 false 반환 
-    ///// </summary>
-    ///// <returns>위시리스트에 선물이 하나라도 있으면 true</returns>
-    //public bool IsHaveWishList()
-    //{
-    //    bool returnVal = false;
-
-    //    for (int i = 0; i < giftList.Count; i++)
-    //    {
-    //        if (giftList[i].wishCount > 0)
-    //        {
-    //            returnVal = true;
-    //            break;
-    //        }
-    //    }
-
-    //    return returnVal;
-    //}
-
     /// <summary>
     /// 랜덤으로 선물을 받음
     /// </summary>
@@ -147,6 +106,8 @@ public class GiftManager : MonoBehaviour
         Inventory.Instance.AddItem(gift);       // 인벤토리에 저장
     }
     #endregion
+
+
     //앱의 활성화 상태를 저장하는 변수
     bool isPaused = false;
 
@@ -179,7 +140,7 @@ public class GiftManager : MonoBehaviour
     /// </summary>
     void SaveData()
     {
-        string jdata = JsonUtility.ToJson(new Serialization<Gift>(giftList));
+        string jdata = JsonUtility.ToJson(new Serialization<GiftInfo>(giftInfoList));
         File.WriteAllText(Application.persistentDataPath + "/GiftData.json", jdata);
     }
 
@@ -194,15 +155,34 @@ public class GiftManager : MonoBehaviour
         {
             string jdata = File.ReadAllText(Application.persistentDataPath + "/GiftData.json");
 
-            giftList = JsonUtility.FromJson<Serialization<Gift>>(jdata).target;
+            giftInfoList = JsonUtility.FromJson<Serialization<GiftInfo>>(jdata).target;
             for (int i = 0; i < giftList.Count; i++)
             {
-                giftList[i].giftImage = giftSprites[i];
+                giftList[i].giftInfo = giftInfoList[i];
             }
+            
+            //giftList = JsonUtility.FromJson<Serialization<GiftInfo>>(jdata).target;
+            //for (int i = 0; i < giftList.Count; i++)
+            //{
+            //    giftList[i].giftImage = giftSprites[i];
+            //}
 
             return true;
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// 데이터 초기화
+    /// </summary>
+    public void InitData()
+    {
+        for (int i = 0; i < giftList.Count; i++)
+        {
+            GiftInfo giftInfo = new GiftInfo(0, -1);
+            giftInfoList.Add(giftInfo);
+            giftList[i].giftInfo = giftInfo;
+        }
     }
 }

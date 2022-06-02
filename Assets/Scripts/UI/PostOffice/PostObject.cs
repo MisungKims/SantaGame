@@ -75,7 +75,7 @@ public class PostObject : MonoBehaviour
 
     public int index;           // 편지 목록창에서의 인덱스
 
-    public int listIndex;       // 편지 리스트에서의 인덱스
+   // public int listIndex;       // 편지 리스트에서의 인덱스
 
     public Gift gift;
 
@@ -86,40 +86,47 @@ public class PostObject : MonoBehaviour
     #region 유니티 함수
     public void Awake()
     {
-        if (PostOfficeManager.Instance.havePostList.Count > listIndex)
+        writingPad = PostOfficeManager.Instance.writingPad;
+    }
+
+    #endregion
+
+    #region 함수
+    /// <summary>
+    /// 알림 이미지 새로고침
+    /// </summary>
+    public void RefreshNotification()
+    {
+        if (PostOfficeManager.Instance.havePostList.Count > index)
         {
-            if (PostOfficeManager.Instance.havePostList[listIndex].isRead)
+            // 읽은 편지는 알림 이미지를 보이지 않도록
+            if (PostOfficeManager.Instance.havePostList[index].isRead)
             {
-                notificationImage.SetActive(false);
+                notificationImage.SetActive(false);         
             }
             else
             {
                 notificationImage.SetActive(true);
             }
         }
-
-
-        writingPad = PostOfficeManager.Instance.writingPad;
     }
-    #endregion
 
-    #region 함수
     /// <summary>
     /// 편지를 확인 (인스펙터에서 호출)
     /// </summary>
     public void Read()
     {
-        if (!PostOfficeManager.Instance.havePostList[listIndex].isRead)        // 편지를 처음 읽었을 때
+        if (!PostOfficeManager.Instance.havePostList[index].isRead)        // 편지를 처음 읽었을 때
         {
             //IsRead = true;
 
-            gift.wishCount++;        // 선물을 위시리스트에 추가
+            gift.giftInfo.wishCount++;        // 선물을 위시리스트에 추가
 
             QuestManager.Instance.Success(questID);        // 퀘스트 성공
 
             GameManager.Instance.IncreaseGauge(3);      // 게이지 증가
 
-            PostOfficeManager.Instance.havePostList[listIndex].isRead = true;
+            PostOfficeManager.Instance.havePostList[index].isRead = true;
 
             notificationImage.SetActive(false);
         }
