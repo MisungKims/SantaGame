@@ -129,11 +129,15 @@ public class PostObject : MonoBehaviour
             PostOfficeManager.Instance.havePostList[index].isRead = true;
 
             notificationImage.SetActive(false);
-        }
 
-        writingPad.gameObject.SetActive(true);
+            writingPad.canMove = true;
+            writingPad.giftSprite = gift.giftImage;
+        }
+        else writingPad.canMove = false;
+
         writingPad.PostName = postName;
         writingPad.PostConent = postContent;
+        writingPad.gameObject.SetActive(true);
     }
 
     /// <summary>

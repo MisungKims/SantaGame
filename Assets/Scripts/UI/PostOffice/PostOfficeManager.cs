@@ -68,8 +68,6 @@ public class PostOfficeManager : MonoBehaviour
     // 그 외 변수
     public int maximum;        // 편지함 맥시멈
 
-    [SerializeField]
-    private ObjectPoolingManager ObjectPoolingManager;
 
     #endregion
 
@@ -162,8 +160,7 @@ public class PostOfficeManager : MonoBehaviour
         {
             yield return waitForSeconds;
 
-            //int randIndex = Random.Range(0, postList.Count);        // 랜덤으로 편지 내용을 정함
-            int randIndex = Random.Range(0, 1);        // 랜덤으로 편지 내용을 정함
+            int randIndex = Random.Range(0, postList.Count);        // 랜덤으로 편지 내용을 정함
             if (postUIList.Count < maximum)          // 편지함이 차지 않았을 때만 생성
             {
                 PostStruct postStruct = new PostStruct(
