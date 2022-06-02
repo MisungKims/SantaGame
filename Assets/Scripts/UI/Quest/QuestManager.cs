@@ -208,6 +208,9 @@ public class QuestManager : MonoBehaviour
                 if (questList[id].count == questList[id].maxCount)      // 퀘스트를 완료했을 때
                 {
                     notificationImage.SetActive(true);
+
+                    ERewardType rewardType = RewardManager.StringToRewardType(questList[id].rewardType);
+                    RewardManager.GetReward(rewardType, questList[id].amount);
                 }
 
             }

@@ -23,11 +23,13 @@ public class ClothesManager : MonoBehaviour
     // 리스트
     public List<Clothes> clothesList = new List<Clothes>();             // 옷 리스트
 
-    [SerializeField]
-    private List<Sprite> clothesImageList = new List<Sprite>();      // 옷의 이미지 리스트
+    public List<ClothesInfo> clothesInfoList = new List<ClothesInfo>();
 
-    [SerializeField]
-    private List<GameObject> clothesPrefabList = new List<GameObject>();      // 옷의 프리팹 리스트
+    //[SerializeField]
+    //private List<Sprite> clothesImageList = new List<Sprite>();      // 옷의 이미지 리스트
+
+    //[SerializeField]
+    //private List<GameObject> clothesPrefabList = new List<GameObject>();      // 옷의 프리팹 리스트
 
     // UI 변수
     [Header("-------- Citizen Panel Slot")]
@@ -69,19 +71,12 @@ public class ClothesManager : MonoBehaviour
         {
             for (int i = 0; i < clothesList.Count; i++)
             {
-                clothesList[i].totalAmount = 0;
-                clothesList[i].wearingCount = 0;
+                ClothesInfo info = new ClothesInfo(0, 0);
+                clothesInfoList.Add(info);
+                clothesList[i].clothesInfo = info;
             }
         }
         
-
-        //for (int i = 0; i < clothesList.Count; i++)
-        //{
-        //    clothesList[i].image = clothesImageList[i];
-        //    clothesList[i].clothesPrefabs = clothesPrefabList[i];
-        //}
-
-      
 
         getRewardWindow = UIManager.Instance.getRewardWindow;
 
@@ -105,12 +100,12 @@ public class ClothesManager : MonoBehaviour
     /// <param name="clothes"></param>
     public void GetClothes(Clothes clothes)
     {
-        if (clothes.totalAmount <= 0)       // 새로 받은 옷일 때
+        if (clothes.clothesInfo.totalAmount <= 0)       // 새로 받은 옷일 때
         {
             AddClothesSlot(clothes);
         }
 
-        clothes.totalAmount++;
+        clothes.clothesInfo.totalAmount++;
 
         getRewardWindow.OpenWindow(clothes.clothesName, clothes.image);      // 보상 획득창 보여줌
 
@@ -169,7 +164,7 @@ public class ClothesManager : MonoBehaviour
         int index = 0;
         for (int i = 0; i < clothesList.Count; i++)
         {
-            if (clothesList[i].totalAmount > 0)
+            if (clothesList[i].clothesInfo.totalAmount > 0)
             {
                 clotesInventorySlots[index].gameObject.SetActive(true);
                 clotesInventorySlots[index].Init(clothesList[i]);
@@ -245,7 +240,7 @@ public class ClothesManager : MonoBehaviour
     /// </summary>
     void SaveData()
     {
-        string jdata = JsonUtility.ToJson(new Serialization<Clothes>(clothesList));
+        string jdata = JsonUtility.ToJson(new Serialization<ClothesInfo>(clothesInfoList));
         File.WriteAllText(Application.persistentDataPath + "/ClothesData.json", jdata);
     }
 
@@ -260,16 +255,15 @@ public class ClothesManager : MonoBehaviour
         {
             string jdata = File.ReadAllText(Application.persistentDataPath + "/ClothesData.json");
 
-            clothesList = JsonUtility.FromJson<Serialization<Clothes>>(jdata).target;
-            for (int i = 0; i < clothesList.Count; i++)
+            clothesInfoList = JsonUtility.FromJson<Serialization<ClothesInfo>>(jdata).target;
+            for (int i = 0; i < clothesInfoList.Count; i++)
             {
-                if (clothesList[i].totalAmount > 0)
+                clothesList[i].clothesInfo = clothesInfoList[i];
+
+                if (clothesList[i].clothesInfo.totalAmount > 0)
                 {
                     AddClothesSlot(clothesList[i]);
                 }
-
-                clothesList[i].image = clothesImageList[i];
-                clothesList[i].clothesPrefabs = clothesPrefabList[i];
             }
 
             return true;

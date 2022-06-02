@@ -15,14 +15,24 @@ public class PuzzleManager : MonoBehaviour
     #region 변수
     public List<Puzzle> puzzleList = new List<Puzzle>();    // 퍼즐의 모든 정보를 담고 있는 리스트
 
+    public List<PuzzleButton> puzzleButtons = new List<PuzzleButton>();
+
+    // 퍼즐의 이미지
     [SerializeField]
     private List<Sprite> puzzleImageList = new List<Sprite>();
+
+    [System.Serializable]
+    class puzzlePieceSprites
+    {
+        public Sprite[] sprite;
+    }
+
+    [SerializeField]
+    private List<puzzlePieceSprites> puzzlePieceImageList = new List<puzzlePieceSprites>();
 
     // 캐싱
     private PuzzleUI puzzleUI;
     private GetRewardWindow getRewardWindow;
-
-    public List<PuzzleButton> puzzleButtons = new List<PuzzleButton>();
 
     // 싱글톤
     private static PuzzleManager instance;
@@ -217,6 +227,8 @@ public class PuzzleManager : MonoBehaviour
 
                 for (int j = 0; j < puzzleList[i].puzzlePieceList.Count; j++)
                 {
+                    //puzzleList[i].puzzlePieceList[j].isGet = true;
+                    puzzleList[i].puzzlePieceList[j].pieceImage = puzzlePieceImageList[i].sprite[j];
                     if (puzzleList[i].puzzlePieceList[j].isGet)
                     {
                         puzzleButtons[i].Count++;

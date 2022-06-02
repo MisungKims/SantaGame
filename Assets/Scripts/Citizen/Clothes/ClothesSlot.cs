@@ -81,8 +81,8 @@ public class ClothesSlot : MonoBehaviour
     /// </summary>
     void SetInteractable()
     {
-        // 옷을 입을 수 없고 토끼가 슬롯의 옷을 입고 있지 않을 때 버튼을 누를 수 없게
-        if (clothes.totalAmount <= clothes.wearingCount && rabbitCitizen.clothes != clothes)
+        // 옷을 입을 수 없고, 토끼가 슬롯의 옷을 입고 있지 않을 때 버튼을 누를 수 없게
+        if (clothes.clothesInfo.totalAmount <= clothes.clothesInfo.wearingCount && rabbitCitizen.clothes != clothes)
         {
             button.interactable = false;
         }
@@ -106,7 +106,7 @@ public class ClothesSlot : MonoBehaviour
         }
         else   // 똑같은 옷을 입고있지 않을 때는 입힘
         {
-            if (clothes.totalAmount > clothes.wearingCount)
+            if (clothes.clothesInfo.totalAmount > clothes.clothesInfo.wearingCount)
             {
                 if (rabbitCitizen.clothes != null)      // 이미 다른 옷을 입고 있을 때에는
                 {
@@ -134,7 +134,7 @@ public class ClothesSlot : MonoBehaviour
     {
         if (rabbitCitizen.PutOn(clothes))
         {
-            clothes.wearingCount++;
+            clothes.clothesInfo.wearingCount++;
             IsWearing = true;
         }
     }
@@ -145,7 +145,7 @@ public class ClothesSlot : MonoBehaviour
     void PutOff()
     {
         rabbitCitizen.PutOff();
-        clothes.wearingCount--;
+        clothes.clothesInfo.wearingCount--;
 
         IsWearing = false;
     }

@@ -64,6 +64,7 @@ public class RabbitCitizen : MonoBehaviour
 
     int preGoal = -1;
 
+    public bool isWearing = false;
     public Clothes clothes = null;      // ÁÖ¹ÎÀÇ ¿Ê(ÄÚµðÅÛ)
     private GameObject clothesObj;
 
@@ -423,6 +424,8 @@ public class RabbitCitizen : MonoBehaviour
             clothesObj.transform.localEulerAngles = clothes.rot;
             clothesObj.transform.localScale = clothes.scale;
 
+            isWearing = true;
+
             return true;
         }
 
@@ -434,6 +437,7 @@ public class RabbitCitizen : MonoBehaviour
     /// </summary>
     public void PutOff()
     {
+        isWearing = false;
         ObjectPoolingManager.Instance.Set(clothesObj, clothes.flag);
         clothes = null;
     }

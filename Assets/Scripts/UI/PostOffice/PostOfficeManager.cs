@@ -26,7 +26,6 @@ public class PostStruct
         this.isRead = isRead;
     }
 }
-
 #endregion
 
 public class PostOfficeManager : MonoBehaviour
@@ -42,7 +41,6 @@ public class PostOfficeManager : MonoBehaviour
     // CSV 파일에서 가져올 전체 편지 리스트
     private List<PostStruct> postList = new List<PostStruct>();
 
-    
     public List<PostStruct> havePostList = new List<PostStruct>();  // 우체통에 있는 편지 리스트
 
     // 편지 UI 생성
@@ -164,7 +162,8 @@ public class PostOfficeManager : MonoBehaviour
         {
             yield return waitForSeconds;
 
-            int randIndex = Random.Range(0, postList.Count);        // 랜덤으로 편지 내용을 정함
+            //int randIndex = Random.Range(0, postList.Count);        // 랜덤으로 편지 내용을 정함
+            int randIndex = Random.Range(0, 1);        // 랜덤으로 편지 내용을 정함
             if (postUIList.Count < maximum)          // 편지함이 차지 않았을 때만 생성
             {
                 PostStruct postStruct = new PostStruct(
@@ -175,7 +174,7 @@ public class PostOfficeManager : MonoBehaviour
 
                 havePostList.Add(postStruct);
                 
-                PostOfficeInstance(havePostList.Count - 1, postStruct);
+                PostOfficeInstance(postStruct);
             }
         }
     }
@@ -183,14 +182,13 @@ public class PostOfficeManager : MonoBehaviour
     /// <summary>
     /// 편지 인스턴스 생성
     /// </summary>
-    void PostOfficeInstance(int index, PostStruct post)
+    void PostOfficeInstance(PostStruct post)
     {
         PostObject newObj = ObjectPoolingManager.Instance.Get(EObjectFlag.post).GetComponent<PostObject>();
         
         newObj.PostName = post.name;
         newObj.PostConent = post.content;
         newObj.transform.GetComponent<RectTransform>().anchoredPosition = UITransformList[0];       // 새로온 편지는 맨 상단으로 가도록
-        newObj.listIndex = index;
 
         Gift gift = GiftManager.Instance.giftList[post.giftIndex];
         newObj.gift = gift;
@@ -203,14 +201,15 @@ public class PostOfficeManager : MonoBehaviour
 
         parentRectTransform.sizeDelta = parentSizeList[postUIList.Count];
 
+        newObj.RefreshNotification();
+
         postUIList.Add(newObj);
        
         // 인벤토리가 열려있고, 위시리스트에 추가한 선물이 인벤토리에 있었으면 인벤토리 새로고침
-        if (UIManager.Instance.inventoryPanel.activeSelf && gift.inventoryIndex > -1)
+        if (UIManager.Instance.inventoryPanel.activeSelf && gift.giftInfo.inventoryIndex > -1)
         {
             Inventory.Instance.RefreshInventory();
         }
-
     }
 
     /// <summary>
@@ -228,8 +227,11 @@ public class PostOfficeManager : MonoBehaviour
         for (int i = 0; i < postUIList.Count; i++)
         {
             postUIList[i].index = i;
+            //postUIList[i].listIndex = i;
+            //postUIList[i].RefreshNotification();
             postUIList[i].RefreshTransform(UITransformList[postUIList.Count - 1 - i]);
         }
+
 
         if (postUIList.Count != 0)
         {
@@ -288,7 +290,7 @@ public class PostOfficeManager : MonoBehaviour
             havePostList = JsonUtility.FromJson<Serialization<PostStruct>>(jdata).target;
             for (int i = 0; i < havePostList.Count; i++)
             {
-                PostOfficeInstance(i, havePostList[i]);
+                PostOfficeInstance(havePostList[i]);
             }
 
             return true;

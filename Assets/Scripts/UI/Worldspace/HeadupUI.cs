@@ -53,7 +53,7 @@ public class HeadupUI : MonoBehaviour
         while (true)
         {
             Distance = Vector3.Distance(cam.transform.position, this.transform.position);
-            if (Distance < 15)
+            if (Distance < 17)
             {
                 canvas.enabled = false;
             }

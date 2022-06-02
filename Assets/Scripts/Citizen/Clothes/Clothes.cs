@@ -10,8 +10,11 @@ public class Clothes
     public int price;
     public Sprite image;
     public GameObject clothesPrefabs;
-    public int totalAmount;
-    public int wearingCount;
+
+    public ClothesInfo clothesInfo;
+
+    //public int totalAmount;
+    //public int wearingCount;
 
 
     //public ClothesInfo clothesInfo;
