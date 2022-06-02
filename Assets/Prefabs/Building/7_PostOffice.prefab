@@ -866,6 +866,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7336652118473114477}
+  - component: {fileID: 5268953238344914896}
   m_Layer: 0
   m_Name: 7_PostOffice
   m_TagString: Untagged
@@ -893,6 +894,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 175.998, z: 0}
+--- !u!114 &5268953238344914896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7969918437172795863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1ce9e436561692449ecbbf3a0d1452c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  havePostList: []
+  postObj: {fileID: 6554328222128341630, guid: 806ae81a6b7d83b48a1a948b4a187557, type: 3}
+  parent: {fileID: 0}
+  UITransformList: []
+  parentSizeList: []
+  writingPad: {fileID: 0}
+  maximum: 20
+  ObjectPoolingManager: {fileID: 0}
 --- !u!1 &8028237526299306681
 GameObject:
   m_ObjectHideFlags: 0
