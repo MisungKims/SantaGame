@@ -48,7 +48,6 @@ public class RewardManager : MonoBehaviour
     /// </summary>
     public static void GetReward(ERewardType reward, string amount)
     {
-        //Debug.Log(GameManager.Instance.MyGold);
         switch (reward)
         {
             case ERewardType.gold:
@@ -77,7 +76,6 @@ public class RewardManager : MonoBehaviour
             default:
                 break;
         }
-        //Debug.Log(GameManager.Instance.MyGold);
     }
 
     /// <summary>

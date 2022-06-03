@@ -55,29 +55,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // 데이터가 저장될 경로
-   // string path = Application.dataPath + "/Resources/MyData.json";
-
-    //[Header("---------- UI 변수")]
-    //[SerializeField]
-    //private Slider gaugeSlider;
-    //[SerializeField]
-    //private Text gaugeText;
-    //[SerializeField]
-    //private Text lvText;
-    //[SerializeField]
-    //private Text goldText;
-    //[SerializeField]
-    //private Text carrotsText;
-    //[SerializeField]
-    //private Text diaText;
-    //[SerializeField]
-    //private Text citizenCountText;
-    //[SerializeField]
-    //private Text dateText;
-    //[SerializeField]
-    //private GameObject gaugeBellImage;
-
     private Animator gaugeAnim;
 
     public Text text;   // 나중에 지워야함
@@ -168,7 +145,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private int lastDay;
+    public int lastDay;
     private int month = 1, year = 0;
     private int day = 1;
     public int Day
@@ -194,9 +171,17 @@ public class GameManager : MonoBehaviour
                 else month++;
             }
 
-            if (GameLoadManager.CurrentScene().name == "SantaVillage")
+            
+            UIManager.Instance.dateText.text = String.Format("{0}년 {1}월 {2}일", year, month, day);
+
+            // 12월 25일에만 선물전달버튼이 보이도록
+            if (month == 12 && day == 25)
             {
-                UIManager.Instance.dateText.text = String.Format("{0}년 {1}월 {2}일", year, month, day);
+                deliveryButtonObj.SetActive(true);
+            }
+            else if(deliveryButtonObj.activeSelf)
+            {
+                deliveryButtonObj.SetActive(false);
             }
         }
     }
@@ -211,7 +196,11 @@ public class GameManager : MonoBehaviour
 
     public string lastConnectionTime;       // 마지막으로 접속한 시간
 
-    private WaitForSeconds waitForSeconds;      // 캐싱
+    // 캐싱
+    private WaitForSeconds waitForSeconds;
+
+    [SerializeField]
+    private GameObject deliveryButtonObj;
 
     [SerializeField]
     private GameObject deliveryGame;
@@ -219,7 +208,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject vaillage;
 
-    public string dataPath;
+    //public string dataPath;
 
     #endregion
 
@@ -294,7 +283,7 @@ public class GameManager : MonoBehaviour
         data.citizenCount = citizenCount;
         data.year = year;
         data.month = month;
-        data.day = day;
+        data.day = Day;
         data.attendanceDate = attendanceDate;
         data.initQuestDate = initQuestDate;
         data.lastConnectionTime = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
@@ -319,7 +308,7 @@ public class GameManager : MonoBehaviour
             CitizenCount = data.citizenCount;
             year = data.year;
             month = data.month;
-            day = data.day;
+            Day = data.day;
             attendanceDate = data.attendanceDate;
             initQuestDate = data.initQuestDate;
             lastConnectionTime = data.lastConnectionTime;
@@ -406,11 +395,10 @@ public class GameManager : MonoBehaviour
             MyDia = 0;
             year = 0;
             month = 1;
-            day = 1;
             lastConnectionTime = "";
         }
 
-        dataPath = Application.persistentDataPath + "/MyData.json";
+        //dataPath = Application.persistentDataPath + "/MyData.json";
 
         waitForSeconds = new WaitForSeconds(dayCount);
 

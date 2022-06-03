@@ -918,6 +918,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5350524002202049711}
+  - component: {fileID: 1364870288913817202}
   m_Layer: 0
   m_Name: 8_ClothesStore
   m_TagString: Untagged
@@ -934,7 +935,7 @@ Transform:
   m_GameObject: {fileID: 4686894365237577237}
   m_LocalRotation: {x: -0, y: 0.99961823, z: -0, w: 0.02762985}
   m_LocalPosition: {x: -0.110999905, y: 0.0002000004, z: 0.278}
-  m_LocalScale: {x: 0.022599999, y: 0.022599999, z: 0.022599999}
+  m_LocalScale: {x: 1.1300001, y: 1.13, z: 1.1300001}
   m_Children:
   - {fileID: 6540994928114598306}
   - {fileID: 7385166373212430146}
@@ -944,6 +945,144 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 176.833, z: 0}
+--- !u!114 &1364870288913817202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4686894365237577237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e62cb0ea383cf24ea666988e625c738, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clothesList:
+  - flag: 0
+    clothesName: "\uC720\uCE58\uC6D0\uC0DD \uBAA8\uC790"
+    price: 10
+    image: {fileID: 21300000, guid: 0ae6885fb9876364c96ada4fd9904dd2, type: 3}
+    clothesPrefabs: {fileID: 6261172476416364916, guid: e47ef3ff4fb7d51439cd99cb591f3e9e, type: 3}
+    clothesInfo:
+      totalAmount: 0
+      wearingCount: 0
+    pos: {x: -0.0018, y: -0.004, z: 0.0592}
+    rot: {x: 270.01978, y: 0, z: 0}
+    scale: {x: 40.01445, y: 40.01445, z: 18.096}
+  - flag: 1
+    clothesName: "\uC655\uAD00"
+    price: 10
+    image: {fileID: 21300000, guid: 0ae6885fb9876364c96ada4fd9904dd2, type: 3}
+    clothesPrefabs: {fileID: 5163720191547762751, guid: 36d2631ce3cc26b4db0994526aad9f22, type: 3}
+    clothesInfo:
+      totalAmount: 0
+      wearingCount: 0
+    pos: {x: 0.0036000195, y: 0.05403375, z: 0.07953549}
+    rot: {x: 0, y: 180, z: 0}
+    scale: {x: 0.5624505, y: 0.5624506, z: 0.5624505}
+  - flag: 2
+    clothesName: "\uC0B0\uD0C0 \uBAA8\uC790"
+    price: 10
+    image: {fileID: 21300000, guid: 0ae6885fb9876364c96ada4fd9904dd2, type: 3}
+    clothesPrefabs: {fileID: 9134201676303722265, guid: 583c187438b0eea418100ca42cb94fd5, type: 3}
+    clothesInfo:
+      totalAmount: 0
+      wearingCount: 0
+    pos: {x: -0.0009000832, y: 0.062433776, z: 0.062835485}
+    rot: {x: 0.07265029, y: 153.70401, z: 0.3110149}
+    scale: {x: 0.64142424, y: 0.6414244, z: 0.64142436}
+  - flag: 3
+    clothesName: "\uAF43"
+    price: 10
+    image: {fileID: 21300000, guid: 0ae6885fb9876364c96ada4fd9904dd2, type: 3}
+    clothesPrefabs: {fileID: 7729372279294513657, guid: f00a43b80cd60494ca350a14bd85a032, type: 3}
+    clothesInfo:
+      totalAmount: 0
+      wearingCount: 0
+    pos: {x: 0, y: 0.016533798, z: 0.099035546}
+    rot: {x: 270, y: 180, z: 0}
+    scale: {x: 0.00044147213, y: 0.00044147202, z: 0.00044147213}
+  - flag: 4
+    clothesName: "\uC548\uACBD"
+    price: 10
+    image: {fileID: 21300000, guid: 0ae6885fb9876364c96ada4fd9904dd2, type: 3}
+    clothesPrefabs: {fileID: 6726632771788292192, guid: 05e4abe09f2adb640955d6bfd0b0d515, type: 3}
+    clothesInfo:
+      totalAmount: 0
+      wearingCount: 0
+    pos: {x: 0, y: -0.060566172, z: 0.16743548}
+    rot: {x: 0.000002561321, y: -1.9083329e-14, z: -0.00000085377366}
+    scale: {x: 0.0047410047, y: 0.0047410047, z: 0.0047410056}
+  - flag: 5
+    clothesName: "\uC120\uC7A5 \uBAA8\uC790"
+    price: 15
+    image: {fileID: 21300000, guid: 0ae6885fb9876364c96ada4fd9904dd2, type: 3}
+    clothesPrefabs: {fileID: 8644214564922634138, guid: 8c86cee74f3b5cd4fb24f4d79e0b76d7, type: 3}
+    clothesInfo:
+      totalAmount: 0
+      wearingCount: 0
+    pos: {x: -0.0040000565, y: 0.023233766, z: 0.059035487}
+    rot: {x: -0.000002329809, y: 23.834852, z: -0.0000013642888}
+    scale: {x: 0.02581326, y: 0.025813265, z: 0.02581326}
+  - flag: 6
+    clothesName: "\uD504\uB85C\uD3A0\uB7EC \uBAA8\uC790"
+    price: 15
+    image: {fileID: 21300000, guid: 0ae6885fb9876364c96ada4fd9904dd2, type: 3}
+    clothesPrefabs: {fileID: 3879632567313981265, guid: ab432076f86b94f4db32e564b9ff2c62, type: 3}
+    clothesInfo:
+      totalAmount: 0
+      wearingCount: 0
+    pos: {x: 0, y: -0.022566192, z: 0.10753553}
+    rot: {x: 0.000002561321, y: -1.9083329e-14, z: -0.00000085377366}
+    scale: {x: 0.026655732, y: 0.026655735, z: 0.026655737}
+  - flag: 7
+    clothesName: "\uB9AC\uBCF8"
+    price: 15
+    image: {fileID: 21300000, guid: 0ae6885fb9876364c96ada4fd9904dd2, type: 3}
+    clothesPrefabs: {fileID: 8882225172869837323, guid: 6ac2163bfc890f54f98387c4ad4569e7, type: 3}
+    clothesInfo:
+      totalAmount: 0
+      wearingCount: 0
+    pos: {x: -0.0036999846, y: 0.05683379, z: 0.062835455}
+    rot: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+  - flag: 8
+    clothesName: "\uC11C\uBD80 \uBAA8\uC790"
+    price: 15
+    image: {fileID: 21300000, guid: 0ae6885fb9876364c96ada4fd9904dd2, type: 3}
+    clothesPrefabs: {fileID: 2030409252417605830, guid: 6db3c10052afd314890de108c38c9144, type: 3}
+    clothesInfo:
+      totalAmount: 0
+      wearingCount: 0
+    pos: {x: -0.0030000808, y: -0.012466192, z: 0.047035478}
+    rot: {x: 0, y: 0, z: 0}
+    scale: {x: 0.08568007, y: 0.06585505, z: 0.08568007}
+  clothesInfoList: []
+  clothesScrollView: {fileID: 0}
+  clothesSlot: {fileID: -2456503951246493359, guid: 04963c0ce10c7714d9fefcb4fdbe9609, type: 3}
+  clothesSlots: []
+  clotesStoreSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  store: {fileID: 0}
+  clotesInventorySlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  inventory: {fileID: 0}
 --- !u!1 &5287141478089185374
 GameObject:
   m_ObjectHideFlags: 0

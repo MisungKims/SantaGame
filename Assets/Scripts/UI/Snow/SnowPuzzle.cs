@@ -16,13 +16,13 @@ public class SnowPuzzle : MonoBehaviour
     public RainPuzzlePiece[] rainPuzzles;
     bool isAllStop;
 
-    private WaitForSeconds wait30f;
+    private WaitForSeconds waitMonth;
     #endregion
 
     #region 유니티 함수
     void Start()
     {
-        wait30f = new WaitForSeconds(30f);
+        waitMonth = new WaitForSeconds(GameManager.Instance.dayCount * 7);          // 일주일에 한번씩 눈이 내리게
 
         StartCoroutine(SnowTimer());
     }
@@ -34,7 +34,14 @@ public class SnowPuzzle : MonoBehaviour
     /// </summary>
     private IEnumerator SnowTimer()
     {
-        yield return wait30f;
+        yield return waitMonth;
+
+        // 옷가게가 열려있다면 닫힐 때까지 대기
+        while (UIManager.Instance.clothesStorePanel.activeSelf)
+        {
+            yield return new WaitForSeconds(10f);
+        }
+        
 
         isAllStop = false;
         snowPanel.SetActive(true);

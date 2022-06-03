@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4298567830171898}
   m_Layer: 0
   m_Name: Bone_L_foot
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 4040523537370622}
   m_Layer: 0
   m_Name: ear_R_02
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -71,7 +71,7 @@ GameObject:
   - component: {fileID: 4124237648880778}
   m_Layer: 0
   m_Name: Text001
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 4796610801330856}
   m_Layer: 0
   m_Name: tail
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 4678093346033786}
   m_Layer: 0
   m_Name: ear_L_01
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -199,6 +199,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 0
+  santaObj:
+    desc: 
+    unlockLevel: 0
+    second: 0
+    buildingName: 
+    buildingLevel: 0
+    buildingPrice: 
+    multiplyBuildingPrice: 0
+    incrementGold: 
+    buildingSprite: {fileID: 0}
+    santaName: 
+    santaLevel: 0
+    santaPrice: 
+    multiplySantaPrice: 0
+    santaEfficiency: 0
+    santaSprite: {fileID: 0}
+    prerequisites: 
+    isGetPrerequisites: 0
 --- !u!95 &95673997328824092
 Animator:
   serializedVersion: 3
@@ -229,7 +247,7 @@ GameObject:
   - component: {fileID: 4243844411991440}
   m_Layer: 0
   m_Name: body
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -261,7 +279,7 @@ GameObject:
   - component: {fileID: 4743710496719342}
   m_Layer: 0
   m_Name: nose
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -292,7 +310,7 @@ GameObject:
   - component: {fileID: 137749053239150764}
   m_Layer: 0
   m_Name: Rabbit-handpainted
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -387,7 +405,7 @@ GameObject:
   - component: {fileID: 4566850460695032}
   m_Layer: 0
   m_Name: head
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -422,7 +440,7 @@ GameObject:
   - component: {fileID: 4407416165215052}
   m_Layer: 0
   m_Name: bip001
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -455,7 +473,7 @@ GameObject:
   - component: {fileID: 4284785434011468}
   m_Layer: 0
   m_Name: ear_R_01
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -486,7 +504,7 @@ GameObject:
   - component: {fileID: 4441095284696782}
   m_Layer: 0
   m_Name: Bone_L_leg
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -517,7 +535,7 @@ GameObject:
   - component: {fileID: 4628994168385614}
   m_Layer: 0
   m_Name: Bone_R_foot
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -547,7 +565,7 @@ GameObject:
   - component: {fileID: 4145038035656126}
   m_Layer: 0
   m_Name: Bone_R_leg
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -578,7 +596,7 @@ GameObject:
   - component: {fileID: 4534268123484522}
   m_Layer: 0
   m_Name: _root
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -609,7 +627,7 @@ GameObject:
   - component: {fileID: 4244398237344476}
   m_Layer: 0
   m_Name: eye
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -639,7 +657,7 @@ GameObject:
   - component: {fileID: 4880044526947170}
   m_Layer: 0
   m_Name: ear_L_02
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -724,6 +742,10 @@ PrefabInstance:
     - target: {fileID: 2048706260039042965, guid: babdbdae6be602b40ab6c885d0f3614a, type: 3}
       propertyPath: m_Name
       value: Farmer
+      objectReference: {fileID: 0}
+    - target: {fileID: 2048706260039042965, guid: babdbdae6be602b40ab6c885d0f3614a, type: 3}
+      propertyPath: m_TagString
+      value: Santa
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: babdbdae6be602b40ab6c885d0f3614a, type: 3}

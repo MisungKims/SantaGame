@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4097990719949276}
   m_Layer: 0
   m_Name: tail
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 4606479506172152}
   m_Layer: 0
   m_Name: head
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -61,6 +61,7 @@ Transform:
   - {fileID: 4325111725491094}
   - {fileID: 4777568050485380}
   - {fileID: 4733665273907312}
+  - {fileID: 786333494236106289}
   m_Father: {fileID: 4663981692654506}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -7.3452005, y: -68.1343, z: -171.26424}
@@ -75,7 +76,7 @@ GameObject:
   - component: {fileID: 4335001596881082}
   m_Layer: 0
   m_Name: Bone_L_foot
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -142,6 +143,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 0
+  santaObj:
+    desc: 
+    unlockLevel: 0
+    second: 0
+    buildingName: 
+    buildingLevel: 0
+    buildingPrice: 
+    multiplyBuildingPrice: 0
+    incrementGold: 
+    buildingSprite: {fileID: 0}
+    santaName: 
+    santaLevel: 0
+    santaPrice: 
+    multiplySantaPrice: 0
+    santaEfficiency: 0
+    santaSprite: {fileID: 0}
+    prerequisites: 
+    isGetPrerequisites: 0
 --- !u!95 &95033152853601372
 Animator:
   serializedVersion: 3
@@ -172,7 +191,7 @@ GameObject:
   - component: {fileID: 4663981692654506}
   m_Layer: 0
   m_Name: body
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -237,7 +256,7 @@ GameObject:
   - component: {fileID: 4121754723891782}
   m_Layer: 0
   m_Name: _root
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -268,7 +287,7 @@ GameObject:
   - component: {fileID: 4711601697721078}
   m_Layer: 0
   m_Name: Bone_R_leg
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -299,7 +318,7 @@ GameObject:
   - component: {fileID: 4777568050485380}
   m_Layer: 0
   m_Name: eye
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -329,7 +348,7 @@ GameObject:
   - component: {fileID: 4441058186111052}
   m_Layer: 0
   m_Name: ear_L_01
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -360,7 +379,7 @@ GameObject:
   - component: {fileID: 4088560981558842}
   m_Layer: 0
   m_Name: Bone_L_leg
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -391,7 +410,7 @@ GameObject:
   - component: {fileID: 4692099681552664}
   m_Layer: 0
   m_Name: Bone_R_foot
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -421,7 +440,7 @@ GameObject:
   - component: {fileID: 4733665273907312}
   m_Layer: 0
   m_Name: nose
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -451,7 +470,7 @@ GameObject:
   - component: {fileID: 4133750307383692}
   m_Layer: 0
   m_Name: Text001
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -481,7 +500,7 @@ GameObject:
   - component: {fileID: 4697270608864068}
   m_Layer: 0
   m_Name: ear_R_02
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -512,7 +531,7 @@ GameObject:
   - component: {fileID: 137823903360049922}
   m_Layer: 0
   m_Name: Rabbit-handpainted
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -607,7 +626,7 @@ GameObject:
   - component: {fileID: 4281943024692192}
   m_Layer: 0
   m_Name: ear_L_02
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -637,7 +656,7 @@ GameObject:
   - component: {fileID: 4325111725491094}
   m_Layer: 0
   m_Name: ear_R_01
-  m_TagString: Untagged
+  m_TagString: Santa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -657,3 +676,85 @@ Transform:
   m_Father: {fileID: 4606479506172152}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -19.038599, y: -98.97437, z: 85.97483}
+--- !u!1001 &4797207986352431523
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 4606479506172152}
+    m_Modifications:
+    - target: {fileID: 5222633067337445266, guid: 9296de9be092543cea0572f6ca5660ae, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5222633067337445266, guid: 9296de9be092543cea0572f6ca5660ae, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.8511815
+      objectReference: {fileID: 0}
+    - target: {fileID: 5222633067337445266, guid: 9296de9be092543cea0572f6ca5660ae, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.8511816
+      objectReference: {fileID: 0}
+    - target: {fileID: 5222633067337445266, guid: 9296de9be092543cea0572f6ca5660ae, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.8511813
+      objectReference: {fileID: 0}
+    - target: {fileID: 5222633067337445266, guid: 9296de9be092543cea0572f6ca5660ae, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.071721405
+      objectReference: {fileID: 0}
+    - target: {fileID: 5222633067337445266, guid: 9296de9be092543cea0572f6ca5660ae, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.0629814
+      objectReference: {fileID: 0}
+    - target: {fileID: 5222633067337445266, guid: 9296de9be092543cea0572f6ca5660ae, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.06480007
+      objectReference: {fileID: 0}
+    - target: {fileID: 5222633067337445266, guid: 9296de9be092543cea0572f6ca5660ae, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.13415228
+      objectReference: {fileID: 0}
+    - target: {fileID: 5222633067337445266, guid: 9296de9be092543cea0572f6ca5660ae, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.32922703
+      objectReference: {fileID: 0}
+    - target: {fileID: 5222633067337445266, guid: 9296de9be092543cea0572f6ca5660ae, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.21095595
+      objectReference: {fileID: 0}
+    - target: {fileID: 5222633067337445266, guid: 9296de9be092543cea0572f6ca5660ae, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.91055495
+      objectReference: {fileID: 0}
+    - target: {fileID: 5222633067337445266, guid: 9296de9be092543cea0572f6ca5660ae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -28.529
+      objectReference: {fileID: 0}
+    - target: {fileID: 5222633067337445266, guid: 9296de9be092543cea0572f6ca5660ae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -52.201
+      objectReference: {fileID: 0}
+    - target: {fileID: 5222633067337445266, guid: 9296de9be092543cea0572f6ca5660ae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -9.409
+      objectReference: {fileID: 0}
+    - target: {fileID: 5222633067337544624, guid: 9296de9be092543cea0572f6ca5660ae, type: 3}
+      propertyPath: m_TagString
+      value: Santa
+      objectReference: {fileID: 0}
+    - target: {fileID: 5222633067337544626, guid: 9296de9be092543cea0572f6ca5660ae, type: 3}
+      propertyPath: m_Name
+      value: 056 Star
+      objectReference: {fileID: 0}
+    - target: {fileID: 5222633067337544626, guid: 9296de9be092543cea0572f6ca5660ae, type: 3}
+      propertyPath: m_TagString
+      value: Santa
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9296de9be092543cea0572f6ca5660ae, type: 3}
+--- !u!4 &786333494236106289 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5222633067337445266, guid: 9296de9be092543cea0572f6ca5660ae, type: 3}
+  m_PrefabInstance: {fileID: 4797207986352431523}
+  m_PrefabAsset: {fileID: 0}

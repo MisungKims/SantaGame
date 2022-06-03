@@ -43,11 +43,6 @@ public class UIManager : MonoBehaviour
     public GetRewardWindow getRewardWindow; // 보상 획득 창
 
 
-
-    
-
-    // public GameObject panel;        // 시작 전 껐다 켜야하는 창들을 담은 오브젝트
-
     [Header("---------- 게임 매니저 UI 변수")]
     public Slider gaugeSlider;
     public Text gaugeText;
@@ -58,9 +53,6 @@ public class UIManager : MonoBehaviour
     public Text citizenCountText;
     public Text dateText;
     public GameObject gaugeBellImage;
-
-    //[Header("---------- 인벤토리 UI 변수")]
-    //public Slot[] slots;        // 인벤토리 UI 슬롯
 
     #endregion
 

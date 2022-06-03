@@ -454,7 +454,7 @@ public class RabbitCitizen : MonoBehaviour
 
             if (true == (Physics.Raycast(ray.origin, ray.direction * 10, out hit)))
             {
-                if (hit.collider.name == this.name)
+                if (hit.collider.CompareTag("Santa") && hit.collider.name == this.name)
                 {
                     SetCamTargetThis();
                 }

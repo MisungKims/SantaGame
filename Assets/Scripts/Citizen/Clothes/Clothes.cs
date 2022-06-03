@@ -37,6 +37,13 @@ public class ClothesInfo
 }
 public enum EClothesFlag
 {
-    strawHat,
-    kindergardenHat
+    kindergardenHat,
+    crown,
+    santaHat,
+    flower,
+    glasses,
+    pirateHat,
+    propellerHat,
+    ribbon,
+    sherifHat
 }
