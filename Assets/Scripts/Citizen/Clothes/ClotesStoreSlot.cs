@@ -21,8 +21,7 @@ public class ClotesStoreSlot : MonoBehaviour
             clothesNameText.text = clothesName;
         }
     }
-    Button button;
-   
+  
     private int price;                 // 옷의 가격
     public int Price
     {
@@ -33,19 +32,27 @@ public class ClotesStoreSlot : MonoBehaviour
         }
     }
 
+    [SerializeField]
+    private Button buyButton;
+
     public Clothes clothes;
 
     [SerializeField]
     private RabbitModel model;
 
+    private void OnEnable()
+    {
+        SetInteractable();
+    }
 
     public void Init(Clothes clothes)
     {
         this.clothes = clothes;
-        clothesName = clothes.clothesName;
+        ClothesName = clothes.clothesName;
         clothesImage.sprite = clothes.image;
-        price = clothes.price;
+        Price = clothes.price;
 
+        SetInteractable();
     }
 
     /// <summary>
@@ -77,7 +84,23 @@ public class ClotesStoreSlot : MonoBehaviour
             GameManager.Instance.MyDia -= price;
 
             ClothesManager.Instance.GetClothes(clothes);
+
+            SetInteractable();
         }
-        
+    }
+
+    /// <summary>
+    /// 옷을 살 수 있는만큼의 다이아가 없을 땐 버튼을 클릭하지 못하도록
+    /// </summary>
+    public void SetInteractable()
+    {
+        if (GameManager.Instance.MyDia < price)
+        {
+            buyButton.interactable = false;
+        }
+        else
+        {
+            buyButton.interactable = true;
+        }
     }
 }

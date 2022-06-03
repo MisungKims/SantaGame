@@ -25,16 +25,12 @@ public class ClothesManager : MonoBehaviour
 
     public List<ClothesInfo> clothesInfoList = new List<ClothesInfo>();
 
-    //[SerializeField]
-    //private List<Sprite> clothesImageList = new List<Sprite>();      // 옷의 이미지 리스트
-
-    //[SerializeField]
-    //private List<GameObject> clothesPrefabList = new List<GameObject>();      // 옷의 프리팹 리스트
-
     // UI 변수
     [Header("-------- Citizen Panel Slot")]
     [SerializeField]
-    private Transform clothesScrollView;
+    private GameObject clothesScrollView;
+
+    private RectTransform scrollRect;
 
     [SerializeField]
     private ClothesSlot clothesSlot;
@@ -67,6 +63,10 @@ public class ClothesManager : MonoBehaviour
         else
             Destroy(gameObject);
 
+
+        scrollRect = clothesScrollView.GetComponent<RectTransform>();
+        scrollRect.sizeDelta = new Vector2(0, scrollRect.sizeDelta.y);
+
         if (!LoadData())
         {
             for (int i = 0; i < clothesList.Count; i++)
@@ -84,13 +84,9 @@ public class ClothesManager : MonoBehaviour
 
         InitStore();
         RefreshInventory();
+
     }
 
-    //public void Start()
-    //{
-    //    GetClothes(clothesList[0]);
-    //    GetClothes(clothesList[1]);
-    //}
     #endregion
 
     #region 함수
@@ -129,12 +125,15 @@ public class ClothesManager : MonoBehaviour
     /// <param name="clothes"></param>
     public void AddClothesSlot(Clothes clothes)
     {
-        ClothesSlot newSlot = ClothesSlot.Instantiate(clothesSlot, clothesScrollView);
+        ClothesSlot newSlot = ClothesSlot.Instantiate(clothesSlot, clothesScrollView.transform);
 
         newSlot.Init(clothes);
 
         RectTransform rect = newSlot.GetComponent<RectTransform>();
-        rect.anchoredPosition = new Vector2(137 * clothesSlots.Count - 228, 0);
+        rect.anchoredPosition = new Vector2(137 * clothesSlots.Count - 473, 0);
+
+        scrollRect.sizeDelta += new Vector2(60, 0);
+       // scrollRect.sizeDelta += new Vector2(0, 200);
 
         clothesSlots.Add(newSlot);
     }

@@ -86,6 +86,10 @@ public class RabbitModel : MonoBehaviour
             clothesObj = ObjectPoolingManager.Instance.Get(clothes.flag, clothesParent);
 
             clothesObj.layer = 7;           // UI 카메라에 보여지도록 layer를 변경
+            for (int i = 0; i < clothesObj.transform.childCount; i++)
+            {
+                clothesObj.transform.GetChild(i).gameObject.layer = 7;
+            }
 
             // 오브젝트의 Transform 설정
             clothesObj.transform.localPosition = clothes.pos;

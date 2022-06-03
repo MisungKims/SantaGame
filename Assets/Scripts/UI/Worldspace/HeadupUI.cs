@@ -59,7 +59,14 @@ public class HeadupUI : MonoBehaviour
             }
             else
             {
-                canvas.enabled = true;
+                if (cam.fieldOfView < 40f)
+                {
+                    canvas.enabled = false;
+                }
+                else
+                {
+                    canvas.enabled = true;
+                }
             }
             yield return null;
         }

@@ -79,8 +79,8 @@ public class PostOfficeManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        //waitForSeconds = new WaitForSeconds(GameManager.Instance.dayCount * 7);     // 다음 달이 될 때마다 편지를 전송하기 위함
-        waitForSeconds = new WaitForSeconds(3f);     // 다음 달이 될 때마다 편지를 전송하기 위함
+        //waitForSeconds = new WaitForSeconds(GameManager.Instance.dayCount * (GameManager.Instance.lastDay - 1));     // 다음 달이 될 때마다 편지를 전송하기 위함
+        //waitForSeconds = new WaitForSeconds(3f);
 
         SetTransform();
 
@@ -152,13 +152,13 @@ public class PostOfficeManager : MonoBehaviour
 
 
     /// <summary>
-    /// 랜덤한 시간마다 랜덤한 편지 발송
+    /// 한달마다 랜덤한 편지 발송
     /// </summary>
     IEnumerator SendPost()
     {
         while (true)
         {
-            yield return waitForSeconds;
+            yield return new WaitForSeconds(GameManager.Instance.dayCount * (GameManager.Instance.lastDay - 1));        // 다음 달이 될 때마다 편지 전송
 
             int randIndex = Random.Range(0, postList.Count);        // 랜덤으로 편지 내용을 정함
             if (postUIList.Count < maximum)          // 편지함이 차지 않았을 때만 생성

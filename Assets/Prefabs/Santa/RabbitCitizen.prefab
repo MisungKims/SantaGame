@@ -428,9 +428,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   rabbitMat: {fileID: 7914683007052765767}
+  isWearing: 0
   clothes:
     flag: 0
     clothesName: 
+    price: 0
     image: {fileID: 0}
     clothesPrefabs: {fileID: 0}
     clothesInfo:

@@ -150,6 +150,7 @@ public class Santa : MonoBehaviour
 
             if (true == (Physics.Raycast(ray.origin, ray.direction * 10, out hit)))
             {
+                //Debug.Log(hit.collider.name);
                 if (hit.collider.CompareTag("Santa") && hit.collider.name.Equals(this.name))
                 {
                     SetCamTargetThis();
