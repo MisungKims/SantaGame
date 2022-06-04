@@ -23,6 +23,7 @@ public enum ERewardType
 
 public class RewardManager : MonoBehaviour
 {
+    #region MyRegion
     // 싱글톤
     private static RewardManager instance;
     public static RewardManager Instance
@@ -31,18 +32,19 @@ public class RewardManager : MonoBehaviour
     }
 
     public Sprite[] rewardImages;                   // 보상 이미지
+    #endregion
 
-    // 캐싱
-   
+    #region 유니티 함수
     private void Awake()
     {
         if (instance == null)
             instance = this;
         else
             Destroy(this.gameObject);
-
     }
+    #endregion
 
+    #region 함수
     /// <summary>
     /// 보상의 종류에 따라 보상 획득
     /// </summary>
@@ -59,7 +61,12 @@ public class RewardManager : MonoBehaviour
                 break;
 
             case ERewardType.puzzle:
-                for (int i = 0; i < int.Parse(amount); i++)
+                int iAmount = int.Parse(amount);
+                if (iAmount > 1)
+                {
+                    PuzzleManager.Instance.GetManyRandomPiece(iAmount);
+                }
+                else
                 {
                     PuzzleManager.Instance.GetRandomPuzzle();
                 }
@@ -88,16 +95,16 @@ public class RewardManager : MonoBehaviour
         {
             case "골드":
                 return ERewardType.gold;
-                
+
             case "다이아":
                 return ERewardType.dia;
-              
+
             case "퍼즐":
                 return ERewardType.puzzle;
-                
+
             case "랜덤 상자":
                 return ERewardType.clothesBox;
-              
+
             case "당근":
                 return ERewardType.carrot;
 
@@ -116,4 +123,5 @@ public class RewardManager : MonoBehaviour
 
         return (ERewardType)randType;
     }
+    #endregion
 }

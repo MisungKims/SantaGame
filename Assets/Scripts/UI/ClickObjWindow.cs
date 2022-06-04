@@ -24,8 +24,6 @@ public class ClickObjWindow : MonoBehaviour
     private Text PriceText;
     [SerializeField]
     private Button UpgradeButton;
-    //[SerializeField]
-    //private Image buildingImg;
     [SerializeField]
     private Image objImg;
 
@@ -34,8 +32,9 @@ public class ClickObjWindow : MonoBehaviour
     StringBuilder levelSb = new StringBuilder();
     StringBuilder goldSb = new StringBuilder();
 
+
     // 프로퍼티 
-    public string ObjName
+    public string ObjName       // 산타 이름
     {
         set
         {
@@ -43,7 +42,7 @@ public class ClickObjWindow : MonoBehaviour
         }
     }
 
-    public int ObjLevel
+    public int ObjLevel         // 산타의 레벨
     {
         set
         {
@@ -54,7 +53,7 @@ public class ClickObjWindow : MonoBehaviour
         }
     }
 
-    public string ObjAmount
+    public string ObjAmount     // 산타의 효율 증가량
     {
         set
         {
@@ -62,7 +61,7 @@ public class ClickObjWindow : MonoBehaviour
         }
     }
 
-    public string ObjPrice
+    public string ObjPrice      // 산타의 가격
     {
         get { return PriceText.text; }
         set
@@ -71,41 +70,31 @@ public class ClickObjWindow : MonoBehaviour
         }
     }
 
-    //private Building building;
-    //public Building Builidng
-    //{
-    //    set { building = value; }
-    //}
-
     private Santa santa;
     public Santa Santa
     {
         set { santa = value; }
     }
 
-    //public Object clickedObj;
+    // 캐싱
+    private GameManager gameManager;
+    private SoundManager soundManager;
+    #endregion
+
+    #region 유니티 함수
+    private void Awake()
+    {
+        soundManager = SoundManager.Instance;
+        gameManager = GameManager.Instance;
+    }
+
+    private void OnEnable()
+    {
+        SetSantaInfo();
+    }
     #endregion
 
     #region 함수
-
-    ///// <summary>
-    ///// 빌딩의 정보를 가져와 UI에 Set
-    ///// </summary>
-    //public void SetBuildingInfo()
-    //{
-    //    ObjName = clickedObj.buildingName;
-    //    ObjLevel = clickedObj.buildingLevel;
-    //    ObjPrice = clickedObj.buildingPrice;
-
-    //    goldSb.Clear();
-    //    goldSb.Append("+ ");
-    //    goldSb.Append(clickedObj.incrementGold);
-    //    ObjAmount = goldSb.ToString();
-
-    //    buildingImg.sprite = clickedObj.buildingSprite;
-    //    buildingImg.gameObject.SetActive(true);
-    //}
-
     /// <summary>
     /// 산타의 정보를 가져와 UI에 Set
     /// </summary>
@@ -137,12 +126,10 @@ public class ClickObjWindow : MonoBehaviour
     /// </summary>
     void Refresh()
     {
-        //if (building && building.Upgrade())     // 빌딩 업그레이드
-        //{
-        //    SetBuildingInfo();
-        //}
         if (santa.Upgrade())      // 산타 업그레이드
         {
+            soundManager.PlaySoundEffect(ESoundEffectType.uiButton);       // 효과음 실행
+
             ObjLevel = santa.Level;
             ObjPrice = santa.SantaPrice;
 
@@ -151,8 +138,6 @@ public class ClickObjWindow : MonoBehaviour
             goldSb.Append(santa.SantaEfficiency.ToString());
             goldSb.Append("% 증가");
             ObjAmount = goldSb.ToString();
-
-            SoundManager.Instance.PlaySoundEffect(ESoundEffectType.uiButton);       // 효과음 실행
         }
 
         SetButtonInteractable();
@@ -164,32 +149,9 @@ public class ClickObjWindow : MonoBehaviour
     /// </summary>
     void SetButtonInteractable()
     {
-        if (GoldManager.CompareBigintAndUnit(GameManager.Instance.MyGold, ObjPrice))        //가진 돈이 오브젝트의 가격보다 클 때
+        if (GoldManager.CompareBigintAndUnit(gameManager.MyGold, ObjPrice))        //가진 돈이 오브젝트의 가격보다 클 때
             UpgradeButton.interactable = true;
         else UpgradeButton.interactable = false;
     }
-
-
-    #endregion
-
-    #region 유니티 함수
-    private void OnEnable()
-    {
-        SetSantaInfo();
-    }
-
-    //private void OnDisable()
-    //{
-    //    if (building)
-    //    {
-    //        building = null;
-    //        buildingImg.gameObject.SetActive(false);
-    //    }
-    //    if (santa)
-    //    {
-    //        santa = null;
-    //        santaImg.gameObject.SetActive(false);
-    //    }
-    //}
     #endregion
 }

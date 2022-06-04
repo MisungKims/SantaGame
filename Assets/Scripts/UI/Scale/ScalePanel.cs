@@ -4,13 +4,13 @@
  * @date 22-05-14
  */
 
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ScalePanel : MonoBehaviour
 {
+    #region 변수
     private Vector3 zeroScale = new Vector3(0, 0, 1);
     private Vector3 oneScale = new Vector3(1, 1, 1);
 
@@ -21,7 +21,9 @@ public class ScalePanel : MonoBehaviour
 
     [SerializeField]
     private float speed = 15f;
+    #endregion
 
+    #region 유니티 함수
     private void Awake()
     {
         if (anotherVector)
@@ -34,12 +36,9 @@ public class ScalePanel : MonoBehaviour
     {
         StartCoroutine(ScaleUp());
     }
+    #endregion
 
-    public void ClosePanel()
-    {
-        StartCoroutine(ScaleDown());
-    }
-
+    #region 코루틴
     /// <summary>
     /// 스케일이 0에서 1로 커짐
     /// </summary>
@@ -59,7 +58,6 @@ public class ScalePanel : MonoBehaviour
     }
 
 
-
     /// <summary>
     /// 스케일이 1에서 0으로 작아짐
     /// </summary>
@@ -76,4 +74,15 @@ public class ScalePanel : MonoBehaviour
         this.transform.localScale = zeroScale;
         this.gameObject.SetActive(false);
     }
+    #endregion
+
+    #region 함수
+    /// <summary>
+    /// 패널을 닫을 때 스케일을 줄임 (인스펙터에서 호출)
+    /// </summary>
+    public void ClosePanel()
+    {
+        StartCoroutine(ScaleDown());
+    }
+    #endregion
 }

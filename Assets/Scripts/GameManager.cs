@@ -1,7 +1,7 @@
 /**
  * @brief 플레이어의 전반적인 것을 관리
  * @author 김미성
- * @date 22-04-20
+ * @date 22-06-04
  */
 
 using System.Collections;
@@ -31,6 +31,8 @@ public class SaveData
     public int day;
     public int month;
     public int year;
+
+    public string inviteRabbitPrice;
 
     public string attendanceDate;
     public string initQuestDate;
@@ -70,16 +72,13 @@ public class GameManager : MonoBehaviour
         {
             gauge = value;
 
-            if (GameLoadManager.CurrentScene().name == "SantaVillage")
-            {
-                UIManager.Instance.gaugeSlider.value = gauge;
+            UIManager.Instance.gaugeSlider.value = gauge;
 
-                gaugeSb.Clear();
-                gaugeSb.Append(gauge.ToString("N0"));
-                gaugeSb.Append("%");
+            gaugeSb.Clear();
+            gaugeSb.Append(gauge.ToString("N0"));
+            gaugeSb.Append("%");
 
-                UIManager.Instance.gaugeText.text = gaugeSb.ToString();
-            }
+            UIManager.Instance.gaugeText.text = gaugeSb.ToString();
         }
     }
 
@@ -171,7 +170,6 @@ public class GameManager : MonoBehaviour
                 else month++;
             }
 
-            
             UIManager.Instance.dateText.text = String.Format("{0}년 {1}월 {2}일", year, month, day);
 
             // 12월 25일에만 선물전달버튼이 보이도록
@@ -195,6 +193,8 @@ public class GameManager : MonoBehaviour
     public string initQuestDate;            // 퀘스트를 초기화한 날짜
 
     public string lastConnectionTime;       // 마지막으로 접속한 시간
+
+    public string inviteRabbitPrice;        // 토끼 주민 초대 비용
 
     // 캐싱
     private WaitForSeconds waitForSeconds;
@@ -263,12 +263,12 @@ public class GameManager : MonoBehaviour
     public void StartDeliveryGame()
     {
         deliveryGame.SetActive(true);
-        vaillage.SetActive(false);
+        UIManager.Instance.StartDeliveryGame();
     }
 
     public void EndDeliveryGame()
     {
-        vaillage.SetActive(true);
+        UIManager.Instance.EndDeliveryGame();
         deliveryGame.SetActive(false);
     }
 
@@ -284,6 +284,7 @@ public class GameManager : MonoBehaviour
         data.year = year;
         data.month = month;
         data.day = Day;
+        data.inviteRabbitPrice = inviteRabbitPrice;
         data.attendanceDate = attendanceDate;
         data.initQuestDate = initQuestDate;
         data.lastConnectionTime = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
@@ -309,9 +310,12 @@ public class GameManager : MonoBehaviour
             year = data.year;
             month = data.month;
             Day = data.day;
+            inviteRabbitPrice = data.inviteRabbitPrice;
             attendanceDate = data.attendanceDate;
             initQuestDate = data.initQuestDate;
             lastConnectionTime = data.lastConnectionTime;
+
+            OfflineTime();
 
             return true;
         }
@@ -362,13 +366,48 @@ public class GameManager : MonoBehaviour
             LevelUp();
     }
 
-#endregion
+    /// <summary>
+    /// 오프라인 시간 동안 얻은 보상을 계산
+    /// </summary>
+    public void OfflineTime()
+    {
+        if (lastConnectionTime.Equals("")) return;
+
+        // 지난 앱 비활성화 시간을 가져와
+        DateTime lastConnection = DateTime.ParseExact(lastConnectionTime, "yyyy-MM-dd-HH-mm-ss", System.Globalization.CultureInfo.InvariantCulture);
+
+        // 오프라인 시간을 계산
+        TimeSpan timeDiff = DateTime.Now - lastConnection;
+        float diffTotalSeconds = (float)timeDiff.TotalSeconds;
+
+        if (diffTotalSeconds > 21600f)       // 최대 360분
+        {
+            diffTotalSeconds = 21600f;
+        }
+
+        int goneDay = (int)(diffTotalSeconds / dayCount);       // 지나간 날짜
+
+        int lastMonth = month;
+        for (int i = 0; i < goneDay; i++)
+        {
+            Day++;
+
+            if (lastMonth - month < 0)
+            {
+                PostOfficeManager.Instance.NewPost();
+            }
+
+            lastMonth = month;
+        }
+    }
+
+    #endregion
 
 
 
-#region 유니티 함수
+    #region 유니티 함수
 
-#endregion
+    #endregion
     private void Awake()
     {
         if (instance == null)
@@ -395,6 +434,7 @@ public class GameManager : MonoBehaviour
             MyDia = 0;
             year = 0;
             month = 1;
+            inviteRabbitPrice = "100";
             lastConnectionTime = "";
         }
 
@@ -410,23 +450,6 @@ public class GameManager : MonoBehaviour
         StartCoroutine(DateCounting());
 
         SoundManager.Instance.PlayBGM(EBgmType.main);
-
-        //BigInteger start = 100;
-        //string value = start.ToString();
-        //float sf = 1.7f;
-
-        //Debug.Log(value);
-
-        //for (int i = 0; i < 100; i++)
-        //{
-        //    value = GoldManager.MultiplyUnit(value, sf);
-        //    sf += 0.5f;
-        //    text.text += value + "\n";
-        //}
-
-
-        //Debug.Log(BigIntegerManager.UnitToValue(BigInteger.Pow(1000, 702)));
-
     }
 
 

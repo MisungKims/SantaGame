@@ -12,16 +12,14 @@ using UnityEngine.UI;
 public class Chimney : DeliveryGameObject
 {
     #region 변수
-    
     public Image giftImage;
     public Gift gift;
 
-    public Chimney preChimney;
+    public bool isAlreadyGet;       // 선물을 받은 굴뚝인지?
 
+    // 캐싱
     private DeliveryGameManager deliveryGameManager;
     private Inventory inventory;
-
-    public bool isAlreadyGet;       // 선물을 받은 굴뚝인지?
     #endregion
 
     #region 유니티 함수
@@ -48,7 +46,6 @@ public class Chimney : DeliveryGameObject
         {
             giftImage.sprite = gift.giftImage;
         }
-   
     }
     #endregion
 }

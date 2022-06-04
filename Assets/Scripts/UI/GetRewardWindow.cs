@@ -12,44 +12,41 @@ using System;
 
 public class GetRewardWindow : MonoBehaviour
 {
+    #region 변수
     [SerializeField]
     private Text RewardName;
     [SerializeField]
     private Text RewardGrade;
     [SerializeField]
     private Image RewardImg;
-    
-    public bool isTouch;
 
-    RectTransform imgRect;
-    Vector2 giftImgSize = new Vector2(300f, 300f);
+    public bool isTouch;        // UI를 터치했는지?
+    #endregion
 
-    private void Awake()
-    {
-        imgRect = RewardImg.GetComponent<RectTransform>();
-    }
-
+    #region 유니티 함수
     private void OnEnable()
     {
         isTouch = false;
     }
+    #endregion
 
+    #region 함수
     /// <summary>
     /// 선물 획득 창을 열 때 초기 설정
     /// </summary>
-    /// <param name="sprite">보여줄 이미지</param>
+    /// <param name="gift">획득할 선물</param>
     public void OpenWindow(Gift gift)
     {
         this.gameObject.SetActive(true);
         RewardName.text = gift.giftName;
         RewardGrade.text = Enum.GetName(typeof(EGiftGrade), (int)gift.giftGrade);
         RewardImg.sprite = gift.giftImage;
-        imgRect.sizeDelta = giftImgSize;
     }
 
     /// <summary>
     /// 보상 획득 창을 열 때 초기 설정
     /// </summary>
+    /// <param name="name">보여줄 이름</param>
     /// <param name="sprite">보여줄 이미지</param>
     public void OpenWindow(string name, Sprite sprite)
     {
@@ -57,7 +54,6 @@ public class GetRewardWindow : MonoBehaviour
         RewardName.text = name;
         RewardGrade.text = "";
         RewardImg.sprite = sprite;
-       // imgRect.sizeDelta = sprite.bounds.size;
     }
 
     /// <summary>
@@ -68,4 +64,5 @@ public class GetRewardWindow : MonoBehaviour
         isTouch = true;
         this.gameObject.SetActive(false);
     }
+    #endregion
 }

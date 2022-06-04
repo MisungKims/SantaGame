@@ -10,7 +10,33 @@ using UnityEngine;
 
 public class ButtonRaycast : ClickScale
 {
-    
+    #region 변수
+    protected UIManager uIManager;
+    protected SoundManager soundManager;
+    #endregion
+
+    #region 유니티 함수
+    private void Awake()
+    {
+        uIManager = UIManager.Instance;
+        soundManager = SoundManager.Instance;
+    }
+
+    protected override IEnumerator Start()
+    {
+        yield return StartCoroutine(base.Start()); // 베이스 호출
+    }
+
+    void Update()
+    {
+        DetectTouch();
+    }
+    #endregion
+
+    #region 함수
+    /// <summary>
+    /// 버튼 터치시 동작
+    /// </summary>
     protected virtual void Touched()
     {
         StartCoroutine(ScaleDown());
@@ -18,7 +44,7 @@ public class ButtonRaycast : ClickScale
 
     void DetectTouch()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !UIManagerInstance().isOpenPanel)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit = new RaycastHit();
@@ -33,13 +59,14 @@ public class ButtonRaycast : ClickScale
         }
     }
 
-    protected override IEnumerator Start()
+    protected UIManager UIManagerInstance()
     {
-        yield return StartCoroutine(base.Start()); // 베이스 호출
-    }
+        if (!uIManager)
+        {
+            uIManager = UIManager.Instance;
+        }
 
-    void Update()
-    {
-        DetectTouch();
+        return uIManager;
     }
+    #endregion
 }

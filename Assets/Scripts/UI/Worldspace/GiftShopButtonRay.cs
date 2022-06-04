@@ -20,7 +20,8 @@ public class GiftShopButtonRay : ButtonRaycast
     {
         yield return new WaitForSeconds(0.13f);
 
-        CameraMovement.Instance.canMove = false;
-        UIManager.Instance.ShowGiftShopPanel();
+        soundManager.PlaySoundEffect(ESoundEffectType.uiButton);      // È¿°úÀ½
+
+        UIManagerInstance().ShowGiftShopPanel();
     }
 }

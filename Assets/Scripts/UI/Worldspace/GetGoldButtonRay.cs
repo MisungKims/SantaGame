@@ -17,7 +17,7 @@ public class GetGoldButtonRay : ButtonRaycast
     {
         base.Touched();
 
-        SoundManager.Instance.PlaySoundEffect(ESoundEffectType.getGoldButton);      // 효과음
+        soundManager.PlaySoundEffect(ESoundEffectType.getGoldButton);      // 효과음
 
         building.ClickGetBtn();
     }

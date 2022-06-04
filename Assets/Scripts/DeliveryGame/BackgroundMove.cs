@@ -10,7 +10,7 @@ using UnityEngine;
 
 public class BackgroundMove : Background
 {
-    public bool isMove;
+    public bool isMove;     // 움직일 것인지?
 
     protected override void Update()
     {

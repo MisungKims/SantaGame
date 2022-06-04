@@ -12,6 +12,7 @@ using UnityEngine.SceneManagement;
 
 public class GameLoadManager : MonoBehaviour
 {
+    #region 변수
     public static string nextScene;
 
     [SerializeField]
@@ -19,8 +20,10 @@ public class GameLoadManager : MonoBehaviour
 
     [SerializeField]
     private float speed = 0.1f;        // 로딩 속도
+    #endregion
 
-   private void Start()
+    #region 유니티 함수
+    private void Start()
     {
         progressBar.fillAmount = 0;
 
@@ -28,20 +31,21 @@ public class GameLoadManager : MonoBehaviour
         {
             nextScene = "SantaVillage";
         }
-        
+
         StartCoroutine(LoadAsyncScene());
     }
+    #endregion
 
+    #region 함수
+    /// <summary>
+    /// 로딩 씬 호출
+    /// </summary>
+    /// <param name="sceneName"></param>
     public static void LoadScene(string sceneName)
     {
         nextScene = sceneName;
 
         SceneManager.LoadScene("GameLoad");
-    }
-
-    public static Scene CurrentScene()
-    {
-        return SceneManager.GetActiveScene();
     }
 
     IEnumerator LoadAsyncScene()
@@ -58,24 +62,25 @@ public class GameLoadManager : MonoBehaviour
             yield return null;
 
             timer += Time.deltaTime * speed;
-            if (asyncScene.progress < 0.9f) 
-            { 
-                progressBar.fillAmount = Mathf.Lerp(progressBar.fillAmount, asyncScene.progress, timer); 
-                if (progressBar.fillAmount >= asyncScene.progress) 
-                { 
-                    timer = 0f; 
-                } 
+            if (asyncScene.progress < 0.9f)
+            {
+                progressBar.fillAmount = Mathf.Lerp(progressBar.fillAmount, asyncScene.progress, timer);
+                if (progressBar.fillAmount >= asyncScene.progress)
+                {
+                    timer = 0f;
+                }
             }
             else
             {
                 progressBar.fillAmount = Mathf.Lerp(progressBar.fillAmount, 1f, timer);
-                if (progressBar.fillAmount == 1.0f) 
+                if (progressBar.fillAmount == 1.0f)
                 {
-                    asyncScene.allowSceneActivation = true; 
-                    yield break; 
+                    asyncScene.allowSceneActivation = true;
+                    yield break;
                 }
             }
         }
 
     }
+    #endregion
 }

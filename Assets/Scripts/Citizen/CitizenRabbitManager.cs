@@ -1,7 +1,7 @@
 /**
  * @brief 산타 주민을 관리
  * @author 김미성
- * @date 22-04-22
+ * @date 22-06-02
  */
 
 using System.Collections;
@@ -18,9 +18,9 @@ public class goal
 [System.Serializable]
 public class goalObject
 {
-    public Transform pos;     // 건물에서 주민이 갈 수 있는 위치
+    public Transform pos;           // 건물에서 주민이 갈 수 있는 위치
     public Transform lookAtPos;     // 바라봐야하는 위치
-    public bool isUse;          // 다른 주민이 이미 사용 중인가?
+    public bool isUse;              // 다른 주민이 이미 사용 중인가?
 }
 
 
@@ -51,8 +51,6 @@ public class CitizenRabbitManager : MonoBehaviour
     [HideInInspector]
     public List<RabbitCitizen> rabbitCitizens = new List<RabbitCitizen>();
     
-    //public List<Transform> rabbitCitizens = new List<Transform>();
-
     // 싱글톤
     private static CitizenRabbitManager instance;
     public static CitizenRabbitManager Instance
@@ -60,15 +58,18 @@ public class CitizenRabbitManager : MonoBehaviour
         get { return instance; }
     }
 
-    public Material[] materials;
+    public Material[] materials;        // 주민 머터리얼 배열
 
-    public RabbitCitizen rabbit;
-    public GameObject rabbitGroup;
+    public RabbitCitizen rabbit;        // 토끼 주민 프리팹
+    public GameObject rabbitGroup;      // 토끼 주민 하이라키의 부모
 
     public Transform zeroPos;
+
+    // 데이터 저장
+    bool isPaused = false;      //앱의 활성화 상태
     #endregion
 
-
+    #region 유니티 함수
     public void Awake()
     {
         if (instance == null)
@@ -83,9 +84,6 @@ public class CitizenRabbitManager : MonoBehaviour
 
         LoadData();
     }
-
-    //앱의 활성화 상태를 저장하는 변수
-    bool isPaused = false;
 
     void OnApplicationPause(bool pause)
     {
@@ -110,7 +108,9 @@ public class CitizenRabbitManager : MonoBehaviour
     {
         SaveData();         // 앱 종료 시 데이터 저장
     }
+    #endregion
 
+    #region 함수
     /// <summary>
     /// 데이터 저장
     /// </summary>
@@ -127,7 +127,7 @@ public class CitizenRabbitManager : MonoBehaviour
             {
                 citizenList[i].clothesIdx = -1;
             }
-            
+
             // 주민의 위치 저장
             citizenList[i].pos = rabbitCitizens[i].transform.position;
         }
@@ -151,9 +151,8 @@ public class CitizenRabbitManager : MonoBehaviour
             for (int i = 0; i < citizenList.Count; i++)
             {
                 // 저장된 데이터를 불러와 토끼 주민 생성
-
                 RabbitCitizen rabbitCitizen = RabbitCitizen.Instantiate(rabbit, citizenList[i].pos, Quaternion.identity, rabbitGroup.transform);
-                
+
                 rabbitCitizen.rabbitMat.material = materials[citizenList[i].materiaIdx];
                 rabbitCitizen.name = citizenList[i].name;
                 if (citizenList[i].clothesIdx > -1)
@@ -168,5 +167,5 @@ public class CitizenRabbitManager : MonoBehaviour
 
         return false;
     }
-
+    #endregion
 }

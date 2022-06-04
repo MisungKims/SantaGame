@@ -1,17 +1,16 @@
 /**
  * @brief 사용자가 가진 옷의 UI 슬롯
  * @author 김미성
- * @date 22-06-01
+ * @date 22-06-04
  */
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ClothesSlot : MonoBehaviour
 {
     #region 변수
+    // UI 변수
     [SerializeField]
     private Image clothesImage;             // 슬롯의 옷 이미지
 
@@ -34,9 +33,17 @@ public class ClothesSlot : MonoBehaviour
     public RabbitCitizen rabbitCitizen;     // 현재 토끼 주민창의 토끼
 
     public Clothes clothes;                 // 해당 슬롯의 옷
+
+    // 캐싱
+    private ClothesManager clothesManager;
     #endregion
 
     #region 유니티 함수
+    void Awake()
+    {
+        clothesManager = ClothesManager.Instance;
+    }
+
     private void OnEnable()
     {
         CheckWearing();
@@ -47,13 +54,24 @@ public class ClothesSlot : MonoBehaviour
 
     #region 함수
     /// <summary>
-    /// 슬롯 UI 초기화
+    /// 슬롯 UI 설정
     /// </summary>
     /// <param name="myClothes">해당 슬롯의 옷</param>
-    public void Init(Clothes myClothes)
+    public void SetClothes(Clothes myClothes)
     {
         clothes = myClothes;
+        clothesImage.gameObject.SetActive(true);
         clothesImage.sprite = myClothes.image;
+    }
+
+    /// <summary>
+    /// 슬롯 UI를 초기 상태로
+    /// </summary>
+    public void Reset()
+    {
+        clothes = null;
+        clothesImage.gameObject.SetActive(false);
+        checkImage.SetActive(false);
     }
 
     /// <summary>
@@ -62,9 +80,12 @@ public class ClothesSlot : MonoBehaviour
     /// <returns></returns>
     bool CheckWearing()
     {
-        if (!rabbitCitizen) return false;
+        if (!rabbitCitizen)
+        {
+           rabbitCitizen = UIManager.Instance.citizenPanel.rabbitCitizen;
+        }
 
-        if (rabbitCitizen.clothes == clothes)       // 해당 옷을 입고 있을 때
+        if (rabbitCitizen.clothes == clothes && clothes != null)       // 해당 옷을 입고 있을 때
         {
             IsWearing = true;
             return true;
@@ -81,17 +102,23 @@ public class ClothesSlot : MonoBehaviour
     /// </summary>
     void SetInteractable()
     {
-        // 옷을 입을 수 없고, 토끼가 슬롯의 옷을 입고 있지 않을 때 버튼을 누를 수 없게
-        if (clothes.clothesInfo.totalAmount <= clothes.clothesInfo.wearingCount && rabbitCitizen.clothes != clothes)
+        if (clothes == null)
         {
             button.interactable = false;
         }
         else
         {
-            button.interactable = true;
+            // 옷을 입을 수 없고, 토끼가 슬롯의 옷을 입고 있지 않을 때 버튼을 누를 수 없게
+            if (clothes.clothesInfo.totalAmount <= clothes.clothesInfo.wearingCount && rabbitCitizen.clothes != clothes)
+            {
+                button.interactable = false;
+            }
+            else
+            {
+                button.interactable = true;
+            }
         }
     }
-
 
     /// <summary>
     /// 토끼 주민에게 옷을 입히거나 벗김
@@ -108,13 +135,14 @@ public class ClothesSlot : MonoBehaviour
         {
             if (clothes.clothesInfo.totalAmount > clothes.clothesInfo.wearingCount)
             {
-                if (rabbitCitizen.clothes != null)      // 이미 다른 옷을 입고 있을 때에는
+                // 이미 다른 옷을 입고 있을 때에는 그 옷을 찾아 벗김
+                if (rabbitCitizen.clothes != null)      
                 {
-                    for (int i = 0; i < ClothesManager.Instance.clothesSlots.Count; i++)
+                    for (int i = 0; i < clothesManager.clothesSlotCount; i++)
                     {
-                        if (ClothesManager.Instance.clothesSlots[i].clothes == rabbitCitizen.clothes)
+                        if (clothesManager.clothesSlotList[i].clothes == rabbitCitizen.clothes)
                         {
-                            ClothesManager.Instance.clothesSlots[i].PutOff();           // 해당 옷을 벗김
+                            clothesManager.clothesSlotList[i].PutOff();
                             break;
                         }
                     }

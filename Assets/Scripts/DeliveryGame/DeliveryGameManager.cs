@@ -31,7 +31,7 @@ public class DeliveryGameManager : MonoBehaviour
     [SerializeField]
     private Image[] lifeImages;
 
-    private int life;
+    private int life;       // »ý¸í
     public int Life
     {
         get { return life; }
@@ -86,19 +86,7 @@ public class DeliveryGameManager : MonoBehaviour
         }
     }
 
-    //[SerializeField]
-    //private Text wishCountText;
-
     public int wishCount = 0;
-    //public int WishCount
-    //{
-    //    get { return wishCount; }
-    //    set
-    //    {
-    //        wishCount = value;
-    //        wishCountText.text = wishCount.ToString();
-    //    }
-    //}
 
     [SerializeField]
     private Text puzzleCountText;
@@ -116,16 +104,7 @@ public class DeliveryGameManager : MonoBehaviour
 
     [SerializeField]
     private Text carrotCountText;
-
     public int carrotCount = 0;
-    //public int CarrotCount
-    //{
-    //    get { return carrotCount; }
-    //    set
-    //    {
-    //        carrotCount = value;
-    //    }
-    //}
 
     [SerializeField]
     private Text timeCountText;
@@ -140,7 +119,6 @@ public class DeliveryGameManager : MonoBehaviour
         }
     }
 
-    
     [SerializeField]
     private Text gaugeAmountText;
 
@@ -261,8 +239,6 @@ public class DeliveryGameManager : MonoBehaviour
 
         soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
         gaugeAmountText.gameObject.SetActive(true);
-
-        
     }
 
     /// <summary>
@@ -348,7 +324,7 @@ public class DeliveryGameManager : MonoBehaviour
         // ½Å·Úµµ È¹µæ
         int gaugeAmount = Score + wishCount;
         GameManager.Instance.IncreaseGaugeNotAnim(gaugeAmount);
-
+        
         // °á°úÃ¢¿¡ ½Å·Úµµ °á°ú ¶ç¿ì±â
         StringBuilder sb = new StringBuilder();
         sb.Append("½Å·Úµµ  ");
@@ -375,14 +351,5 @@ public class DeliveryGameManager : MonoBehaviour
 
         GameManager.Instance.EndDeliveryGame();
     }
-
-    ///// <summary>
-    ///// ¾ÀÀ» º¯°æ (ÀÎ½ºÆåÅÍ¿¡¼­ È£Ãâ)
-    ///// </summary>
-    //public void ChangeScene()
-    //{
-    //    soundManager.StopBGM();           // BGM Á¾·á
-    //    GameLoadManager.LoadScene("SantaVillage");
-    //}
     #endregion
 }

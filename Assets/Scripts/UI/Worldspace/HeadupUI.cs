@@ -12,11 +12,11 @@ using UnityEngine.UI;
 
 public class HeadupUI : MonoBehaviour
 {
-    [SerializeField]
-    Transform hostObject;
+    #region 변수
+    public Transform hostObject;    // 붙어있을 host
 
     [SerializeField]
-    float height = 8f;
+    float height = 8f;          // hostObject와 떨어져있을 거리
 
     float Distance;
 
@@ -25,8 +25,10 @@ public class HeadupUI : MonoBehaviour
     Camera cam;
 
     [SerializeField]
-    private bool isUseDistance = true;
+    private bool isUseDistance = true;      // 카메라와의 거리를 계산할 것인지?
+    #endregion
 
+    #region 유니티 함수
     void Awake()
     {
         cam = CameraMovement.Instance.cam;
@@ -42,8 +44,9 @@ public class HeadupUI : MonoBehaviour
             StartCoroutine(CamDistance());
         }
     }
+    #endregion
 
-
+    #region 코루틴
     /// <summary>
     /// 메인 카메라와의 거리를 계산하여 거리가 가까우면 보이지 않게 함
     /// </summary>
@@ -71,4 +74,5 @@ public class HeadupUI : MonoBehaviour
             yield return null;
         }
     }
+    #endregion
 }

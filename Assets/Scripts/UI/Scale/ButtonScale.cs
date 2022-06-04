@@ -1,5 +1,5 @@
 /**
- * @details 이벤트 트리거로 scale 변경
+ * @details 이벤트 트리거로 오브젝트의 scale 변경
  * @author 김미성
  * @date 22-04-27
  */
@@ -11,11 +11,7 @@ using UnityEngine.EventSystems;
 
 public class ButtonScale : ClickScale
 {
-    void OnPointerDown(PointerEventData eventData)      // 마우스를 눌렀을 때
-    {
-        StartCoroutine(ScaleDown());                     // 스케일을 작아지게
-    }
-
+    #region 유니티 함수
     protected override IEnumerator Start()
     {
         yield return StartCoroutine(base.Start()); // 베이스 호출
@@ -29,5 +25,9 @@ public class ButtonScale : ClickScale
         et.triggers.Add(entry_pointerDown);     // 최종으로 추가
     }
 
-    
+    void OnPointerDown(PointerEventData eventData)      // 마우스를 눌렀을 때
+    {
+        StartCoroutine(ScaleDown());                     // 스케일을 작아지게
+    }
+    #endregion
 }

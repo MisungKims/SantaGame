@@ -53,27 +53,6 @@ public class CameraMovement : MonoBehaviour
     private Vector3 movePos;
     public bool canMove = true;
 
-    [Header("---------- Rotate")]
-    private float rotateSpeed = 18f;
-
-    //private float minRotateX = -10f;                // 회전 시 x축의 Min 값
-    //private float maxRotateX = 20f;                 // 회전 시 x축의 Max 값
-
-    //private float minRotateY = -55f;                // 회전 시 y축의 Min 값
-    //private float maxRotateY = 55f;                 // 회전 시 y축의 Max 값
-
-    //private float mouseX;
-    //private float mouseY;
-    //private float touchX;
-    //private float touchY;
-
-    //Vector3 FirstPoint;
-    //Vector3 SecondPoint;
-    //float xAngle;
-    //float yAngle;
-    //float xAngleTemp;
-    //float yAngleTemp;
-
 
     [Header("---------- Zoom")]
     public Camera cam;
@@ -82,23 +61,68 @@ public class CameraMovement : MonoBehaviour
     private float zoomMaxValue = 70f;
     private float sensitive = 1f;
 
+    Vector2 touchZeroPrevPos;
+    Vector2 touchOnePrevPos;
 
-    private GameManager gameManager;
+    float prevTouchDeltaMag;
+    float touchDeltaMag;
+
+    float deltaMagnitudeDiff;
+
+    float zoomSpeed = 0.2f;
+
+    Touch touchZero;
+    Touch touchOne;
+
+    // 캐싱
     private UIManager uiManager;
-
-
-    Vector3 targetPos;
 
     #endregion
 
-    #region 사용자 정의 함수
+    #region 유니티 함수
 
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            if (instance != this)
+                Destroy(this.gameObject);
+        }
 
+        uiManager = UIManager.Instance;
+
+        chaseState = EChaseState.noChase;                       // 카메라의 상태 지정   
+
+        cam.fieldOfView = basicFieldOfView;                     // 카메라의 기본 값 조정
+
+        basicCamAngles = new Vector3(basicRotateX, 0, 0);       // 카메라의 기본 각도 조정
+        cam.transform.eulerAngles = basicCamAngles;
+
+        chasingCamAngles = new Vector3(chasingRotateX, 0, 0);   // 추적 시 카메라의 각도 설정
+
+        distance = distanceTransform.localPosition;             // 카메라의 기본 위치 조정
+        cam.transform.position = distance;
+    }
+
+    private void Start()
+    {
+        StartCoroutine(Angles());
+        StartCoroutine(Position());
+        StartCoroutine(FieldOfView());
+    }
+
+    private void LateUpdate()
+    {
+        CameraMove();       // 카메라의 움직임
+    }
+    #endregion
+
+    #region 함수
     #region 카메라 움직임
-
-    // ui열릴때는 x
-    //moveSpeed너무 빠름
-    //
 
     /// <summary>
     /// 터치로 카메라를 움직임
@@ -175,39 +199,6 @@ public class CameraMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// 터치로 카메라를 회전
-    /// </summary>
-    void CamRotate()
-    {
-        if (isSantaAngleStart) return;
-
-        // 마우스로 회전
-        if (Input.GetMouseButton(0))
-        {
-            Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) * Time.deltaTime * rotateSpeed;
-            Vector3 camAngle = transform.rotation.eulerAngles;
-
-            float yRot = camAngle.y + mouseDelta.x;
-            yRot = Mathf.Clamp(yRot, 0f, 5f);
-
-            transform.rotation = Quaternion.Euler(0, yRot, 0);
-        }
-    }
-
-    Vector2 touchZeroPrevPos;
-    Vector2 touchOnePrevPos;
-
-    float prevTouchDeltaMag;
-    float touchDeltaMag;
-
-    float deltaMagnitudeDiff;
-
-    float zoomSpeed = 0.2f;
-
-    Touch touchZero;
-    Touch touchOne;
-
-    /// <summary>
     /// 터치로 카메라 줌 인/줌 아웃
     /// </summary>
     void Zoom()
@@ -242,10 +233,7 @@ public class CameraMovement : MonoBehaviour
                     chaseState = EChaseState.noChase;
                 }
 
-                if (chaseState == EChaseState.noChase)          // 추적 중이 아니면
-                    CamMove();                                 // 카메라 이동
-                //if (chaseState == EChaseState.chaseSanta)      // 추적 중이면
-                //    CamRotate();                               // 오브젝트를 중심으로 카메라 회전
+                if (chaseState == EChaseState.noChase) CamMove();        // 추적 중이 아니면 카메라 이동                                              
             }
 
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -286,7 +274,6 @@ public class CameraMovement : MonoBehaviour
         isSantaAngleStart = true;
     }
 
-
     /// <summary>
     /// 카메라가 빌딩의 카메라 위치로 이동
     /// </summary>
@@ -299,8 +286,6 @@ public class CameraMovement : MonoBehaviour
         chasingTarget = obj;
         buildingDistance = distance;
     }
-
-   
 
     /// <summary>
     /// 타깃 추적 종료 (인스펙터에서 호출)
@@ -432,50 +417,6 @@ public class CameraMovement : MonoBehaviour
 
 #endregion
 
-#endregion
-
-
-#region 유니티 함수
-
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            if (instance != this)
-                Destroy(this.gameObject);
-        }
-
-        uiManager = UIManager.Instance;
-    }
-
-    private void Start()
-    {
-        chaseState = EChaseState.noChase;                       // 카메라의 상태 지정   
-
-        cam.fieldOfView = basicFieldOfView;                     // 카메라의 기본 값 조정
-
-        basicCamAngles = new Vector3(basicRotateX, 0, 0);       // 카메라의 기본 각도 조정
-        cam.transform.eulerAngles = basicCamAngles;
-
-        chasingCamAngles = new Vector3(chasingRotateX, 0, 0);   // 추적 시 카메라의 각도 설정
-
-        distance = distanceTransform.localPosition;             // 카메라의 기본 위치 조정
-        cam.transform.position = distance;
-
-
-        StartCoroutine(Angles());
-        StartCoroutine(Position());
-        StartCoroutine(FieldOfView());
-    }
-
-    private void LateUpdate()
-    {
-        CameraMove();       // 카메라의 움직임
-    }
 #endregion
 }
 

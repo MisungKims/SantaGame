@@ -15,19 +15,23 @@ public class RainPuzzlePiece : MonoBehaviour
     private RectTransform rect;
     private float moveSpeed;
 
-    public bool isStop;
+    public bool isStop;         // ¸ØÃè´ÂÁö?
 
     // Ä³½Ì
     private WaitForSeconds wait;
+    private SoundManager soundManager;
+    private PuzzleManager puzzleManager;
     #endregion
 
     #region À¯´ÏÆ¼ ÇÔ¼ö
     private void Awake()
     {
+        soundManager = SoundManager.Instance;
+        puzzleManager = PuzzleManager.Instance;
+
         rect = this.GetComponent<RectTransform>();
     }
 
-    // Start is called before the first frame update
     void OnEnable()
     {
         isStop = false;
@@ -78,8 +82,8 @@ public class RainPuzzlePiece : MonoBehaviour
         isStop = true;
         this.gameObject.SetActive(false);
 
-        SoundManager.Instance.PlaySoundEffect(ESoundEffectType.getGoldButton);
-        PuzzleManager.Instance.GetRandomPuzzle();       // ·£´ýÀ¸·Î ÆÛÁñ È¹µæ
+        soundManager.PlaySoundEffect(ESoundEffectType.getGoldButton);
+        puzzleManager.GetRandomPuzzle();       // ·£´ýÀ¸·Î ÆÛÁñ È¹µæ
     }
     #endregion
 }

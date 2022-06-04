@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// 배경이 움직일 방향
+/// </summary>
 enum EBackgroundDirection
 {
     leftToRight,
@@ -19,17 +22,17 @@ enum EBackgroundDirection
 
 public class Background : MonoBehaviour
 {
+    #region 변수
     [SerializeField]
     private float speed = 0.03f;
-
-    Material mat;
-
-    //[SerializeField]
-    //bool isCross;       // 대각선으로 움직일 것인지?
 
     [SerializeField]
     private EBackgroundDirection direction;
 
+    private Material mat;           // 머터리얼
+    #endregion
+
+    #region 유니티 함수
     private void Start()
     {
         mat = GetComponent<Image>().material;
@@ -60,5 +63,6 @@ public class Background : MonoBehaviour
                 break;
         }
     }
+    #endregion
 }
 

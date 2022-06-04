@@ -1,7 +1,7 @@
 /**
  * @brief 퍼즐을 관리
  * @author 김미성
- * @date 22-04-21
+ * @date 22-06-02
  */
 
 using System.Collections;
@@ -13,26 +13,36 @@ using System.IO;
 public class PuzzleManager : MonoBehaviour
 {
     #region 변수
-    public List<Puzzle> puzzleList = new List<Puzzle>();    // 퍼즐의 모든 정보를 담고 있는 리스트
+    // 퍼즐의 모든 정보를 담고 있는 리스트
+    public List<Puzzle> puzzleList = new List<Puzzle>();    
 
-    public List<PuzzleButton> puzzleButtons = new List<PuzzleButton>();
+    // 퍼즐 UI 버튼 리스트
+    public List<PuzzleButton> puzzleButtons = new List<PuzzleButton>();    
 
     // 퍼즐의 이미지
     [SerializeField]
     private List<Sprite> puzzleImageList = new List<Sprite>();
 
+    // 퍼즐 조각 Sprite 배열 구조체
     [System.Serializable]
-    class puzzlePieceSprites
+    struct puzzlePieceSprites
     {
         public Sprite[] sprite;
     }
 
+    // 퍼즐 조각 이미지 배열 리스트
     [SerializeField]
     private List<puzzlePieceSprites> puzzlePieceImageList = new List<puzzlePieceSprites>();
+
+
+    //앱의 활성화 상태를 저장하는 변수
+    bool isPaused = false;
+
 
     // 캐싱
     private PuzzleUI puzzleUI;
     private GetRewardWindow getRewardWindow;
+    private GiftManager giftManager;
 
     // 싱글톤
     private static PuzzleManager instance;
@@ -55,7 +65,32 @@ public class PuzzleManager : MonoBehaviour
 
         getRewardWindow = UIManager.Instance.getRewardWindow;
 
+        giftManager = GiftManager.Instance;
+
         LoadData();
+    }
+
+    void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            isPaused = true;
+
+            SaveData();         // 앱이 비활성화되었을 때 데이터 저장
+        }
+
+        else
+        {
+            if (isPaused)
+            {
+                isPaused = false;
+            }
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        SaveData();         // 앱 종료 시 데이터 저장
     }
     #endregion
 
@@ -65,10 +100,6 @@ public class PuzzleManager : MonoBehaviour
     // 테스트 용
     public void get()
     {
-        //GetPiece(EPuzzle.rcCar, 0);
-        //GetPiece(EPuzzle.rcCar, 1);
-        //GetPiece(EPuzzle.rcCar, 2);
-
         StartCoroutine(getCoru());
     }
 
@@ -86,31 +117,36 @@ public class PuzzleManager : MonoBehaviour
     }
 
 
-  
+
     /// <summary>
     /// 퍼즐 조각 획득
     /// </summary>
     /// <param name="ePuzzle">획득한 퍼즐의 종류</param>
     /// <param name="pieceIndex">퍼즐 조각 인덱스</param>
+    /// <param name="isOpenWindow">보상 획득창을 열 것인지?</param>
     public void GetPiece(EGiftType ePuzzle, int pieceIndex, bool isOpenWindow)
     {
         PuzzlePiece puzzlePiece = puzzleList[(int)ePuzzle].puzzlePieceList[pieceIndex];
-        puzzlePiece.isGet = true;
-        puzzleList[(int)ePuzzle].puzzlePieceList[pieceIndex] = puzzlePiece;     // 해당 퍼즐 조각의 isGet을 true로 바꿈
 
-        puzzleButtons[(int)ePuzzle].Count++;
-
-        IsSuccess(ePuzzle);     // 퍼즐을 다 완성했는지 확인
-
-        // 퍼즐 UI가 열려있고 얻은 퍼즐을 보여주고 있다면 새로고침
-        if (puzzleUI.gameObject.activeSelf && puzzleUI.puzzleType == ePuzzle)
+        if (!puzzlePiece.isGet)          // 새로 얻은 퍼즐조각이라면
         {
-            puzzleUI.RefreshPieceImage(pieceIndex);
-        }
+            puzzlePiece.isGet = true;
 
+            puzzleButtons[(int)ePuzzle].Count++;
+
+            IsSuccess(ePuzzle);     // 퍼즐을 다 완성했는지 확인
+
+            // 퍼즐 UI가 열려있고 얻은 퍼즐을 보여주고 있다면 새로고침
+            if (puzzleUI.gameObject.activeSelf && puzzleUI.puzzleType == ePuzzle)
+            {
+                puzzleUI.RefreshPieceImage(pieceIndex);
+            }
+        }
+        
         if (isOpenWindow)
         {
-            getRewardWindow.OpenWindow("퍼즐 조각", puzzlePiece.pieceImage);      // 보상 획득창 보여줌
+            string puzzleName = giftManager.giftList[(int)ePuzzle].giftName;
+            getRewardWindow.OpenWindow(puzzleName + " 퍼즐 조각", puzzlePiece.pieceImage);      // 보상 획득창 보여줌
         }
     }
 
@@ -119,41 +155,31 @@ public class PuzzleManager : MonoBehaviour
     /// </summary>
     public void GetRandomPuzzle()
     {
-        EGiftType RandomPuzzleIndex = GiftManager.Instance.RandomGift().giftType;        // 확률에 따라 랜덤으로 퍼즐 그림 정하기
-        
-        int RandomPieceIndex = Random.Range(0, 12);         // 그 퍼즐의 어떤 조각을 가져올지
+        // 확률에 따라 랜덤으로 퍼즐 그림 정하기
+        EGiftType RandomPuzzleIndex = giftManager.RandomGift().giftType;        
+
+        // 그 퍼즐의 어떤 조각을 가져올지
+        int RandomPieceIndex = Random.Range(0, 12);                        
 
         GetPiece(RandomPuzzleIndex, RandomPieceIndex, true);
     }
 
+    /// <summary>
+    /// 다수의 랜덤 퍼즐 조각 획득
+    /// </summary>
+    /// <param name="count">얼만큼 퍼즐 조각을 획득할 것인지</param>
     public void GetManyRandomPiece(int count)
     {
-        EGiftType RandomPuzzleIndex = GiftManager.Instance.RandomGift().giftType;        // 확률에 따라 랜덤으로 퍼즐 그림 정하기
+        for (int i = 0; i < count; i++)
+        {
+            EGiftType RandomPuzzleIndex = GiftManager.Instance.RandomGift().giftType;        // 확률에 따라 랜덤으로 퍼즐 그림 정하기
 
-        int RandomPieceIndex = Random.Range(0, 12);         // 그 퍼즐의 어떤 조각을 가져올지
+            int RandomPieceIndex = Random.Range(0, 12);         // 그 퍼즐의 어떤 조각을 가져올지
 
-        GetPiece(RandomPuzzleIndex, RandomPieceIndex, false);
+            GetPiece(RandomPuzzleIndex, RandomPieceIndex, false);
+        }
     }
 
-
-    ///// <summary>
-    ///// 다수의 랜덤 퍼즐 조각 획득
-    ///// </summary>
-    ///// <param name="count">획득할 조각의 개수</param>
-    ///// <returns></returns>
-    //IEnumerator GetManyRandomPiece(int count)
-    //{
-    //    for (int i = 0; i < count; i++)
-    //    {
-            
-    //        //GetRandomPuzzle();
-
-    //        //while (!getRewardWindow.isTouch)        // 보상 획득 창이 닫힐 때까지 대기
-    //        //{
-    //        //    yield return null;
-    //        //}
-    //    }
-    //}
 
     /// <summary>
     /// 퍼즐을 다 완성했는지 체크
@@ -171,35 +197,7 @@ public class PuzzleManager : MonoBehaviour
 
         puzzleList[(int)ePuzzle].isSuccess = true;
     }
-    #endregion
-
-    //앱의 활성화 상태를 저장하는 변수
-    bool isPaused = false;
-
-    void OnApplicationPause(bool pause)
-    {
-        if (pause)
-        {
-            isPaused = true;
-
-            SaveData();         // 앱이 비활성화되었을 때 데이터 저장
-        }
-
-        else
-        {
-            if (isPaused)
-            {
-                isPaused = false;
-                /* 앱이 활성화 되었을 때 처리 */
-            }
-        }
-    }
-
-    void OnApplicationQuit()
-    {
-        SaveData();         // 앱 종료 시 데이터 저장
-    }
-
+   
     /// <summary>
     /// 데이터 저장
     /// </summary>
@@ -221,20 +219,20 @@ public class PuzzleManager : MonoBehaviour
             string jdata = File.ReadAllText(Application.persistentDataPath + "/PuzzleData.json");
 
             puzzleList = JsonUtility.FromJson<Serialization<Puzzle>>(jdata).target;
+
+            // 값 초기화 (퍼즐의 이미지, 퍼즐 조각 개수)
             for (int i = 0; i < puzzleList.Count; i++)
             {
                 puzzleList[i].puzzleImage = puzzleImageList[i];
 
                 for (int j = 0; j < puzzleList[i].puzzlePieceList.Count; j++)
                 {
-                    //puzzleList[i].puzzlePieceList[j].isGet = true;
                     puzzleList[i].puzzlePieceList[j].pieceImage = puzzlePieceImageList[i].sprite[j];
                     if (puzzleList[i].puzzlePieceList[j].isGet)
                     {
                         puzzleButtons[i].Count++;
                     }
                 }
-                
             }
             
 
@@ -243,4 +241,5 @@ public class PuzzleManager : MonoBehaviour
 
         return false;
     }
+    #endregion
 }

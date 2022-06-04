@@ -93,5 +93,4 @@ public class AttendanceObject : MonoBehaviour
         }
     }
     #endregion
-
 }

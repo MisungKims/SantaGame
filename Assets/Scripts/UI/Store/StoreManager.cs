@@ -7,13 +7,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.IO;
-
-//[System.Serializable]
-//public class StoreData
-//{
-
-//}
 
 public class StoreManager : MonoBehaviour
 {
@@ -32,8 +25,6 @@ public class StoreManager : MonoBehaviour
     [HideInInspector]
     public List<StoreObject> storeObjectList = new List<StoreObject>();
 
-   // private List<StoreData> storeDatas = new List<StoreData>();
-    
 
     // UI 배치
     private RectTransform rectTransform;
@@ -45,6 +36,7 @@ public class StoreManager : MonoBehaviour
 
     #endregion
 
+    #region 유니티 함수
     void Awake()
     {
         if (instance == null)
@@ -63,7 +55,9 @@ public class StoreManager : MonoBehaviour
 
         GetObject();
     }
+    #endregion
 
+    #region 함수
     /// <summary>
     /// 초기 위치와 사이즈 설정
     /// </summary>
@@ -79,7 +73,7 @@ public class StoreManager : MonoBehaviour
     /// <summary>
     /// 오브젝트 매니저의 리스트를 가져와 상점 UI 생성
     /// </summary>
-   void GetObject()
+    void GetObject()
     {
         for (int i = 0; i < objectManager.objectList.Count; i++)
         {
@@ -100,12 +94,9 @@ public class StoreManager : MonoBehaviour
         copiedStoreObject.index = i;
         copiedStoreObject.storeObject = newObject;
 
-        
-
         // 상점 오브젝트의 이미지 설정
         copiedStoreObject.buildingImage.sprite = newObject.buildingSprite;      //오류 이렇게 하지말기 (오브젝트 매니저에서 가져오기)
         copiedStoreObject.santaImage.sprite = newObject.santaSprite;
-
 
         if (newObject.buildingLevel > 0)
         {
@@ -117,16 +108,7 @@ public class StoreManager : MonoBehaviour
             copiedStoreObject.isBuySanta = true;
         }
 
-        //RectTransform objRect = copiedStoreObject.buildingImage.transform.GetComponent<RectTransform>();
-        //RectTransform ImgRect = buildingImages[i].transform.GetComponent<RectTransform>();
-        // objRect.sizeDelta = ImgRect.sizeDelta;
-
-
-
-        // objRect = copiedStoreObject.santaImage.transform.GetComponent<RectTransform>();
-        // ImgRect = santaImages[i].transform.GetComponent<RectTransform>();
-        // objRect.sizeDelta = ImgRect.sizeDelta;
-
         storeObjectList.Add(copiedStoreObject);
     }
+    #endregion
 }
