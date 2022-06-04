@@ -22,80 +22,103 @@ enum ECitizenBehavior
     goBuilding
 }
 
-
 public class RabbitCitizen : MonoBehaviour
 {
     #region 변수
-    [SerializeField]
-    private string carrot = "100.0A";   // 얻을 당근
-
-    private float waitSecond;           // 당근을 몇 초마다 얻을건지
-
-    private goal goal;      // 사용 중인 건물의 위치
-    private int usingIndex; // 사용 중인 건물 위치의 인덱스
-
-    private ECitizenBehavior citizenBehavior;
-
     private Animator anim;
+    public SkinnedMeshRenderer rabbitMat;       // 머터리얼
     [SerializeField]
     private NavMeshAgent nav;
 
 
+    // 당근 획득
+    [SerializeField]
+    private string carrot = "100.0A";   // 얻을 당근
+
+    private float waitSecond;           // 당근을 몇 초마다 얻을건지
     private CitizenButtonRay getCarrotButton;      // 당근 획득 UI
     public bool isTouch = false;       // 당근 획득 UI를 클릭했는지
     bool isAutoGet = false;         // 당근을 자동으로 받을지
 
+
     // 이동 시 필요한 변수
-    bool isCanGo = true;
-    Vector3 goalPoint;
-    bool isFindGoal = false;
+    private goal goal;          // 사용 중인 건물의 위치
+    private int usingIndex;     // 사용 중인 건물 위치의 인덱스
+
+    private ECitizenBehavior citizenBehavior;
+
+    bool isCanGo = true;        // 발 밑에 땅이 있어서 갈 수 있는지?
+    Vector3 goalPoint;          // 목적지
+    bool isFindGoal = false;    // 목적지를 찾았는지?
+
+    int preGoal = -1;           // 이전 목적지의 인덱스
+
+    Vector3 centerPos;          // 랜덤 목적지 범위의 center
+    int range;                  // 랜덤 목적지 범위
+
+    bool isGoing = false;       // 움직이고 있는지?
+    int timerCnt = 0;
 
     [SerializeField]
     private LayerMask layerMask;
 
-    // 머터리얼
-   public SkinnedMeshRenderer rabbitMat;
-
-    // 캐싱
-    private WaitForSeconds waitForSecond;
-    private GameManager gameManager;
-
-    //private goal preGoal;
-
-    int preGoal = -1;
-
+    
+    // 옷
     public bool isWearing = false;
     public Clothes clothes = null;      // 주민의 옷(코디템)
     private GameObject clothesObj;
-
     public Transform clothesParent;    // 옷 오브젝트의 부모
 
+
+    // 캐싱
+    private WaitForSeconds randomWaitForSecond;
+    private GameManager gameManager;
+    private ObjectPoolingManager objectPoolingManager;
+    private UIManager uIManager;
+    private CameraMovement cameraMovement;
     #endregion
 
 
     #region 유니티 함수
     void Awake()
     {
-        gameManager = GameManager.Instance;
         anim = GetComponent<Animator>();
 
-        int rand = Random.Range(0, 12);
-        rabbitMat.material = CitizenRabbitManager.Instance.materials[rand];       // 토끼의 Material을 랜덤으로 설정
-        
+        gameManager = GameManager.Instance;
+        objectPoolingManager = ObjectPoolingManager.Instance;
+        uIManager = UIManager.Instance;
+        cameraMovement = CameraMovement.Instance;
+
         waitSecond = Random.Range(20.0f, 70.0f);            // 당근을 몇 초마다 얻을건지 랜덤한 시간을 정함
-        waitForSecond = new WaitForSeconds(waitSecond);
+        randomWaitForSecond = new WaitForSeconds(waitSecond);
     }
 
     private void Start()
     {
-        StartCoroutine(GetCarrotTimer());                   // 당근 획득 타이머 실행
-        StartCoroutine(Action());
+        StartCoroutine(GetCarrotTimer());       // 당근 획득 타이머 실행
+
+        // 토끼 이동 시작
+        StartCoroutine(Action());              
         StartCoroutine(Timer());
+
+        StartCoroutine(UpdateCoru());
     }
     #endregion
 
-   
     #region 코루틴
+    private IEnumerator UpdateCoru()
+    {
+        while (true)
+        {
+            SetCarrotButtonPos();
+
+            TouchRabbit();
+
+            yield return null;
+        }
+    }
+
+    #region 당근 획득
     /// <summary>
     /// 랜덤한 시간이 지난 후 당근 획득 UI 생성
     /// </summary>
@@ -103,10 +126,10 @@ public class RabbitCitizen : MonoBehaviour
     {
         while (true)
         {
-            yield return waitForSecond;
+            yield return randomWaitForSecond;
 
             GetButton();
-           
+
             yield return StartCoroutine(IsGetCarrot());         // 당근 획득을 기다림
         }
     }
@@ -134,14 +157,13 @@ public class RabbitCitizen : MonoBehaviour
             yield return null;
         }
 
-        gameManager.MyCarrots += GoldManager.UnitToBigInteger(carrot);
+        gameManager.MyCarrots += GoldManager.UnitToBigInteger(carrot);          // 당근 획득
 
         yield return new WaitForSeconds(0.13f);
-        ObjectPoolingManager.Instance.Set(getCarrotButton.gameObject, EObjectFlag.getCarrotButton);
+        ObjectPoolingManager.Instance.Set(getCarrotButton.gameObject, EObjectFlag.getCarrotButton);         // UI를 오브젝트 풀에 반환
         getCarrotButton = null;
     }
 
-    
     /// <summary>
     /// 10초 동안 수동으로 획득하지 않으면 자동으로 획득
     /// </summary>
@@ -158,13 +180,12 @@ public class RabbitCitizen : MonoBehaviour
         {
             isAutoGet = true;
         }
-        
+
         yield return null;
     }
+    #endregion
 
-    Vector3 centerPos;
-    int range;
-
+    #region 움직임
     /// <summary>
     /// 위치를 정해서 이동한 후 애니메이션을 실행
     /// </summary>
@@ -172,13 +193,13 @@ public class RabbitCitizen : MonoBehaviour
     IEnumerator Action()
     {
         while (true)
-        {   
+        {
             // 랜덤 행동을 정함
-            //int randBehavior = Random.Range(0, 4);
-            int randBehavior = 3;    
+            int randBehavior = Random.Range(0, 4);
+            //int randBehavior = 3;    
             citizenBehavior = (ECitizenBehavior)randBehavior;
 
-            isFindGoal= false;
+            isFindGoal = false;
 
             if (isCanGo)
             {
@@ -208,20 +229,17 @@ public class RabbitCitizen : MonoBehaviour
                 isFindGoal = true;
             }
 
-           
-
             if (isFindGoal)
             {
                 isCanGo = true;
                 isGoing = true;
-                anim.SetBool("isWalking", true);
+                anim.SetBool("isWalking", true);        // 걷기 애니메이션 실행
 
-                nav.SetDestination(goalPoint);
-                
+                nav.SetDestination(goalPoint);          // AI의 목적지 설정
+
                 yield return new WaitForSeconds(1f);
 
                 float distance = Vector3.Distance(this.transform.position, goalPoint);
-                //int i = 0;
                 while (distance > 1f && isCanGo && timerCnt < 25)
                 {
                     distance = Vector3.Distance(this.transform.position, goalPoint);
@@ -246,12 +264,16 @@ public class RabbitCitizen : MonoBehaviour
         }
     }
 
-    bool isGoing = false;
-    int timerCnt = 0;
+    /// <summary>
+    /// 토끼가 움직일 동안 실행하는 타이머
+    /// </summary>
+    /// <returns></returns>
     IEnumerator Timer()
     {
         while (true)
         {
+            timerCnt = 0;
+
             while (isGoing)
             {
                 yield return new WaitForSeconds(1f);
@@ -261,17 +283,6 @@ public class RabbitCitizen : MonoBehaviour
             yield return null;
         }
     }
-
-    public bool CanGo()
-    {
-        // 갈 수 있는 땅이 없으면 멈춤
-        Ray rayRoad = new Ray(transform.position + transform.TransformVector(0, 0.1f, 0.2f),
-                        transform.TransformDirection(0, -1, 0));
-        Debug.DrawLine(rayRoad.origin, rayRoad.origin + rayRoad.direction, Color.red);
-    
-        return Physics.Raycast(rayRoad, out _, 0.8f, layerMask);
-    }
-
 
     /// <summary>
     /// 각 행동에 맞는 애니메이션을 실행
@@ -292,12 +303,11 @@ public class RabbitCitizen : MonoBehaviour
             {
                 if (goal != null)
                 {
-                    this.transform.LookAt(goal.goalObjects[usingIndex].lookAtPos);
+                    this.transform.LookAt(goal.goalObjects[usingIndex].lookAtPos);          // 바라봐야하는 곳을 바라보도록 함
                 }
             }
         }
-        
-        
+
         int randTime = Random.Range(3, 10);         // 몇 초 동안 행동할 건지 랜덤으로 결정
 
         anim.SetInteger("Action", (int)citizenBehavior);
@@ -317,10 +327,65 @@ public class RabbitCitizen : MonoBehaviour
         this.transform.eulerAngles = temp;
     }
     #endregion
+    #endregion
 
     #region 함수
-    
-    
+    /// <summary>
+    /// 오브젝트 풀에서 당근 획득 UI를 가져옴
+    /// </summary>
+    void GetButton()
+    {
+        getCarrotButton = objectPoolingManager.Get(EObjectFlag.getCarrotButton).GetComponent<CitizenButtonRay>();
+        getCarrotButton.citizen = this;
+    }
+
+    /// <summary>
+    /// 카메라가 해당 산타를 따라다님
+    /// </summary>
+    public void SetCamTargetThis()
+    {
+        uIManager.ShowCitizenPanel(this);
+        cameraMovement.ChaseSanta(this.transform);
+    }
+
+    /// <summary>
+    /// 토끼 터치 시 카메라의 타깃을 토끼로 설정
+    /// </summary>
+    void TouchRabbit()
+    {
+        if (Input.GetMouseButtonDown(0) && !uIManager.isOpenPanel)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit = new RaycastHit();
+
+            if (true == (Physics.Raycast(ray.origin, ray.direction * 10, out hit)))
+            {
+                if (hit.collider.CompareTag("Santa") && hit.collider.name == this.name)
+                {
+                    SetCamTargetThis();
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 당근 획득 버튼의 위치를 설정
+    /// </summary>
+    void SetCarrotButtonPos()
+    {
+        if (getCarrotButton && getCarrotButton.gameObject.activeSelf)
+        {
+            Vector3 newPos = transform.position;
+            newPos.y += 5f;
+
+            getCarrotButton.transform.position = newPos;
+        }
+    }
+
+    #region 움직임
+    /// <summary>
+    /// 건물의 해당 위치를 벗어날 때
+    /// </summary>
     void EndUseBuilding()
     {
         if (goal != null)
@@ -328,16 +393,6 @@ public class RabbitCitizen : MonoBehaviour
             goal.goalObjects[usingIndex].isUse = false;
             goal = null;
         }
-    }
-
-    /// <summary>
-    /// 오브젝트 풀에서 당근 획득 UI를 가져옴
-    /// </summary>
-    void GetButton()
-    {
-        getCarrotButton = ObjectPoolingManager.Instance.Get(EObjectFlag.getCarrotButton).GetComponent<CitizenButtonRay>();
-        getCarrotButton.citizen = this;
-        //getCarrotButton.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -373,7 +428,7 @@ public class RabbitCitizen : MonoBehaviour
     {
         // 건물 중 갈 곳을 설정
         int randBuilding = Random.Range(0, CitizenRabbitManager.Instance.goalPositions.Count);
-        
+
         // 직전에 갔던 건물에는 가지 않도록
         if (randBuilding == preGoal)
         {
@@ -388,12 +443,12 @@ public class RabbitCitizen : MonoBehaviour
         // 설정한 건물에서 산타 주민이 사용하지 않는 위치를 찾아 그 곳으로 이동
         for (int i = 0; i < goal.goalObjects.Length; i++)
         {
-           if (!goal.goalObjects[i].isUse)    // 가려고 하는 위치가 사용 중이 아닐 때
-           {
+            if (!goal.goalObjects[i].isUse)    // 가려고 하는 위치가 사용 중이 아닐 때
+            {
                 usingIndex = i;
                 result = goal.goalObjects[i].pos.position;
                 return true;
-           }
+            }
         }
 
         result = Vector3.zero;
@@ -401,14 +456,20 @@ public class RabbitCitizen : MonoBehaviour
     }
 
     /// <summary>
-    /// 카메라가 해당 산타를 따라다님
+    /// 레이캐스트로 토끼의 발 밑에 땅이 있는지 없는지 확인
     /// </summary>
-    public void SetCamTargetThis()
+    /// <returns>갈 수 있으면 true</returns>
+    public bool CanGo()
     {
-        UIManager.Instance.ShowCitizenPanel(this);
-        CameraMovement.Instance.ChaseSanta(this.transform);
-    }
+        Ray rayRoad = new Ray(transform.position + transform.TransformVector(0, 0.1f, 0.2f),
+                        transform.TransformDirection(0, -1, 0));
+        Debug.DrawLine(rayRoad.origin, rayRoad.origin + rayRoad.direction, Color.red);
 
+        return Physics.Raycast(rayRoad, out _, 0.8f, layerMask);
+    }
+    #endregion
+
+    #region 코디
     /// <summary>
     /// 옷을 입음
     /// </summary>
@@ -419,7 +480,7 @@ public class RabbitCitizen : MonoBehaviour
         {
             this.clothes = clothes;
 
-            clothesObj = ObjectPoolingManager.Instance.Get(clothes.flag, clothesParent);
+            clothesObj = objectPoolingManager.Get(clothes.flag, clothesParent);
             clothesObj.transform.localPosition = clothes.pos;
             clothesObj.transform.localEulerAngles = clothes.rot;
             clothesObj.transform.localScale = clothes.scale;
@@ -438,41 +499,9 @@ public class RabbitCitizen : MonoBehaviour
     public void PutOff()
     {
         isWearing = false;
-        ObjectPoolingManager.Instance.Set(clothesObj, clothes.flag);
+        objectPoolingManager.Set(clothesObj, clothes.flag);
         clothes = null;
     }
-
-    /// <summary>
-    /// 산타 터치 시 카메라의 타깃을 산타로 설정
-    /// </summary>
-    void TouchSanta()
-    {
-        if (Input.GetMouseButtonDown(0) && !UIManager.Instance.isOpenPanel)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit = new RaycastHit();
-
-            if (true == (Physics.Raycast(ray.origin, ray.direction * 10, out hit)))
-            {
-                if (hit.collider.CompareTag("Santa") && hit.collider.name == this.name)
-                {
-                    SetCamTargetThis();
-                }
-            }
-        }
-    }
     #endregion
-
-    private void Update()
-    {
-        if (getCarrotButton && getCarrotButton.gameObject.activeSelf)
-        {
-            Vector3 newPos = transform.position;
-            newPos.y += 5f;
-            //Vector3 ButtonPos = Camera.main.WorldToScreenPoint(newPos);
-            getCarrotButton.transform.position = newPos;
-        }
-
-        TouchSanta();
-    }
+    #endregion
 }

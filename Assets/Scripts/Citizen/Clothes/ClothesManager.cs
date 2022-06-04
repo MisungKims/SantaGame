@@ -1,7 +1,7 @@
 /**
  * @brief 토끼 주민의 옷을 관리
  * @author 김미성
- * @date 22-06-01
+ * @date 22-06-04
  */
 
 using System.Collections;
@@ -20,35 +20,34 @@ public class ClothesManager : MonoBehaviour
         get { return instance; }
     }
 
+
     // 리스트
-    public List<Clothes> clothesList = new List<Clothes>();             // 옷 리스트
+    public List<Clothes> clothesList = new List<Clothes>();                 // 옷 리스트
 
-    public List<ClothesInfo> clothesInfoList = new List<ClothesInfo>();
+    public List<ClothesInfo> clothesInfoList = new List<ClothesInfo>();     // 옷의 정보를 담은 리스트
 
-    // UI 변수
     [Header("-------- Citizen Panel Slot")]
-    [SerializeField]
-    private GameObject clothesScrollView;
+    public List<ClothesSlot> clothesSlotList = new List<ClothesSlot>();
 
-    private RectTransform scrollRect;
+    [HideInInspector]
+    public int clothesSlotCount = 0;        // 현재 가진 옷의 수
 
-    [SerializeField]
-    private ClothesSlot clothesSlot;
-
-    public List<ClothesSlot> clothesSlots = new List<ClothesSlot>();    // 옷의 UI 슬롯
 
     [Header("-------- Clothes Store")]
-    public List<ClotesStoreSlot> clotesStoreSlots = new List<ClotesStoreSlot>();
+    public List<ClotesStoreSlot> clotesStoreSlots = new List<ClotesStoreSlot>();        // 옷 가게 슬롯 리스트
 
     [SerializeField]
     private GameObject store;
 
     [Header("-------- Clothes Inventory")]
-    public List<ClothesInventorySlot> clotesInventorySlots = new List<ClothesInventorySlot>();
+    public List<ClothesInventorySlot> clotesInventorySlots = new List<ClothesInventorySlot>();      // 옷 보관함 슬롯 리스트
 
     [SerializeField]
     private GameObject inventory;
 
+
+    // 데이터 저장
+    bool isPaused = false;      //앱의 활성화 상태
 
 
     // 캐싱
@@ -63,42 +62,55 @@ public class ClothesManager : MonoBehaviour
         else
             Destroy(gameObject);
 
+        getRewardWindow = UIManager.Instance.getRewardWindow;   // 캐싱
 
-        scrollRect = clothesScrollView.GetComponent<RectTransform>();
-        scrollRect.sizeDelta = new Vector2(0, scrollRect.sizeDelta.y);
-
+        // 데이터를 로드
         if (!LoadData())
         {
-            for (int i = 0; i < clothesList.Count; i++)
-            {
-                ClothesInfo info = new ClothesInfo(0, 0);
-                clothesInfoList.Add(info);
-                clothesList[i].clothesInfo = info;
-            }
+            NewData();                  // 데이터 로드에 실패시 새로운 데이터 생성
         }
         
-
-        getRewardWindow = UIManager.Instance.getRewardWindow;
-
-        ObjectPoolingManager.Instance.InitClothes();
+        // 오브젝트 풀링으로 미리 옷 오브젝트 생성
+        ObjectPoolingManager.Instance.InitClothes();            
 
         InitStore();
         RefreshInventory();
-
     }
 
+    void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            isPaused = true;
+
+            SaveData();         // 앱이 비활성화되었을 때 데이터 저장
+        }
+
+        else
+        {
+            if (isPaused)
+            {
+                isPaused = false;
+            }
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        SaveData();         // 앱 종료 시 데이터 저장
+    }
     #endregion
 
     #region 함수
     /// <summary>
-    /// 옷을 얻음
+    /// 옷을 획득
     /// </summary>
-    /// <param name="clothes"></param>
+    /// <param name="clothes">획득할 옷</param>
     public void GetClothes(Clothes clothes)
     {
         if (clothes.clothesInfo.totalAmount <= 0)       // 새로 받은 옷일 때
         {
-            AddClothesSlot(clothes);
+            AddClothesSlot(clothes);                    // 옷장 슬롯에도 추가
         }
 
         clothes.clothesInfo.totalAmount++;
@@ -120,22 +132,13 @@ public class ClothesManager : MonoBehaviour
     }
 
     /// <summary>
-    /// UI 슬롯을 추가
+    /// 옷장 UI 슬롯을 추가
     /// </summary>
     /// <param name="clothes"></param>
     public void AddClothesSlot(Clothes clothes)
     {
-        ClothesSlot newSlot = ClothesSlot.Instantiate(clothesSlot, clothesScrollView.transform);
-
-        newSlot.Init(clothes);
-
-        RectTransform rect = newSlot.GetComponent<RectTransform>();
-        rect.anchoredPosition = new Vector2(137 * clothesSlots.Count - 473, 0);
-
-        scrollRect.sizeDelta += new Vector2(60, 0);
-       // scrollRect.sizeDelta += new Vector2(0, 200);
-
-        clothesSlots.Add(newSlot);
+        clothesSlotList[clothesSlotCount].SetClothes(clothes);
+        clothesSlotCount++;
     }
 
     /// <summary>
@@ -143,15 +146,10 @@ public class ClothesManager : MonoBehaviour
     /// </summary>
     public void InitStore()
     {
-        for (int i = 0; i < clothesList.Count; i++)
+        for (int i = 0; i < clothesList.Count; i++)             
         {
             clotesStoreSlots[i].gameObject.SetActive(true);
-            clotesStoreSlots[i].Init(clothesList[i]);
-        }
-
-        for (int i = clothesList.Count; i < clotesStoreSlots.Count; i++)
-        {
-            clotesStoreSlots[i].gameObject.SetActive(false);
+            clotesStoreSlots[i].SetSlot(clothesList[i]);
         }
     }
 
@@ -166,12 +164,13 @@ public class ClothesManager : MonoBehaviour
             if (clothesList[i].clothesInfo.totalAmount > 0)
             {
                 clotesInventorySlots[index].gameObject.SetActive(true);
-                clotesInventorySlots[index].Init(clothesList[i]);
+                clotesInventorySlots[index].SetClothes(clothesList[i]);
 
                 index++;
             }
         }
 
+        // 보여지지 않아도 되는 슬롯은 active를 끔
         for (int i = index; i < clotesInventorySlots.Count; i++)
         {
             clotesInventorySlots[i].gameObject.SetActive(false);
@@ -179,16 +178,16 @@ public class ClothesManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 상점을 엶
+    /// 상점을 엶 (인스펙터에서 호출)
     /// </summary>
     public void OpenStore()
     {
         store.SetActive(true);
         inventory.SetActive(false);
     }
-    
+
     /// <summary>
-    /// 인벤토리를 엶
+    /// 인벤토리를 엶 (인스펙터에서 호출)
     /// </summary>
     public void OpenInventory()
     {
@@ -202,36 +201,6 @@ public class ClothesManager : MonoBehaviour
     public void ShowAdAndGetReward()
     {
         /// TODO : 광고 보기 구현 (다이아 10개?)
-    }
-
-    #endregion
-
-
-    //앱의 활성화 상태를 저장하는 변수
-    bool isPaused = false;
-
-    void OnApplicationPause(bool pause)
-    {
-        if (pause)
-        {
-            isPaused = true;
-
-            SaveData();         // 앱이 비활성화되었을 때 데이터 저장
-        }
-
-        else
-        {
-            if (isPaused)
-            {
-                isPaused = false;
-                /* 앱이 활성화 되었을 때 처리 */
-            }
-        }
-    }
-
-    void OnApplicationQuit()
-    {
-        SaveData();         // 앱 종료 시 데이터 저장
     }
 
     /// <summary>
@@ -255,6 +224,8 @@ public class ClothesManager : MonoBehaviour
             string jdata = File.ReadAllText(Application.persistentDataPath + "/ClothesData.json");
 
             clothesInfoList = JsonUtility.FromJson<Serialization<ClothesInfo>>(jdata).target;
+
+            // 주민 패널의 옷장 슬롯 UI 추가
             for (int i = 0; i < clothesInfoList.Count; i++)
             {
                 clothesList[i].clothesInfo = clothesInfoList[i];
@@ -265,10 +236,28 @@ public class ClothesManager : MonoBehaviour
                 }
             }
 
+            for (int i = clothesSlotCount; i < clothesSlotList.Count; i++)
+            {
+                clothesSlotList[i].Reset();
+            }
+
             return true;
         }
 
         return false;
     }
 
+    /// <summary>
+    /// 새로운 데이터 생성
+    /// </summary>
+    public void NewData()
+    {
+        for (int i = 0; i < clothesList.Count; i++)             
+        {
+            ClothesInfo info = new ClothesInfo(0, 0);
+            clothesInfoList.Add(info);
+            clothesList[i].clothesInfo = info;
+        }
+    }
+    #endregion
 }

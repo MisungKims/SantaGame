@@ -66,10 +66,46 @@ public class Santa : MonoBehaviour
     private GameManager gameManager;
     private UIManager uiManager;
     private ClickObjWindow window;
+    private QuestManager questManager;
+    private CameraMovement cameraMovement;
+    #endregion
+
+    #region 유니티 함수
+    void Awake()
+    {
+        gameManager = GameManager.Instance;
+        uiManager = UIManager.Instance;
+        window = UIManager.Instance.clickObjWindow.transform.GetComponent<ClickObjWindow>();
+        questManager = QuestManager.Instance;
+        cameraMovement = CameraMovement.Instance;
+    }
+
+    void Start()
+    {
+        StartCoroutine(Touch());
+    }
+    #endregion
+
+    #region 코루틴
+    /// <summary>
+    /// 산타 터치를 감지
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator Touch()
+    {
+        while (true)
+        {
+            TouchSanta();
+
+            yield return null;
+        }
+    }
     #endregion
 
     #region 함수
-
+    /// <summary>
+    /// 초기 설정
+    /// </summary>
     public void Init()
     {
         gameObject.SetActive(true);
@@ -77,6 +113,9 @@ public class Santa : MonoBehaviour
         Building.isAuto = true;     // 골드 자동화 시작
     }
 
+    /// <summary>
+    /// 새로운 산타 생성
+    /// </summary>
     public void NewSanta()
     {
         Init();
@@ -104,7 +143,7 @@ public class Santa : MonoBehaviour
         
         if (!isInit)
         {
-            QuestManager.Instance.Success(questID);        // 퀘스트 성공
+            QuestManagerInstance().Success(questID);        // 퀘스트 성공
         }
 
         gameManager.MyCarrots -= GoldManager.UnitToBigInteger(SantaPrice);          // 비용 지불
@@ -124,7 +163,7 @@ public class Santa : MonoBehaviour
     /// </summary>
     public void SetCamTargetThis()
     {
-        CameraMovement.Instance.ChaseSanta(this.transform);
+        CameraMovementInstance().ChaseSanta(this.transform);
     }
 
     /// <summary>
@@ -136,7 +175,6 @@ public class Santa : MonoBehaviour
 
         uiManager.ShowClickObjWindow();
     }
-
 
     /// <summary>
     /// 산타 터치 시 카메라의 타깃을 산타로 설정, 클릭 오브젝트창을 보여줌
@@ -160,24 +198,32 @@ public class Santa : MonoBehaviour
         }
     }
 
-    
-    #endregion
-
-    #region 유니티 메소드
-    void Awake()
+    /// <summary>
+    /// 퀘스트 매니저 인스턴스 반환
+    /// </summary>
+    /// <returns></returns>
+    QuestManager QuestManagerInstance()
     {
-        //anim = GetComponent<Animator>();
-        
-        gameManager = GameManager.Instance;
-        uiManager = UIManager.Instance;
-        window = UIManager.Instance.clickObjWindow.transform.GetComponent<ClickObjWindow>();
+        if (!questManager)
+        {
+            questManager = QuestManager.Instance;
+        }
+
+        return questManager;
     }
 
-   
-    void Update()
+    /// <summary>
+    /// 카메라 무브먼트 인스턴스 반환
+    /// </summary>
+    /// <returns></returns>
+    CameraMovement CameraMovementInstance()
     {
-        TouchSanta();
+        if (!cameraMovement)
+        {
+            cameraMovement = CameraMovement.Instance;
+        }
+
+        return cameraMovement;
     }
     #endregion
-
 }

@@ -10,7 +10,7 @@ using UnityEngine;
 
 public class RabbitModel : MonoBehaviour
 {
-    #region MyRegion
+    #region 변수
     public Clothes clothes = null;      // 주민의 옷(코디템)
 
     private GameObject clothesObj;      // 옷 오브젝트
@@ -79,13 +79,16 @@ public class RabbitModel : MonoBehaviour
     {
         if (clothes != null)
         {
+            PutOff();
+
             isWearing = true;
 
             this.clothes = clothes;
 
             clothesObj = ObjectPoolingManager.Instance.Get(clothes.flag, clothesParent);
 
-            clothesObj.layer = 7;           // UI 카메라에 보여지도록 layer를 변경
+            // UI 카메라에 보여지도록 layer를 변경
+            clothesObj.layer = 7;          
             for (int i = 0; i < clothesObj.transform.childCount; i++)
             {
                 clothesObj.transform.GetChild(i).gameObject.layer = 7;

@@ -15,7 +15,6 @@ public class GiftItem
 {
     public Gift gift;
     public int amount;
-    public int giftType;
 
     public GiftItem(Gift gift, int amount)
     {
@@ -28,7 +27,6 @@ public class Inventory : MonoBehaviour
 {
     #region 변수
     public List<GiftItem> giftItems = new List<GiftItem>();     // 선물 인벤토리 리스트
-
 
     public Slot[] slots;        // 인벤토리 UI 슬롯 프리팹
 
@@ -43,6 +41,8 @@ public class Inventory : MonoBehaviour
         get { return instance; }
     }
 
+    
+    bool isPaused = false;      //앱의 활성화 상태
     #endregion
 
     #region 유니티 함수
@@ -61,6 +61,29 @@ public class Inventory : MonoBehaviour
 
         LoadData();
     }
+
+    void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            isPaused = true;
+
+            SaveData();         // 앱이 비활성화되었을 때 데이터 저장
+        }
+
+        else
+        {
+            if (isPaused)
+            {
+                isPaused = false;
+            }
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        SaveData();         // 앱 종료 시 데이터 저장
+    }
     #endregion
 
     #region 함수
@@ -77,13 +100,11 @@ public class Inventory : MonoBehaviour
         if (giftInvIndex > -1)          // 이미 인벤토리에 있는 선물이라면
         {
             giftItems[giftInvIndex].amount++;              // 카운트를 늘림
-            //UIManager.Instance.slots[giftInvIndex].SetSlot(giftItems[giftInvIndex]);     // 슬롯에 저장
         }
         else
         {
             gift.giftInfo.inventoryIndex = giftItems.Count;
             giftItems.Add(new GiftItem(gift, 1));       // 인벤토리에 없다면 새로 생성
-            //UIManager.Instance.slots[giftItems.Count - 1].SetSlot(giftItems[giftItems.Count - 1]);     // 슬롯에 저장
         }
     }
 
@@ -100,19 +121,18 @@ public class Inventory : MonoBehaviour
         if (giftInvIndex > -1)                          // 인벤토리에 아이템이 있을 때
         {
             giftItems[giftInvIndex].amount--;          // 수량을 줄임
-           // UIManager.Instance.slots[giftInvIndex].SetSlot(giftItems[giftInvIndex]);
 
             if (giftItems[giftInvIndex].amount <= 0)    // 수량이 0 이하이면 인벤토리에서 완전 제거
             {
                 giftItems.RemoveAt(giftInvIndex);
                 gift.giftInfo.inventoryIndex = -1;
 
-                if (giftItems.Count > 0)    // 제거 후 인벤토리에 다른 아이템이 있으면 UI 재배치
+                // 제거 후 인벤토리에 다른 아이템이 있으면 UI 재배치
+                if (giftItems.Count > 0)   
                 {
                     for (int i = giftInvIndex; i < giftItems.Count; i++)
                     {
                         giftItems[i].gift.giftInfo.inventoryIndex -= 1;          // 제거한 슬롯의 뒤에 있는 슬롯을 앞으로 한 칸씩 당김
-                        //UIManager.Instance.slots[giftItems[i].gift.inventoryIndex].SetSlot(giftItems[giftItems[i].gift.inventoryIndex]);
                     }
                    if(isUseSlot) slots[giftItems.Count].SetEmpty();          // 한 칸씩 당기면 맨 뒤의 슬롯은 필요없으므로 비워둠
                 }
@@ -148,36 +168,6 @@ public class Inventory : MonoBehaviour
         }
     }
 
-
-    #endregion
-
-    //앱의 활성화 상태를 저장하는 변수
-    bool isPaused = false;
-
-    void OnApplicationPause(bool pause)
-    {
-        if (pause)
-        {
-            isPaused = true;
-
-            SaveData();         // 앱이 비활성화되었을 때 데이터 저장
-        }
-
-        else
-        {
-            if (isPaused)
-            {
-                isPaused = false;
-                /* 앱이 활성화 되었을 때 처리 */
-            }
-        }
-    }
-
-    void OnApplicationQuit()
-    {
-        SaveData();         // 앱 종료 시 데이터 저장
-    }
-
     /// <summary>
     /// 데이터 저장
     /// </summary>
@@ -202,6 +192,8 @@ public class Inventory : MonoBehaviour
             for (int i = 0; i < giftItems.Count; i++)
             {
                 giftItems[i].gift = GiftManager.Instance.giftList[(int)giftItems[i].gift.giftType];
+
+                count += giftItems[i].amount;
             }
 
             return true;
@@ -209,4 +201,5 @@ public class Inventory : MonoBehaviour
 
         return false;
     }
+    #endregion
 }

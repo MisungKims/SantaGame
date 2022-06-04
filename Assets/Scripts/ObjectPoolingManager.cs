@@ -19,8 +19,6 @@ public enum EObjectFlag // 배열이나 리스트의 순서
     reward
 }
 
-
-
 public class ObjectPoolingManager : MonoBehaviour
 {
     #region 변수
@@ -33,18 +31,13 @@ public class ObjectPoolingManager : MonoBehaviour
 
     public List<ObjectPool> poolingList = new List<ObjectPool>();
 
-    //public List<ObjectPool> clothesPoolingList = new List<ObjectPool>();
-
     // Clothes를 위한 변수들
-
     [SerializeField]
     private Transform clothesParent;
 
     public List<Queue<GameObject>> clothesQueue = new List<Queue<GameObject>>();
 
-    
-    //public Queue<GameObject> clothesQueue = new Queue<GameObject>();   // 오브젝트들을 담을 큐
-
+    private ClothesManager clothesManager;
     #endregion
 
     #region 유니티 함수
@@ -53,7 +46,7 @@ public class ObjectPoolingManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-           // DontDestroyOnLoad(gameObject);      // 씬 전환 시에도 파괴되지 않음
+
         }
         else
         {
@@ -61,12 +54,9 @@ public class ObjectPoolingManager : MonoBehaviour
                 Destroy(this.gameObject);
         }
 
-        for (int i = 0; i < poolingList.Count; i++)     // poolingList를 탐색해 각 오브젝트를 미리 생성
-        {
-            Init(i);
-        }
+        clothesManager = ClothesManager.Instance;
 
-        
+        Init();
     }
     #endregion
 
@@ -74,14 +64,17 @@ public class ObjectPoolingManager : MonoBehaviour
     /// <summary>
     /// 초기에 initCount 만큼 생성
     /// </summary>
-    private void Init(int index)
+    private void Init()
     {
-        for (int i = 0; i < poolingList[index].initCount; i++)
+        for (int i = 0; i < poolingList.Count; i++)     // poolingList를 탐색해 각 오브젝트를 미리 생성
         {
-            GameObject tempGb = GameObject.Instantiate(poolingList[index].copyObj, poolingList[index].parent.transform);
-            tempGb.name = i.ToString();
-            tempGb.gameObject.SetActive(false);
-            poolingList[index].queue.Enqueue(tempGb);
+            for (int j = 0; j < poolingList[i].initCount; j++)
+            {
+                GameObject tempGb = GameObject.Instantiate(poolingList[i].copyObj, poolingList[i].parent.transform);
+                tempGb.name = j.ToString();
+                tempGb.gameObject.SetActive(false);
+                poolingList[i].queue.Enqueue(tempGb);
+            }
         }
     }
 
@@ -90,12 +83,12 @@ public class ObjectPoolingManager : MonoBehaviour
     /// </summary>
     public void InitClothes()
     {
-        for (int index = 0; index < ClothesManager.Instance.clothesList.Count; index++)
+        for (int index = 0; index < ClothesManagerInstance().clothesList.Count; index++)
         {
             clothesQueue.Add(new Queue<GameObject>());
             for (int i = 0; i < 5; i++)
             {
-                GameObject tempGb = GameObject.Instantiate(ClothesManager.Instance.clothesList[index].clothesPrefabs, clothesParent);
+                GameObject tempGb = GameObject.Instantiate(ClothesManagerInstance().clothesList[index].clothesPrefabs, clothesParent);
                 tempGb.name = i.ToString();
                 tempGb.gameObject.SetActive(false);
                 clothesQueue[index].Enqueue(tempGb);
@@ -152,12 +145,11 @@ public class ObjectPoolingManager : MonoBehaviour
         }
         else         // 큐에 더이상 없으면 새로 생성
         {
-            tempGb = GameObject.Instantiate(ClothesManager.Instance.clothesList[index].clothesPrefabs, parent);
+            tempGb = GameObject.Instantiate(ClothesManagerInstance().clothesList[index].clothesPrefabs, parent);
         }
 
         return tempGb;
     }
-
 
     /// <summary>
     /// 다 쓴 오브젝트를 큐에 돌려줌
@@ -171,39 +163,14 @@ public class ObjectPoolingManager : MonoBehaviour
         clothesQueue[index].Enqueue(gb);
     }
 
-    ///// <summary>
-    ///// 오브젝트를 반환 (선물 전달 게임 씬에서 사용)
-    ///// </summary>
-    //public GameObject Get(EObjectFlag flag)
-    //{
-    //    int index = (int)flag;
-    //    GameObject tempGb;
+    ClothesManager ClothesManagerInstance()
+    {
+        if (!clothesManager)
+        {
+            clothesManager = ClothesManager.Instance;
+        }
 
-    //    if (poolingList[index].queue.Count > 0)             // 큐에 게임 오브젝트가 남아 있을 때
-    //    {
-    //        tempGb = poolingList[index].queue.Dequeue();
-    //    }
-    //    else         // 큐에 더이상 없으면 새로 생성
-    //    {
-
-    //        tempGb = GameObject.Instantiate(poolingList[index].copyObj, poolingList[index].parent.transform);
-    //    }
-
-    //    tempGb.SetActive(true);
-    //    return tempGb;
-    //}
-
-
-    ///// <summary>
-    ///// 다 쓴 오브젝트를 큐에 돌려줌 (선물 전달 게임 씬에서 사용)
-    ///// </summary>
-    //public void Set(GameObject gb, EDeliveryFlag flag)
-    //{
-    //    int index = (int)flag;
-    //    gb.SetActive(false);
-
-    //    poolingList[index].queue.Enqueue(gb);
-    //}
+        return clothesManager;
+    }
     #endregion
-
 }

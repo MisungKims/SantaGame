@@ -1,27 +1,20 @@
+/**
+ * @brief ø  ∫∏∞¸«‘¿« UI ΩΩ∑‘
+ * @author ±ËπÃº∫
+ * @date 22-06-04
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 
-public class ClothesInventorySlot : MonoBehaviour
+public class ClothesInventorySlot : Closet
 {
-    [SerializeField]
-    private Text clothesNameText;
-    [SerializeField]
-    private Image clothesImage;
+    #region ∫Øºˆ
     [SerializeField]
     private Text amountText;
-
-    private string clothesName;         // ø ¿« ¿Ã∏ß
-    public string ClothesName
-    {
-        set
-        {
-            clothesName = value;
-            clothesNameText.text = clothesName;
-        }
-    }
 
     private int amount;                 // ø ¿« ∞°∞›
     public int Amount
@@ -32,39 +25,18 @@ public class ClothesInventorySlot : MonoBehaviour
             amountText.text = amount.ToString();
         }
     }
+    #endregion
 
-    public Clothes clothes;
-
-    [SerializeField]
-    private RabbitModel model;
-
-
-    public void Init(Clothes clothes)
+    #region «‘ºˆ
+    /// <summary>
+    /// ΩΩ∑‘ º≥¡§
+    /// </summary>
+    /// <param name="clothes">º≥¡§«“ ø </param>
+    public override void SetClothes(Clothes clothes)
     {
-        this.clothes = clothes;
-        ClothesName = clothes.clothesName;
-        clothesImage.sprite = clothes.image;
+        base.SetClothes(clothes);
+
         Amount = clothes.clothesInfo.totalAmount;
     }
-
-    /// <summary>
-    /// ∏µ®ø°∞‘ ø ¿ª ¿‘«Ù∫Ω (¿ŒΩ∫∆Â≈Õø°º≠ »£√‚)
-    /// </summary>
-    public void Wear()
-    {
-        if (model.clothes != clothes)       // ø ¿ª ¿‘¡ˆ æ ∞≈≥™ ¥Ÿ∏• ø ¿ª ¿‘∞Ì ¿÷¿ª ∂ßø°¥¬ ø ¿ª ¿‘»˚
-        {
-            if (model.clothes.clothesName != null && !model.clothes.clothesName.Equals(""))
-            {
-                model.PutOff();
-            }
-            
-            model.PutOn(clothes);
-        }
-        else         // «ÿ¥Á ΩΩ∑‘¿« ø ¿ª ¿‘∞Ì ¿÷æ˙¥Ÿ∏È ø ¿ª π˛±Ë
-        {
-            model.PutOff();
-        }
-    }
-
+    #endregion
 }

@@ -14,16 +14,19 @@ public class SnowPuzzle : MonoBehaviour
     public GameObject snowPanel;            // 눈 패널
 
     public RainPuzzlePiece[] rainPuzzles;
-    bool isAllStop;
+    bool isAllStop;         // 눈이 모두 멈추었는지?
 
-    private WaitForSeconds waitMonth;
+    private WaitForSeconds waitWeek;
+    private UIManager uIManager;
     #endregion
 
     #region 유니티 함수
     void Start()
     {
-        waitMonth = new WaitForSeconds(GameManager.Instance.dayCount * 7);          // 일주일에 한번씩 눈이 내리게
+        uIManager = UIManager.Instance;
 
+        waitWeek = new WaitForSeconds(GameManager.Instance.dayCount * 7);          // 일주일에 한번씩 눈이 내리게
+        
         StartCoroutine(SnowTimer());
     }
     #endregion
@@ -34,21 +37,22 @@ public class SnowPuzzle : MonoBehaviour
     /// </summary>
     private IEnumerator SnowTimer()
     {
-        yield return waitMonth;
+        yield return waitWeek;
 
-        // 옷가게가 열려있다면 닫힐 때까지 대기
-        while (UIManager.Instance.clothesStorePanel.activeSelf)
+        // 패널이 열려있다면 닫힐 때까지 대기
+        while (uIManager.isOpenPanel)
         {
             yield return new WaitForSeconds(10f);
         }
         
-
         isAllStop = false;
         snowPanel.SetActive(true);
 
         // 모든 퍼즐이 멈출 때까지 대기 (클릭되거나 화면에서 안보일 때)
         while (!isAllStop)
         {
+            uIManager.SetisOpenPanel(true);
+
             for (int i = 0; i < rainPuzzles.Length; i++)
             {
                 if (!rainPuzzles[i].isStop)
@@ -62,6 +66,7 @@ public class SnowPuzzle : MonoBehaviour
             isAllStop = true;
         }
 
+        uIManager.SetisOpenPanel(false);
         snowPanel.SetActive(false);
     }
     #endregion

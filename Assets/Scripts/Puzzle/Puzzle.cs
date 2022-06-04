@@ -1,7 +1,7 @@
 /**
  * @brief ∆€¡Ò ±∏¡∂√º
  * @author ±ËπÃº∫
- * @date 22-04-21
+ * @date 22-06-02
  */
 
 using System.Collections;
@@ -29,7 +29,6 @@ public class Puzzle
 [System.Serializable]
 public class PuzzlePiece
 {
-   // public int index;
     public Sprite pieceImage;
     public bool isGet;
 }

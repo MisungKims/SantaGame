@@ -42,8 +42,13 @@ public class QuestManager : MonoBehaviour
     // CSV 파일 이름
     private string csvFileName = "DailyQuestData";
 
-    public bool isAllSuccess;
+   // public bool isAllSuccess;       // 모두 완료했는지?
 
+    //앱의 활성화 상태를 저장하는 변수
+    bool isPaused = false;
+
+    // 캐싱
+    private GameManager gameManager;
     #endregion
 
     #region 유니티 함수
@@ -59,10 +64,7 @@ public class QuestManager : MonoBehaviour
             }
         }
 
-        //csvFileName = "DailyQuestData";
-        //startPos = new Vector3(0, 190, 0);
-        //startParentSize = new Vector2(0, 480);
-        //nextYPos = -75;
+        gameManager = GameManager.Instance;
 
         SetTransform();
 
@@ -74,13 +76,11 @@ public class QuestManager : MonoBehaviour
 
     void Start()
     {
-        isAllSuccess = false;   // 추후 저장 필요
+      //  isAllSuccess = false;   // 추후 저장 필요
 
         StartCoroutine(Init());     // 익일 초기화
     }
 
-    //앱의 활성화 상태를 저장하는 변수
-    bool isPaused = false;
 
     void OnApplicationPause(bool pause)
     {
@@ -104,6 +104,31 @@ public class QuestManager : MonoBehaviour
     void OnApplicationQuit()
     {
         SaveData();         // 앱 종료 시 데이터 저장
+    }
+    #endregion
+
+    #region 코루틴
+    /// <summary>
+    /// 다음 날이 되면 퀘스트 초기화
+    /// </summary>
+    IEnumerator Init()
+    {
+        while (true)
+        {
+            if (gameManager.initQuestDate != DateTime.Now.ToString("yyyy.MM.dd"))
+            {
+                // 목록의 모든 퀘스트를 초기화
+                for (int i = 0; i < questList.Count; i++)
+                {
+                    questList[i].count = 0;
+                    questObjectList[i].NextDay();
+                }
+
+                gameManager.initQuestDate = DateTime.Now.ToString("yyyy.MM.dd");
+            }
+
+            yield return null;
+        }
     }
     #endregion
 
@@ -169,6 +194,12 @@ public class QuestManager : MonoBehaviour
             for (int i = 0; i < questList.Count; i++)
             {
                 AchivementInstance(questList[i]);     // UI에 퀘스트 목록 생성 후 배치
+
+                // 받을 보상이 있으면 알림 이미지를 활성화
+                if (questList[i].isSuccess && !questList[i].isGetReward)
+                {
+                    notificationImage.SetActive(true);
+                }
             }
 
             return true;
@@ -188,8 +219,6 @@ public class QuestManager : MonoBehaviour
         questObjectList.Add(questObject);
 
         rectTransform.anchoredPosition += new Vector2(0, nextYPos);         // 다음 오브젝트를 스크롤뷰의 알맞은 위치에 넣기 위해 RectTransform을 조정
-
-       // parentRectTransform.sizeDelta += new Vector2(0, rectTransform.sizeDelta.y);        // 스크롤뷰의 Content의 크기를 늘려줌
     }
 
     /// <summary>
@@ -198,57 +227,15 @@ public class QuestManager : MonoBehaviour
     /// <param name="id">퀘스트의 id</param>
     public virtual void Success(int id)
     {
-        if (!isAllSuccess)
+        if (questList[id].count < questList[id].maxCount)
         {
-            if (questList[id].count < questList[id].maxCount)
+            questList[id].count++;
+            questObjectList[id].QuestCount++;
+
+            if (questList[id].count == questList[id].maxCount)      // 퀘스트를 완료했을 때
             {
-                questList[id].count++;
-                questObjectList[id].QuestCount++;
-
-                if (questList[id].count == questList[id].maxCount)      // 퀘스트를 완료했을 때
-                {
-                    notificationImage.SetActive(true);
-
-                    ERewardType rewardType = RewardManager.StringToRewardType(questList[id].rewardType);
-                    RewardManager.GetReward(rewardType, questList[id].amount);
-                }
-
+                notificationImage.SetActive(true);          // 알림 이미지를 보여줌
             }
-
-            // 일일 퀘스트를 모두 완료했는지 탐색
-            for (int i = 0; i < questList.Count; i++)
-            {
-                if (questList[i].count == questList[i].maxCount)
-                {
-                    isAllSuccess = false;
-                    return;
-                }
-            }
-
-            isAllSuccess = true;
-        }
-        
-    }
-    /// <summary>
-    /// 다음 날이 되면 퀘스트 초기화
-    /// </summary>
-    IEnumerator Init()
-    {
-        while (true)
-        {
-            if (GameManager.Instance.initQuestDate != DateTime.Now.ToString("yyyy.MM.dd"))
-            {
-                // 목록의 모든 퀘스트를 초기화
-                for (int i = 0; i < questList.Count; i++)
-                {
-                    questList[i].count = 0;
-                    questObjectList[i].NextDay();
-                }
-
-                GameManager.Instance.initQuestDate = DateTime.Now.ToString("yyyy.MM.dd");
-            }
-
-            yield return null;
         }
     }
     #endregion

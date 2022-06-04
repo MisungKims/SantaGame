@@ -18,7 +18,7 @@ public class PuzzleButton : MonoBehaviour
     [SerializeField]
     private Text countText;
 
-    private int count = 0;
+    private int count = 0;              // 가지고있는 퍼즐 조각의 개수
     public int Count
     {
         get { return count; }
@@ -29,14 +29,39 @@ public class PuzzleButton : MonoBehaviour
             countText.text = count.ToString();
         }
     }
+
+    // 캐싱
+    private PuzzleUI puzzleUI;
+    #endregion
+
+    #region 유니티 함수
+    private void Awake()
+    {
+        puzzleUI = PuzzleUI.Instance;
+    }
     #endregion
 
     #region 함수
-    // 버튼을 누르면 퍼즐 UI가 해당 퍼즐로 변경
+    /// <summary>
+    /// PuzzleUI 인스턴스 반환
+    /// </summary>
+    /// <returns></returns>
+    PuzzleUI PuzzleUIInsance()
+    {
+        if (!puzzleUI)
+        {
+            puzzleUI = PuzzleUI.Instance;
+        }
+
+        return puzzleUI;
+    }
+
+    /// <summary>
+    /// 버튼을 누르면 퍼즐 UI가 해당 퍼즐로 변경 (인스펙터에서 호출)
+    /// </summary>
     public void SetPuzzleEnum()
     {
-        PuzzleUI.Instance.puzzleType = puzzleType;
-        PuzzleUI.Instance.SetPuzzle();
+        PuzzleUIInsance().SetPuzzle(puzzleType);
     }
     #endregion
 }

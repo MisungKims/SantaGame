@@ -1,7 +1,7 @@
 /**
  * @brief 선물 구조체
  * @author 김미성
- * @date 22-04-24
+ * @date 22-06-02
  */
 
 
@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// 선물 등급
+/// </summary>
 public enum EGiftGrade
 {
     SS,
@@ -54,10 +57,7 @@ public class Gift
     public string giftName;
     public Sprite giftImage;
 
-    public GiftInfo giftInfo;
-
-    //public int wishCount;
-    //public int inventoryIndex = -1;
+    public GiftInfo giftInfo;       // 저장해야할 변수
 
     public Gift(Gift gift)
     {
@@ -66,11 +66,13 @@ public class Gift
         this.giftName = gift.giftName;
         this.giftImage = gift.giftImage;
         this.giftInfo = gift.giftInfo;
-
-        //this.wishCount = gift.wishCount;
-        //this.inventoryIndex = gift.inventoryIndex;
     }
 
+    /// <summary>
+    /// 선물의 등급에 따른 가중치
+    /// </summary>
+    /// <param name="giftGrade"></param>
+    /// <returns></returns>
     public static int GetWeight(EGiftGrade giftGrade)
     {
         switch (giftGrade)

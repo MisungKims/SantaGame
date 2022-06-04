@@ -1,7 +1,7 @@
 /**
  * @brief 선물을 관리
  * @author 김미성
- * @date 22-04-24
+ * @date 22-06-02
  */
 
 
@@ -13,17 +13,19 @@ using System.IO;
 public class GiftManager : MonoBehaviour
 {
     #region 변수
-    public List<Gift> giftList = new List<Gift>();
+    public List<Gift> giftList = new List<Gift>();                  // 선물 리스트
 
     [HideInInspector]
     public List<GiftInfo> giftInfoList = new List<GiftInfo>();      // 저장할 데이터
 
-    //public List<Sprite> giftSprites = new List<Sprite>();
-
     int totalWeight = 0;
+
+    // 데이터 저장
+    bool isPaused = false;      //앱의 활성화 상태
 
     // 캐싱
     private GetRewardWindow getRewardWindow;
+    private Inventory inventory;
 
     // 싱글톤
     private static GiftManager instance;
@@ -48,24 +50,53 @@ public class GiftManager : MonoBehaviour
         }
 
         getRewardWindow = UIManager.Instance.getRewardWindow;
+        inventory = Inventory.Instance;
 
         if (!LoadData())
         {
-            // 데이터 로드에 실패 시 데이터 초기화
-            InitData();
+            // 데이터 로드에 실패 시 새로운 데이터 생성
+            NewData();
+        }
+
+        SetTotalWeight();
+    }
+
+    void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            isPaused = true;
+
+            SaveData();         // 앱이 비활성화되었을 때 데이터 저장
+        }
+
+        else
+        {
+            if (isPaused)
+            {
+                isPaused = false;
+            }
         }
     }
 
-    private void Start()
+    void OnApplicationQuit()
+    {
+        SaveData();         // 앱 종료 시 데이터 저장
+    }
+    #endregion
+
+    #region 함수
+    /// <summary>
+    /// 총 가중치 설정
+    /// </summary>
+    public void SetTotalWeight()
     {
         for (int i = 0; i < giftList.Count; i++)
         {
             totalWeight += Gift.GetWeight(giftList[i].giftGrade);
         }
     }
-    #endregion
 
-    #region 함수
     /// <summary>
     /// 랜덤 선물 반환
     /// </summary>
@@ -103,36 +134,18 @@ public class GiftManager : MonoBehaviour
         Gift gift = giftList[(int)giftType];
 
         getRewardWindow.OpenWindow(gift);       // 보상 획득창 보여줌
-        Inventory.Instance.AddItem(gift);       // 인벤토리에 저장
-    }
-    #endregion
-
-
-    //앱의 활성화 상태를 저장하는 변수
-    bool isPaused = false;
-
-    void OnApplicationPause(bool pause)
-    {
-        if (pause)
-        {
-            isPaused = true;
-
-            SaveData();         // 앱이 비활성화되었을 때 데이터 저장
-        }
-
-        else
-        {
-            if (isPaused)
-            {
-                isPaused = false;
-                /* 앱이 활성화 되었을 때 처리 */
-            }
-        }
+        InventoryInstance().AddItem(gift);       // 인벤토리에 저장
     }
 
-    void OnApplicationQuit()
+    /// <summary>
+    /// 인벤토리 싱글톤 반환
+    /// </summary>
+    /// <returns></returns>
+    Inventory InventoryInstance()
     {
-        SaveData();         // 앱 종료 시 데이터 저장
+        inventory = Inventory.Instance;
+        
+        return inventory;
     }
 
     /// <summary>
@@ -160,12 +173,6 @@ public class GiftManager : MonoBehaviour
             {
                 giftList[i].giftInfo = giftInfoList[i];
             }
-            
-            //giftList = JsonUtility.FromJson<Serialization<GiftInfo>>(jdata).target;
-            //for (int i = 0; i < giftList.Count; i++)
-            //{
-            //    giftList[i].giftImage = giftSprites[i];
-            //}
 
             return true;
         }
@@ -174,9 +181,9 @@ public class GiftManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 데이터 초기화
+    /// 데이터 생성
     /// </summary>
-    public void InitData()
+    public void NewData()
     {
         for (int i = 0; i < giftList.Count; i++)
         {
@@ -185,4 +192,5 @@ public class GiftManager : MonoBehaviour
             giftList[i].giftInfo = giftInfo;
         }
     }
+    #endregion
 }

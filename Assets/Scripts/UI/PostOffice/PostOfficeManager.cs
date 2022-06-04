@@ -48,8 +48,9 @@ public class PostOfficeManager : MonoBehaviour
     private GameObject postObj;         // 생성될 편지 UI (프리팹)
     [SerializeField]
     public GameObject parent;          // 편지 오브젝트의 부모
+    public WritingPad writingPad;
 
-    
+
     private List<PostObject> postUIList = new List<PostObject>();    // 편지 UI 리스트
     public List<Vector2> UITransformList = new List<Vector2>();      // 편지 UI의 위치 리스트
     public List<Vector2> parentSizeList = new List<Vector2>();       // 부모(스크롤뷰의 content)의 크기 리스트
@@ -59,16 +60,16 @@ public class PostOfficeManager : MonoBehaviour
     private RectTransform parentRectTransform;
     private float nextYPos = -90;
 
-    // 캐싱
-    WaitForSeconds waitForSeconds;
-
-    // 스크립트
-    public WritingPad writingPad;
-
-    // 그 외 변수
+   
     public int maximum;        // 편지함 맥시멈
 
+    // 캐싱
+    private UIManager uIManager;
+    private Inventory inventory;
+    private ObjectPoolingManager objectPoolingManager;
 
+    //앱의 활성화 상태를 저장하는 변수
+    bool isPaused = false;
     #endregion
 
     #region 유니티 함수
@@ -79,8 +80,10 @@ public class PostOfficeManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        //waitForSeconds = new WaitForSeconds(GameManager.Instance.dayCount * (GameManager.Instance.lastDay - 1));     // 다음 달이 될 때마다 편지를 전송하기 위함
-        //waitForSeconds = new WaitForSeconds(3f);
+        uIManager = UIManager.Instance;
+        inventory = Inventory.Instance;
+        objectPoolingManager = ObjectPoolingManager.Instance;
+
 
         SetTransform();
 
@@ -91,9 +94,47 @@ public class PostOfficeManager : MonoBehaviour
 
     private void Start()
     {
-        maximum = ObjectPoolingManager.Instance.poolingList[(int)EObjectFlag.post].initCount;
+        maximum = objectPoolingManager.poolingList[(int)EObjectFlag.post].initCount;
 
         StartCoroutine(SendPost());
+    }
+
+    void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            isPaused = true;
+
+            SaveData();         // 앱이 비활성화되었을 때 데이터 저장
+        }
+
+        else
+        {
+            if (isPaused)
+            {
+                isPaused = false;
+            }
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        SaveData();         // 앱 종료 시 데이터 저장
+    }
+    #endregion
+
+    #region 코루틴
+    /// <summary>
+    /// 한달마다 랜덤한 편지 발송
+    /// </summary>
+    IEnumerator SendPost()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(GameManager.Instance.dayCount * (GameManager.Instance.lastDay - 1));        // 다음 달이 될 때마다 편지 전송
+
+            NewPost();
+        }
     }
     #endregion
 
@@ -150,38 +191,29 @@ public class PostOfficeManager : MonoBehaviour
         }
     }
 
-
-    /// <summary>
-    /// 한달마다 랜덤한 편지 발송
-    /// </summary>
-    IEnumerator SendPost()
+    public void NewPost()
     {
-        while (true)
+        int randIndex = Random.Range(0, postList.Count);        // 랜덤으로 편지 내용을 정함
+        if (postUIList.Count < maximum)          // 편지함이 차지 않았을 때만 생성
         {
-            yield return new WaitForSeconds(GameManager.Instance.dayCount * (GameManager.Instance.lastDay - 1));        // 다음 달이 될 때마다 편지 전송
+            PostStruct postStruct = new PostStruct(
+                postList[randIndex].name,
+                postList[randIndex].content,
+                postList[randIndex].giftIndex,
+                false);
 
-            int randIndex = Random.Range(0, postList.Count);        // 랜덤으로 편지 내용을 정함
-            if (postUIList.Count < maximum)          // 편지함이 차지 않았을 때만 생성
-            {
-                PostStruct postStruct = new PostStruct(
-                    postList[randIndex].name,
-                    postList[randIndex].content,
-                    postList[randIndex].giftIndex,
-                    false);
+            havePostList.Add(postStruct);
 
-                havePostList.Add(postStruct);
-                
-                PostOfficeInstance(postStruct);
-            }
+            PostOfficeInstance(postStruct);
         }
-    }
+    }    
 
     /// <summary>
     /// 편지 인스턴스 생성
     /// </summary>
     void PostOfficeInstance(PostStruct post)
     {
-        PostObject newObj = ObjectPoolingManager.Instance.Get(EObjectFlag.post).GetComponent<PostObject>();
+        PostObject newObj = objectPoolingManager.Get(EObjectFlag.post).GetComponent<PostObject>();
         
         newObj.PostName = post.name;
         newObj.PostConent = post.content;
@@ -203,9 +235,9 @@ public class PostOfficeManager : MonoBehaviour
         postUIList.Add(newObj);
        
         // 인벤토리가 열려있고, 위시리스트에 추가한 선물이 인벤토리에 있었으면 인벤토리 새로고침
-        if (UIManager.Instance.inventoryPanel.activeSelf && gift.giftInfo.inventoryIndex > -1)
+        if (UIManagerInstance().inventoryPanel.activeSelf && gift.giftInfo.inventoryIndex > -1)
         {
-            Inventory.Instance.RefreshInventory();
+            InventoryInstance().RefreshInventory();
         }
     }
 
@@ -215,7 +247,7 @@ public class PostOfficeManager : MonoBehaviour
     /// <param name="index"></param>
     public void Refresh(int index)
     {
-        ObjectPoolingManager.Instance.Set(postUIList[index].gameObject, EObjectFlag.post);        // 오브젝트 풀에 돌려줌
+        objectPoolingManager.Set(postUIList[index].gameObject, EObjectFlag.post);        // 오브젝트 풀에 돌려줌
 
         postUIList.RemoveAt(index);
         havePostList.RemoveAt(index);
@@ -224,44 +256,13 @@ public class PostOfficeManager : MonoBehaviour
         for (int i = 0; i < postUIList.Count; i++)
         {
             postUIList[i].index = i;
-            //postUIList[i].listIndex = i;
-            //postUIList[i].RefreshNotification();
             postUIList[i].RefreshTransform(UITransformList[postUIList.Count - 1 - i]);
         }
-
 
         if (postUIList.Count != 0)
         {
             parentRectTransform.sizeDelta = parentSizeList[postUIList.Count - 1];
         }
-    }
-    #endregion
-
-    //앱의 활성화 상태를 저장하는 변수
-    bool isPaused = false;
-
-    void OnApplicationPause(bool pause)
-    {
-        if (pause)
-        {
-            isPaused = true;
-
-            SaveData();         // 앱이 비활성화되었을 때 데이터 저장
-        }
-
-        else
-        {
-            if (isPaused)
-            {
-                isPaused = false;
-                /* 앱이 활성화 되었을 때 처리 */
-            }
-        }
-    }
-
-    void OnApplicationQuit()
-    {
-        SaveData();         // 앱 종료 시 데이터 저장
     }
 
     /// <summary>
@@ -295,4 +296,33 @@ public class PostOfficeManager : MonoBehaviour
 
         return false;
     }
+
+    /// <summary>
+    /// UIManager 인스턴스 반환
+    /// </summary>
+    /// <returns></returns>
+    UIManager UIManagerInstance()
+    {
+        if (!uIManager)
+        {
+            uIManager = UIManager.Instance;
+        }
+
+        return uIManager;
+    }
+
+    /// <summary>
+    /// Inventory 인스턴스 반환
+    /// </summary>
+    /// <returns></returns>
+    Inventory InventoryInstance()
+    {
+        if (!inventory)
+        {
+            inventory = Inventory.Instance;
+        }
+
+        return inventory;
+    }
+    #endregion
 }

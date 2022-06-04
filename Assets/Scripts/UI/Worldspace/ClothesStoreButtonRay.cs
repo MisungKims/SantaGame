@@ -1,3 +1,9 @@
+/**
+ * @brief 옷가게 입장 버튼
+ * @author 김미성
+ * @date 22-06-02
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +20,7 @@ public class ClothesStoreButtonRay : ButtonRaycast
     {
         yield return new WaitForSeconds(0.13f);
 
-        UIManager.Instance.ShowClothesStore();
+        soundManager.PlaySoundEffect(ESoundEffectType.uiButton);      // 효과음
+        UIManagerInstance().ShowClothesStore();
     }
 }

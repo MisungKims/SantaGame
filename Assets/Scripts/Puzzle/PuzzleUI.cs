@@ -42,7 +42,9 @@ public class PuzzleUI : MonoBehaviour
     }
 
     // 캐싱
+    GameManager gameManager;
     PuzzleManager puzzleManager;
+    GiftManager giftManager;
 
     // 싱글톤
     private static PuzzleUI instance;
@@ -61,28 +63,33 @@ public class PuzzleUI : MonoBehaviour
             Destroy(this.gameObject);
 
         puzzleType = EGiftType.bubbles;
+
+        gameManager = GameManager.Instance;
         puzzleManager = PuzzleManager.Instance;
+        giftManager = GiftManager.Instance;
     }
 
     private void OnEnable()
     {
-        SetPuzzle();
+        SetPuzzle(puzzleType);
     }
     #endregion
 
     #region 함수
     /// <summary>
-    /// UI에 값을 넣어줌
+    /// puzzleType에 따라 퍼즐을 보여줌
     /// </summary>
-    public void SetPuzzle()
+    public void SetPuzzle(EGiftType puzzleType)
     {
+        this.puzzleType = puzzleType;
+
         if (currentObj != null)
         {
-            currentObj.LineType.gameObject.SetActive(false);        // 기존에 보여지고 있던 오브젝트를 끔
+            currentObj.LineType.gameObject.SetActive(false);        // 기존에 보여지고 있던 line 오브젝트를 끔
             currentObj = null;
         }
 
-        PuzzleName = GiftManager.Instance.giftList[(int)puzzleType].giftName;
+        PuzzleName = giftManager.giftList[(int)puzzleType].giftName;
 
         // 퍼즐 배경 이미지 불러오기
         PuzzleImage.sprite = puzzleManager.puzzleList[(int)puzzleType].puzzleImage;
@@ -93,7 +100,7 @@ public class PuzzleUI : MonoBehaviour
         // UI에서 해당 퍼즐의 라인에 해당하는 오브젝트를 보여줌
         currentObj = pieceImages[puzzleManager.puzzleList[(int)puzzleType].line - 1];
         currentObj.LineType.SetActive(true);
-
+        
         for (int i = 0; i < currentObj.images.Length; i++)
         {
             currentObj.images[i].sprite = puzzlePieces[i].pieceImage;
@@ -126,6 +133,12 @@ public class PuzzleUI : MonoBehaviour
 
             successButton.SetActive(true);
         }
+        else
+        {
+            coverBackground.SetActive(true);
+
+            successButton.SetActive(false);
+        }
     }
 
     /// <summary>
@@ -133,9 +146,11 @@ public class PuzzleUI : MonoBehaviour
     /// </summary>
     public void ClickSuccessButton()
     {
-        GiftManager.Instance.ReceiveGift(puzzleType);
+        giftManager.ReceiveGift(puzzleType);
 
-        GameManager.Instance.IncreaseGauge(5f);
+        gameManager.IncreaseGauge(5f);
+
+        puzzleManager.puzzleButtons[(int)puzzleType].Count = 0;
 
         InitPiece();
     }

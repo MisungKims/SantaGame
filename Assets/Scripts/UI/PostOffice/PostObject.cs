@@ -18,9 +18,8 @@ public class PostObject : MonoBehaviour
     private Text nameText;
     [SerializeField]
     private Text contentPreviewText;
-    public GameObject notificationImage;   // 새로온 편지가 있음을 알려주는 이미지
 
-    StringBuilder nameSb = new StringBuilder();
+    public GameObject notificationImage;   // 새로온 편지가 있음을 알려주는 이미지
 
     private string postName;
     public string PostName
@@ -29,9 +28,6 @@ public class PostObject : MonoBehaviour
         {
             postName = value;
 
-            //nameSb.Clear();
-            //nameSb.Append("To. ");
-            //nameSb.Append(postName);
             nameText.text = postName.ToString();
         }
     }
@@ -59,36 +55,31 @@ public class PostObject : MonoBehaviour
         }
     }
 
-    // 스크립트
-    private WritingPad writingPad;
 
-    //// 그 외 변수
-    //private bool isRead;    // 읽은 편지이면 true
-    //public bool IsRead
-    //{
-    //    set
-    //    {
-    //        isRead = value;
-    //        notificationImage.SetActive(!isRead);
-    //    }
-    //}
+    private WritingPad writingPad;      // 편지지 오브젝트
 
     public int index;           // 편지 목록창에서의 인덱스
-
-   // public int listIndex;       // 편지 리스트에서의 인덱스
 
     public Gift gift;
 
     private int questID = 4;
 
+    // 캐싱
+    GameManager gameManager;
+    PostOfficeManager postOfficeManager;
+    QuestManager questManager;
     #endregion
 
     #region 유니티 함수
     public void Awake()
     {
-        writingPad = PostOfficeManager.Instance.writingPad;
-    }
+        gameManager = GameManager.Instance;
 
+        postOfficeManager = PostOfficeManager.Instance;
+        writingPad = postOfficeManager.writingPad;
+
+        questManager = QuestManager.Instance;
+    }
     #endregion
 
     #region 함수
@@ -97,10 +88,10 @@ public class PostObject : MonoBehaviour
     /// </summary>
     public void RefreshNotification()
     {
-        if (PostOfficeManager.Instance.havePostList.Count > index)
+        if (PostOfficeManagerInstance().havePostList.Count > index)
         {
             // 읽은 편지는 알림 이미지를 보이지 않도록
-            if (PostOfficeManager.Instance.havePostList[index].isRead)
+            if (PostOfficeManagerInstance().havePostList[index].isRead)
             {
                 notificationImage.SetActive(false);         
             }
@@ -116,24 +107,25 @@ public class PostObject : MonoBehaviour
     /// </summary>
     public void Read()
     {
-        if (!PostOfficeManager.Instance.havePostList[index].isRead)        // 편지를 처음 읽었을 때
+        if (!postOfficeManager.havePostList[index].isRead)        // 편지를 처음 읽었을 때
         {
-            //IsRead = true;
-
             gift.giftInfo.wishCount++;        // 선물을 위시리스트에 추가
 
-            QuestManager.Instance.Success(questID);        // 퀘스트 성공
+            questManager.Success(questID);        // 퀘스트 성공
 
-            GameManager.Instance.IncreaseGauge(3);      // 게이지 증가
+            gameManager.IncreaseGauge(3);      // 게이지 증가
 
-            PostOfficeManager.Instance.havePostList[index].isRead = true;
+            postOfficeManager.havePostList[index].isRead = true;
 
             notificationImage.SetActive(false);
 
             writingPad.canMove = true;
             writingPad.giftSprite = gift.giftImage;
         }
-        else writingPad.canMove = false;
+        else
+        {
+            writingPad.canMove = false;
+        }
 
         writingPad.PostName = postName;
         writingPad.PostConent = postContent;
@@ -145,7 +137,7 @@ public class PostObject : MonoBehaviour
     /// </summary>
     public void Discard()
     {
-        PostOfficeManager.Instance.Refresh(index);
+        postOfficeManager.Refresh(index);
     }
 
     /// <summary>
@@ -155,6 +147,20 @@ public class PostObject : MonoBehaviour
     public void RefreshTransform(Vector2 vector)
     {
         this.transform.GetComponent<RectTransform>().anchoredPosition = vector;
+    }
+
+    /// <summary>
+    /// PostOfficeManager 인스턴스 반환
+    /// </summary>
+    /// <returns></returns>
+    PostOfficeManager PostOfficeManagerInstance()
+    {
+        if (!postOfficeManager)
+        {
+            postOfficeManager = PostOfficeManager.Instance;
+        }
+
+        return postOfficeManager;
     }
     #endregion
 }

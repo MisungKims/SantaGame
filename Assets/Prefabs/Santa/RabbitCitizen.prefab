@@ -421,13 +421,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c070a4f3b220854ca9a0ca5d242ac78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  carrot: 100.0A
+  rabbitMat: {fileID: 7914683007052765767}
   nav: {fileID: -8659168409574597642}
+  carrot: 100.0A
   isTouch: 0
   layerMask:
     serializedVersion: 2
     m_Bits: 1
-  rabbitMat: {fileID: 7914683007052765767}
   isWearing: 0
   clothes:
     flag: 0

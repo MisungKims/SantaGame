@@ -142,8 +142,7 @@ public class StoreObject : MonoBehaviour
         set { efficiencyText.text = $"{value}%"; }
     }
 
-    private bool isGetPrerequisites;    // 선행 조건 건물이 잠금해제 되었는지
-    public bool IsGetPrerequisites
+    public bool IsGetPrerequisites          // 선행 조건 건물이 잠금해제 되었는지
     {
         get { return storeObject.isGetPrerequisites; }
         set { storeObject.isGetPrerequisites = value; }
@@ -175,34 +174,28 @@ public class StoreObject : MonoBehaviour
 
     // 캐싱
     private GameManager gameManager;
+    private ObjectManager objectManager;
+    private StoreManager storeManager;
+    private SoundManager soundManager;
 
     StringBuilder sb = new StringBuilder();
     #endregion
 
-    #region 유니티 메소드
+    #region 유니티 함수
 
     private void Awake()
     {
         gameManager = GameManager.Instance;
+        objectManager = ObjectManager.Instance;
+        storeManager = StoreManager.Instance;
+        soundManager = SoundManager.Instance;
         prerequisitesGb = PrerequisitesText.gameObject;
 
-        RefreshAll();
+        RefreshAll();   // 새로 고침
 
-        buildingInstance = ObjectManager.Instance.buildingList[index].GetComponent<Building>();
+        buildingInstance = objectManager.buildingList[index].GetComponent<Building>();
 
-        santaInstance = ObjectManager.Instance.santaList[index].GetComponent<Santa>();
-
-
-        if (!isBuyBuilding)      // 건물을 사지 않았을 때 (잠금해제 안했을 때)
-        {
-            lockingImage.SetActive(true);
-            unlockingObject.SetActive(false);
-        }
-        else
-        {
-            lockingImage.SetActive(false);
-            unlockingObject.SetActive(true);
-        }
+        santaInstance = objectManager.santaList[index].GetComponent<Santa>();
     }
 
     void OnEnable()
@@ -213,10 +206,6 @@ public class StoreObject : MonoBehaviour
         Check();
     }
 
-    //void Start()
-    //{
-    //    Check();
-    //}
     #endregion
 
     #region 함수
@@ -261,6 +250,9 @@ public class StoreObject : MonoBehaviour
     {
         if (!isBuyBuilding)                                         // 건물을 사지 않았고 (잠금해제 안했을 때)
         {
+            lockingImage.SetActive(true);
+            unlockingObject.SetActive(false);
+
             if (gameManager.Level < UnlockLevel)                    // 잠금해제 불가능한 레벨일 때
             {
                 unlockButton.SetActive(false);                      // 잠금해제 버튼과 선행조건 텍스트를 숨김
@@ -280,6 +272,11 @@ public class StoreObject : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            lockingImage.SetActive(false);
+            unlockingObject.SetActive(true);
+        }
     }
 
     #region 건물
@@ -293,7 +290,7 @@ public class StoreObject : MonoBehaviour
             return;
         }
 
-        SoundManager.Instance.PlaySoundEffect(ESoundEffectType.uiButton);       // 효과음 실행
+        soundManager.PlaySoundEffect(ESoundEffectType.uiButton);       // 효과음 실행
 
         lockingImage.SetActive(false);
         unlockingObject.SetActive(true);
@@ -306,7 +303,7 @@ public class StoreObject : MonoBehaviour
     /// </summary>
     void BuyNewBuilding()
     {
-        SoundManager.Instance.PlaySoundEffect(ESoundEffectType.newBuilding);            // 효과음 실행  
+        soundManager.PlaySoundEffect(ESoundEffectType.newBuilding);            // 효과음 실행  
 
         isBuyBuilding = true;
 
@@ -315,7 +312,7 @@ public class StoreObject : MonoBehaviour
         // 다음 건물의 선행조건을 만족시킴
         if (index < 11)     // 마지막 건물은 제외
         {
-            StoreObject nextObject = StoreManager.Instance.storeObjectList[index + 1];
+            StoreObject nextObject = storeManager.storeObjectList[index + 1];
 
             nextObject.IsGetPrerequisites = true;      
             nextObject.Check();
@@ -329,7 +326,7 @@ public class StoreObject : MonoBehaviour
     {
         if (buildingInstance.Upgrade())
         {
-            SoundManager.Instance.PlaySoundEffect(ESoundEffectType.uiButton);       // 효과음 실행
+            soundManager.PlaySoundEffect(ESoundEffectType.uiButton);       // 효과음 실행
             RefreshBuildingInfo();
         }
     }
@@ -343,7 +340,7 @@ public class StoreObject : MonoBehaviour
     {
         if (GoldManager.CompareBigintAndUnit(gameManager.MyCarrots, SantaPrice))     // 플레이어가 가진 돈으로 업그레이드가 가능할 때
         {
-            SoundManager.Instance.PlaySoundEffect(ESoundEffectType.uiButton);       // 효과음 실행
+            soundManager.PlaySoundEffect(ESoundEffectType.uiButton);       // 효과음 실행
 
             if (!isBuySanta) BuyNewSanta();                    // 사지 않은 산타면 새로 구매
             else UpgradeSanta();                               // 산 건물이면 업그레이드
