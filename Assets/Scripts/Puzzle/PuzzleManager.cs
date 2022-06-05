@@ -197,6 +197,7 @@ public class PuzzleManager : MonoBehaviour
 
         puzzleList[(int)ePuzzle].isSuccess = true;
     }
+
    
     /// <summary>
     /// 데이터 저장

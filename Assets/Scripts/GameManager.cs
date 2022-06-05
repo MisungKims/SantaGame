@@ -59,8 +59,6 @@ public class GameManager : MonoBehaviour
 
     private Animator gaugeAnim;
 
-    public Text text;   // 나중에 지워야함
-
 
     // 플레이어의 값
     StringBuilder gaugeSb = new StringBuilder();
