@@ -1,44 +1,54 @@
+/**
+ * @brief 선물 전달 게임의 장애물
+ * @author 김미성
+ * @date 22-06-04
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Obstacle : DeliveryGameObject
 {
+    #region 변수
     [SerializeField]
     private Transform rewardPos;
 
-    GameObject reward;      // 퍼즐이나 당근
+    private GameObject reward;      // 장애물의 머리 위에있는 퍼즐이나 당근
+    #endregion
 
+    #region 유니티 함수
     protected override void OnEnable()
     {
         base.OnEnable();
 
+        // 10%의 확률로 보상 아이템 Spawn
         int rand = Random.Range(0, 100);
-        if (rand <= 10)     // 10%의 확률로 보상 아이템 Spawn
+        if (rand <= 10)     
         {
-            reward = ObjectPoolingManager.Instance.Get(EObjectFlag.reward);
+            reward = objectPoolingManager.Get(EObjectFlag.reward);
             reward.transform.position = rewardPos.position;
         }
     }
 
     protected override void Update()
     {
-        if (!DeliveryGameManager.Instance.isEnd)
+        if (!deliveryGameManager.isEnd)
         {
             this.transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
-            if(reward) reward.transform.position = rewardPos.position;
+            if (reward) reward.transform.position = rewardPos.position;
         }
         else
         {
             // 게임 종료시 게임오브젝트를 오브젝트 풀에 반환
-            ObjectPoolingManager.Instance.Set(this.gameObject, flag);
-
             if (reward)
             {
-                ObjectPoolingManager.Instance.Set(reward, EObjectFlag.reward);
+                objectPoolingManager.Set(reward, EObjectFlag.reward);
                 reward = null;
             }
+
+            objectPoolingManager.Set(this.gameObject, flag);
         }
     }
-
+    #endregion
 }

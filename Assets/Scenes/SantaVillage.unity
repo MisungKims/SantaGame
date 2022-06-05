@@ -20447,9 +20447,10 @@ MonoBehaviour:
   initQuestDate: 
   lastConnectionTime: 
   inviteRabbitPrice: 
+  goneMonth: 0
+  diffTotalSeconds: 0
   deliveryButtonObj: {fileID: 1064148734}
   deliveryGame: {fileID: 2262722290878866612}
-  vaillage: {fileID: 1080847879}
 --- !u!4 &625165368
 Transform:
   m_ObjectHideFlags: 0
@@ -77656,7 +77657,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpPower: 700
   doubleJumpPower: 450
-  gravity: {x: 0, y: -800, z: 0}
+  gravity: {x: 0, y: -850, z: 0}
 --- !u!4 &2262722290895685212
 Transform:
   m_ObjectHideFlags: 0

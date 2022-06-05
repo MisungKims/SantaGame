@@ -1,7 +1,7 @@
 /**
  * @brief 선물 전달 게임
  * @author 김미성
- * @date 22-05-18
+ * @date 22-06-04
  */
 
 using System.Collections;
@@ -141,6 +141,10 @@ public class DeliveryGameManager : MonoBehaviour
     private SoundManager soundManager;
 
     private ObjectPoolingManager objectPoolingManager;
+
+    private GameManager gameManager;
+
+    private PuzzleManager puzzleManager;
     #endregion
 
     #region 유니티 함수
@@ -154,6 +158,8 @@ public class DeliveryGameManager : MonoBehaviour
         inventory = Inventory.Instance;
         soundManager = SoundManager.Instance;
         objectPoolingManager = ObjectPoolingManager.Instance;
+        gameManager = GameManager.Instance;
+        puzzleManager = PuzzleManager.Instance;
     }
 
     void OnEnable()
@@ -207,13 +213,12 @@ public class DeliveryGameManager : MonoBehaviour
 
         GetReward();
 
-        //soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
-
         santa.gameObject.SetActive(false);
 
-        // 결과창을 띄우고 차례대로 값을 보여주게끔
+
+        ///// 결과창을 띄우고 차례대로 값을 보여주게끔
+
         scoreText.gameObject.SetActive(false);
-        //wishCountText.gameObject.SetActive(false);
         puzzleCountText.gameObject.SetActive(false);
         carrotCountText.gameObject.SetActive(false);
         gaugeAmountText.gameObject.SetActive(false);
@@ -224,10 +229,6 @@ public class DeliveryGameManager : MonoBehaviour
         soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
         scoreText.gameObject.SetActive(true);
         yield return new WaitForSeconds(0.5f);
-
-        //soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
-        //wishCountText.gameObject.SetActive(true);
-        //yield return new WaitForSeconds(0.5f);
 
         soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
         puzzleCountText.gameObject.SetActive(true);
@@ -290,12 +291,9 @@ public class DeliveryGameManager : MonoBehaviour
         cloud.isMove = true;
 
         Life = 3;
-
         Score = 0;
-        //WishCount = 0;
         PuzzleCount = 0;
         carrotCount = 0;
-
         TimeCount = 60;
 
         isStart = true;
@@ -308,9 +306,9 @@ public class DeliveryGameManager : MonoBehaviour
     /// <summary>
     /// 게임 종료시 호출
     /// </summary>
-    // 1. 시간이 다했을 때 (isClear = true)
-    // 2. 인벤토리에 아이템이 없을 때 (isClear = true)
-    // 3. 생명이 모두 다했을 때 (isClear = false)
+    /// 1. 시간이 다했을 때 (isClear = true)
+    /// 2. 인벤토리에 아이템이 없을 때 (isClear = true)
+    /// 3. 생명이 모두 다했을 때 (isClear = false)
     public void End(bool isClear)
     {
         StartCoroutine(GameOver(isClear));
@@ -323,7 +321,7 @@ public class DeliveryGameManager : MonoBehaviour
     {
         // 신뢰도 획득
         int gaugeAmount = Score + wishCount;
-        GameManager.Instance.IncreaseGaugeNotAnim(gaugeAmount);
+        gameManager.IncreaseGaugeNotAnim(gaugeAmount);
         
         // 결과창에 신뢰도 결과 띄우기
         StringBuilder sb = new StringBuilder();
@@ -335,10 +333,10 @@ public class DeliveryGameManager : MonoBehaviour
         // 당근 획득
         int carrotAmount = carrotCount * 10000;
         carrotCountText.text = GoldManager.ExpressUnitOfGold(carrotAmount);
-        GameManager.Instance.GetCarrot(carrotAmount);
+        gameManager.MyCarrots += carrotAmount;
 
         // 퍼즐 획득
-        PuzzleManager.Instance.GetManyRandomPiece(puzzleCount);
+        puzzleManager.GetManyRandomPiece(puzzleCount);
     }
 
 

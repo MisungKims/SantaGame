@@ -34,6 +34,7 @@ public class GiftCollider : MonoBehaviour
     private void OnEnable()
     {
         capsuleCollider.enabled = true;
+        isRemove = false;
     }
 
     private void OnTriggerEnter(Collider other)

@@ -72,15 +72,16 @@ public class GameManager : MonoBehaviour
         {
             gauge = value;
 
-            UIManager.Instance.gaugeSlider.value = gauge;
+            UIManagerInstance().gaugeSlider.value = gauge;
 
             gaugeSb.Clear();
             gaugeSb.Append(gauge.ToString("N0"));
             gaugeSb.Append("%");
 
-            UIManager.Instance.gaugeText.text = gaugeSb.ToString();
+            UIManagerInstance().gaugeText.text = gaugeSb.ToString();
         }
     }
+
 
     private int level = 1;
     public int Level
@@ -89,7 +90,8 @@ public class GameManager : MonoBehaviour
         set
         {
             level = value;
-            UIManager.Instance.lvText.text = string.Format("{0:D2}", level);
+            UIManagerInstance().lvText.text = level.ToString("D2");
+            
         }
     }
 
@@ -100,7 +102,7 @@ public class GameManager : MonoBehaviour
         set
         {
             myGold = value;
-            UIManager.Instance.goldText.text = GoldManager.ExpressUnitOfGold(myGold);
+            UIManagerInstance().goldText.text = GoldManager.ExpressUnitOfGold(myGold);
         }
     }
 
@@ -111,7 +113,7 @@ public class GameManager : MonoBehaviour
         set
         {
             myCarrots = value;
-            UIManager.Instance.carrotsText.text = GoldManager.ExpressUnitOfGold(MyCarrots);
+            UIManagerInstance().carrotsText.text = GoldManager.ExpressUnitOfGold(MyCarrots);
         }
     }
 
@@ -124,7 +126,7 @@ public class GameManager : MonoBehaviour
         set
         {
             myDia = value;
-            UIManager.Instance.diaText.text = myDia.ToString();
+            UIManagerInstance().diaText.text = myDia.ToString();
         }
     }
 
@@ -135,7 +137,7 @@ public class GameManager : MonoBehaviour
         set
         {
             citizenCount = value;
-            UIManager.Instance.citizenCountText.text = citizenCount.ToString();
+            UIManagerInstance().citizenCountText.text = citizenCount.ToString();
 
             if (citizenCount != 0 && citizenCount % 5 == 0)      // 주민의 수가 5의 배수일 때 게이지 증가
             {
@@ -144,6 +146,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    StringBuilder daySb = new StringBuilder();
     public int lastDay;
     private int month = 1, year = 0;
     private int day = 1;
@@ -170,7 +173,14 @@ public class GameManager : MonoBehaviour
                 else month++;
             }
 
-            UIManager.Instance.dateText.text = String.Format("{0}년 {1}월 {2}일", year, month, day);
+            daySb.Clear();
+            daySb.Append(year);
+            daySb.Append("년 ");
+            daySb.Append(month);
+            daySb.Append("월 ");
+            daySb.Append(day);
+            daySb.Append("일");
+            UIManagerInstance().dateText.text = daySb.ToString();
 
             // 12월 25일에만 선물전달버튼이 보이도록
             if (month == 12 && day == 25)
@@ -196,26 +206,129 @@ public class GameManager : MonoBehaviour
 
     public string inviteRabbitPrice;        // 토끼 주민 초대 비용
 
+
+    // 오프라인
+    public int goneMonth = 0;       // 오프라인 시간동안 지나간 달
+    public float diffTotalSeconds;  // 오프라인 시간 (초)
+
+
+    //앱의 활성화 상태를 저장하는 변수
+    bool isPaused = false;
+
+
     // 캐싱
     private WaitForSeconds waitForSeconds;
+    private UIManager uIManager;
+    private SoundManager soundManager;
+    private StoreManager storeManager;
 
+    
+    // 선물 전달 게임
     [SerializeField]
     private GameObject deliveryButtonObj;
 
     [SerializeField]
     private GameObject deliveryGame;
-
-    [SerializeField]
-    private GameObject vaillage;
-
-    //public string dataPath;
-
     #endregion
 
-    /* public void SuccessQuest()
+    #region 유니티 함수
+    private void Awake()
     {
-        AchivementManager.Instance.Success(questid);
-    }*/
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);      // 씬 전환 시에도 파괴되지 않음
+        }
+        else
+        {
+            if (instance != this)
+                Destroy(this.gameObject);
+        }
+
+        // 데이터 로드
+        if (!LoadData())
+        {
+            InitData();         // 로드 실패시 초기값 설정
+        }
+
+        waitForSeconds = new WaitForSeconds(dayCount);
+
+        gaugeAnim = UIManagerInstance().gaugeBellImage.GetComponent<Animator>();
+    }
+
+    void Start()
+    {
+        StartCoroutine(DateCounting());     // 날짜 세기 시작
+
+        SoundManagerInstance().PlayBGM(EBgmType.main);
+    }
+
+    void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            isPaused = true;
+
+            SaveData();         // 앱이 비활성화되었을 때 데이터 저장
+        }
+
+        else
+        {
+            if (isPaused)
+            {
+                isPaused = false;
+                OfflineTime();
+            }
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        SaveData();         // 앱 종료 시 데이터 저장
+    }
+    #endregion
+
+    #region 코루틴
+    /// <summary>
+    /// 날짜 세기
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator DateCounting()
+    {
+        while (true)
+        {
+            yield return waitForSeconds;
+
+            Day++;
+        }
+    }
+
+    /// <summary>
+    /// 게이지 상승
+    /// </summary>
+    /// <param name="amount">획득할 게이지</param>
+    IEnumerator IncreaseGaugeCorou(float amount)
+    {
+        gaugeAnim.SetBool("isIncrease", true);      // 게이지 상승 애니메이션 실행
+
+        float goalGuage = gauge + amount;
+
+        while (gauge < goalGuage && gauge < 100)
+        {
+            Gauge += 0.1f;
+
+            yield return new WaitForSeconds(0.001f);
+        }
+
+        Gauge = goalGuage;
+
+        gaugeAnim.SetBool("isIncrease", false);
+
+        if (gauge >= 100.0f)
+            LevelUp();
+    }
+
+    #endregion
 
     #region 함수
     /// <summary>
@@ -225,12 +338,13 @@ public class GameManager : MonoBehaviour
     {
         Level++;
 
-        float remain = gauge - 100.0f;
+        float remain = Gauge - 100.0f;
         Gauge = remain;
 
-        for (int i = 0; i < StoreManager.Instance.storeObjectList.Count; i++)
+        // 상점 오브젝트의 조건을 체크
+        for (int i = 0; i < StoreManagerInstance().storeObjectList.Count; i++)
         {
-            StoreManager.Instance.storeObjectList[i].Check();
+            StoreManagerInstance().storeObjectList[i].Check();
         }
     }
 
@@ -249,29 +363,32 @@ public class GameManager : MonoBehaviour
     /// <param name="amount"></param>
     public void IncreaseGaugeNotAnim(float amount)
     {
-        Gauge = gauge + amount;
+        Gauge += amount;
 
-        if (gauge >= 100.0f)
-            LevelUp();
+        if (Gauge >= 100.0f) LevelUp();
     }
 
-    public void GetCarrot(BigInteger amount)
-    {
-        myCarrots += amount;
-    }
-
+    /// <summary>
+    /// 선물 전달 게임 시작
+    /// </summary>
     public void StartDeliveryGame()
     {
         deliveryGame.SetActive(true);
-        UIManager.Instance.StartDeliveryGame();
+        UIManagerInstance().StartDeliveryGame();
     }
 
+    /// <summary>
+    /// 선물 전달 게임 종료
+    /// </summary>
     public void EndDeliveryGame()
     {
-        UIManager.Instance.EndDeliveryGame();
+        UIManagerInstance().EndDeliveryGame();
         deliveryGame.SetActive(false);
     }
 
+    /// <summary>
+    /// 데이터 저장
+    /// </summary>
     public void SaveData()
     {
         SaveData data = new SaveData();
@@ -292,6 +409,10 @@ public class GameManager : MonoBehaviour
         File.WriteAllText(Application.persistentDataPath + "/MyData.json", JsonUtility.ToJson(data));
     }
     
+    /// <summary>
+    /// 데이터 로드
+    /// </summary>
+    /// <returns></returns>
     public bool LoadData()
     {
         FileInfo fileInfo = new FileInfo(Application.persistentDataPath + "/MyData.json");
@@ -322,48 +443,23 @@ public class GameManager : MonoBehaviour
 
         return false;
     }
-#endregion
-
-#region 코루틴
-    /// <summary>
-    /// 날짜 세기
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator DateCounting()
-    {
-        while (true)
-        {
-            yield return waitForSeconds;
-
-            Day++;
-        }
-    }
 
     /// <summary>
-    /// 게이지 상승
+    /// 값 초기화
     /// </summary>
-    /// <param name="amount">획득할 게이지</param>
-    IEnumerator IncreaseGaugeCorou(float amount)
+    void InitData()
     {
-        //SoundManager.Instance.PlaySoundEffect(ESoundEffectType.getGoldButton);      // 효과음 실행
-
-        gaugeAnim.SetBool("isIncrease", true);      // SantaVillage 씬에서만 게이지 상승 애니메이션 실행
-
-        float goalGuage = gauge + amount;
-
-        while (gauge < goalGuage && gauge < 100)
-        {
-            Gauge += 0.1f;
-
-            yield return new WaitForSeconds(0.001f);
-        }
-
-        Gauge = goalGuage;
-
-        gaugeAnim.SetBool("isIncrease", false);
-
-        if (gauge >= 100.0f)
-            LevelUp();
+        Level = 1;
+        Gauge = 0;
+        CitizenCount = 0;
+        Day = 1;
+        MyGold = 1000;
+        MyCarrots = 1000;
+        MyDia = 0;
+        year = 0;
+        month = 1;
+        inviteRabbitPrice = "100";
+        lastConnectionTime = "";
     }
 
     /// <summary>
@@ -371,6 +467,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OfflineTime()
     {
+        goneMonth = 0;
+
         if (lastConnectionTime.Equals("")) return;
 
         // 지난 앱 비활성화 시간을 가져와
@@ -378,7 +476,7 @@ public class GameManager : MonoBehaviour
 
         // 오프라인 시간을 계산
         TimeSpan timeDiff = DateTime.Now - lastConnection;
-        float diffTotalSeconds = (float)timeDiff.TotalSeconds;
+        diffTotalSeconds = (float)timeDiff.TotalSeconds;
 
         if (diffTotalSeconds > 21600f)       // 최대 360분
         {
@@ -386,7 +484,6 @@ public class GameManager : MonoBehaviour
         }
 
         int goneDay = (int)(diffTotalSeconds / dayCount);       // 지나간 날짜
-
         int lastMonth = month;
         for (int i = 0; i < goneDay; i++)
         {
@@ -394,90 +491,53 @@ public class GameManager : MonoBehaviour
 
             if (lastMonth - month < 0)
             {
-                PostOfficeManager.Instance.NewPost();
+                goneMonth++;
             }
 
             lastMonth = month;
         }
     }
 
+    /// <summary>
+    /// UIManager 인스턴스 반환
+    /// </summary>
+    /// <returns></returns>
+    UIManager UIManagerInstance()
+    {
+        if (!uIManager)
+        {
+            uIManager = UIManager.Instance;
+        }
+
+        return uIManager;
+    }
+
+    /// <summary>
+    /// SoundManager 인스턴스 반환
+    /// </summary>
+    /// <returns></returns>
+    SoundManager SoundManagerInstance()
+    {
+        if (!soundManager)
+        {
+            soundManager = SoundManager.Instance;
+        }
+
+        return soundManager;
+    }
+
+    /// <summary>
+    /// UIManager 인스턴스 반환
+    /// </summary>
+    /// <returns></returns>
+    StoreManager StoreManagerInstance()
+    {
+        if (!storeManager)
+        {
+            storeManager = StoreManager.Instance;
+        }
+
+        return storeManager;
+    }
     #endregion
-
-
-
-    #region 유니티 함수
-
-    #endregion
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);      // 씬 전환 시에도 파괴되지 않음
-        }
-        else
-        {
-            if (instance != this)
-                Destroy(this.gameObject);
-        }
-
-        // 데이터 로드
-        if (!LoadData())
-        {
-            // 로드 실패시 초기값 설정
-            Level = 1;
-            Gauge = 0;
-            CitizenCount = 0;
-            Day = 1;
-            MyGold = 1000;
-            MyCarrots = 1000;
-            MyDia = 0;
-            year = 0;
-            month = 1;
-            inviteRabbitPrice = "100";
-            lastConnectionTime = "";
-        }
-
-        //dataPath = Application.persistentDataPath + "/MyData.json";
-
-        waitForSeconds = new WaitForSeconds(dayCount);
-
-        gaugeAnim = UIManager.Instance.gaugeBellImage.GetComponent<Animator>();
-    }
-
-    void Start()
-    {
-        StartCoroutine(DateCounting());
-
-        SoundManager.Instance.PlayBGM(EBgmType.main);
-    }
-
-
-
-    //앱의 활성화 상태를 저장하는 변수
-    bool isPaused = false;
-
-    void OnApplicationPause(bool pause)
-    {
-        if (pause)
-        {
-            isPaused = true;
-
-            SaveData();         // 앱이 비활성화되었을 때 데이터 저장
-        }
-
-        else
-        {
-            if (isPaused)
-            {
-                isPaused = false;
-                /* 앱이 활성화 되었을 때 처리 */
-            }
-        }
-    }
-
-    void OnApplicationQuit()
-    {
-        SaveData();         // 앱 종료 시 데이터 저장
-    }
 }
