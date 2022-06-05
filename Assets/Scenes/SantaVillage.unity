@@ -37127,6 +37127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: {fileID: 0}
   isOpenPanel: 0
+  mainCanvas: {fileID: 1180735488}
   mainPanel: {fileID: 1332293574}
   alwaysVisiblePanel: {fileID: 215986863}
   cameraPanel: {fileID: 1192321993}
@@ -62658,7 +62659,7 @@ RectTransform:
   m_GameObject: {fileID: 1962064693}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.88, y: 0.88, z: 0.88}
   m_Children:
   - {fileID: 2077042720}
   - {fileID: 1461877922}
@@ -62721,8 +62722,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72cd95f48bd251241bd802dd72133b87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anotherScale: {x: 0, y: 0, z: 0}
-  anotherVector: 0
+  anotherScale: {x: 0.88, y: 0.88, z: 0.88}
+  anotherVector: 1
   speed: 15
 --- !u!1 &1967816693
 GameObject:

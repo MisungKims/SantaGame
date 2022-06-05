@@ -20,6 +20,7 @@ public class ScreenShot : MonoBehaviour
 
     // Ä³½Ì
     private UIManager uIManager;
+    private SoundManager soundManager;
     private WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
     #endregion
 
@@ -27,6 +28,7 @@ public class ScreenShot : MonoBehaviour
     private void Awake()
     {
         uIManager = UIManager.Instance;
+        soundManager = SoundManager.Instance;
     }
 
     private void OnEnable()
@@ -44,9 +46,9 @@ public class ScreenShot : MonoBehaviour
     {
         isCapture = true;
 
-        SoundManager.Instance.PlaySoundEffect(ESoundEffectType.screenShot);     // È¿°úÀ½ ½ÇÇà
+        soundManager.PlaySoundEffect(ESoundEffectType.screenShot);     // È¿°úÀ½ ½ÇÇà
 
-        uIManager.cameraPanel.SetActive(false);       // ui¸¦ ¼û±è
+        uIManager.mainCanvas.enabled = false;       // ui¸¦ ¼û±è
 
         yield return waitForEndOfFrame;
 
@@ -63,8 +65,7 @@ public class ScreenShot : MonoBehaviour
             QuestManager.Instance.Success(questID);        // »çÁøÀ» Âï¾î °¶·¯¸®¿¡ ÀúÀåÇÏ¸é Äù½ºÆ® ¿Ï·á
         });
 
-
-        uIManager.cameraPanel.SetActive(true);       // ui¸¦ ¼û±è
+        uIManager.mainCanvas.enabled = true;
         isCapture = false;
 
         // cleanup

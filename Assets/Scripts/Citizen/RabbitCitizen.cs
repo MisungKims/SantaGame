@@ -362,6 +362,10 @@ public class RabbitCitizen : MonoBehaviour
             {
                 if (hit.collider.CompareTag("Santa") && hit.collider.name == this.name)
                 {
+                    if (uIManager.clickObjWindow.activeSelf)
+                    {
+                        uIManager.clickObjWindow.SetActive(false);
+                    }
                     SetCamTargetThis();
                 }
             }
