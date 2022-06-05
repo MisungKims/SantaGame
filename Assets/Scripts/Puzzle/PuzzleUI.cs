@@ -31,16 +31,18 @@ public class PuzzleUI : MonoBehaviour
     [SerializeField]
     private GameObject coverBackground;
 
+
     public List<PieceObject> pieceImages = new List<PieceObject>();
 
     private PieceObject currentObj;     // 현재 보여지고 있는 라인의 퍼즐 오브젝트
 
-    // 프로퍼티
+
     public string PuzzleName
     {
         set { puzzleNameText.text = value; }
     }
 
+   
     // 캐싱
     GameManager gameManager;
     PuzzleManager puzzleManager;

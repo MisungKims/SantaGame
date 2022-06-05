@@ -20,9 +20,9 @@ public class PostOfficeButtonRay : ButtonRaycast
     {
         yield return new WaitForSeconds(0.13f);
 
-        soundManager.PlaySoundEffect(ESoundEffectType.uiButton);      // 효과음
-
         UIManagerInstance().SetisOpenPanel(true);
         UIManagerInstance().postOfficePanel.SetActive(true);
+
+        SoundManagerInstance().PlaySoundEffect(ESoundEffectType.uiButton);      // 효과음
     }
 }

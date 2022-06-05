@@ -30,6 +30,7 @@ public class ObjectManager : MonoBehaviour
     public Sprite[] buildingSprites;
     public Sprite[] santaSprites;
 
+    public bool isWatchingAds = false;
 
     // 싱글톤
     private static ObjectManager instance;
@@ -86,7 +87,15 @@ public class ObjectManager : MonoBehaviour
             {
                 isPaused = false;
 
-                OfflineTime();
+                // 광고를 보고 올때가 아니라면 오프라인 보상
+                if (!isWatchingAds)
+                {
+                    OfflineTime();
+                }
+                else
+                {
+                    isWatchingAds = false;
+                }
             }
         }
     }
