@@ -5,11 +5,6 @@ TagManager:
   serializedVersion: 2
   tags:
   - Santa
-  - Building
-  - WorldSpaceUI
-  - Fluid
-  - Floor
-  - Obstacle
   layers:
   - Default
   - TransparentFX
@@ -17,7 +12,7 @@ TagManager:
   - 
   - Water
   - UI
-  - PostProcessing
+  - 
   - 
   - 
   - 

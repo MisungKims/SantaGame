@@ -1,273 +1,14 @@
-/**
- * @brief 플레이어의 전반적인 것을 관리
- * @author 김미성
- * @date 22-04-20
- */
-
 using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-using System.Text;
-
 
 public class GameManager : MonoBehaviour
 {
-    #region 변수
-    // 싱글톤
+    #region 싱글톤
     private static GameManager instance = null;
-    public static GameManager Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                return null;
-            }
-            return instance;
-        }
-    }
 
-    [Header("---------- UI 변수")]
-    [SerializeField]
-    private Slider gaugeSlider;
-    [SerializeField]
-    private Text gaugeText;
-    [SerializeField]
-    private Text lvText;
-    [SerializeField]
-    private Text goldText;
-    [SerializeField]
-    private Text carrotsText;
-    [SerializeField]
-    private Text diaText;
-    [SerializeField]
-    private Text citizenCountText;
-    [SerializeField]
-    private Text dateText;
-    [SerializeField]
-    private GameObject gaugeBellImage;
-
-    private Animator gaugeAnim;
-
-    public Text text;   // 나중에 지워야함
-
-
-    // 플레이어의 값
-    StringBuilder gaugeSb = new StringBuilder();
-    private float gauge;
-    public float Gauge
-    {
-        get{ return gauge; }
-        set
-        {
-            gauge = value;
-
-            if (GameLoadManager.CurrentScene().name == "SantaVillage")
-            {
-                gaugeSlider.value = gauge;
-
-                gaugeSb.Clear();
-                gaugeSb.Append(gauge.ToString("N0"));
-                gaugeSb.Append("%");
-
-                gaugeText.text = gaugeSb.ToString();
-            }
-        }
-    }
-
-    private int level = 1;
-    public int Level
-    {
-        get { return level; }
-        set
-        {
-            level = value;
-            lvText.text = string.Format("{0:D2}", level);
-        }
-    }
-
-    private BigInteger myGold = 3560000;
-    public BigInteger MyGold
-    {
-        get { return myGold; }
-        set
-        {
-            myGold = value;
-            goldText.text = GoldManager.ExpressUnitOfGold(myGold);
-        }
-    }
-
-    private BigInteger myCarrots = 13000;
-    public BigInteger MyCarrots
-    {
-        get { return myCarrots; }
-        set
-        {
-            myCarrots = value;
-            carrotsText.text = GoldManager.ExpressUnitOfGold(MyCarrots);
-        }
-    }
-
-    private int myDia = 0;
-    public int MyDia
-    {
-        get { return myDia; }
-        set
-        {
-            myDia = value;
-            diaText.text = myDia.ToString();
-        }
-    }
-
-    private int citizenCount = 0;
-    public int CitizenCount
-    {
-        get { return citizenCount; }
-        set
-        {
-            citizenCount = value;
-            citizenCountText.text = citizenCount.ToString();
-        }
-    }
-
-    private int lastDay;
-    private int month = 1, year = 0;
-    private int day = 1;
-    public int Day
-    {
-        get { return day; }
-        set
-        {
-            day = value;
-
-            if (month == 1 && month == 3 && month == 5 && month == 7 && month == 8 && month == 10 && month == 12)
-                lastDay = 32;
-            else
-                lastDay = 31;
-
-            if (day > lastDay)
-            {
-                day = 1;
-                if (month == 12)
-                {
-                    year++;
-                    month = 1;
-                }
-                else month++;
-            }
-
-            if (GameLoadManager.CurrentScene().name == "SantaVillage")
-            {
-                dateText.text = String.Format("{0}년 {1}월 {2}일", year, month, day);
-            }
-        }
-    }
-
-    public float dayCount = 5f;        // 게임 속 에서 몇초마다 다음 날이 될 지
-
-    public float goldEfficiency = 1.0f;         // 토끼 주민 초대 시 증가할 효율
-
-    
-    private WaitForSeconds waitForSeconds;      // 캐싱
-
-    public int questid;     // 나중에 지워야 할 것
-
-  
-    #endregion
-
-    /* public void SuccessQuest()
-    {
-        AchivementManager.Instance.Success(questid);
-    }*/
-
-    #region 함수
-    /// <summary>
-    /// 레벨 업
-    /// </summary>
-    private void LevelUp()
-    {
-        Level++;
-
-        float remain = gauge - 100.0f;
-        Gauge = remain;
-
-        for (int i = 0; i < StoreManager.Instance.storeObjectList.Count; i++)
-        {
-            StoreManager.Instance.storeObjectList[i].Check();
-        }
-    }
-
-    /// <summary>
-    /// 게이지 상승 실행
-    /// </summary>
-    /// <param name="amount">획득할 게이지</param>
-    public void IncreaseGauge(float amount)
-    {
-        StartCoroutine(IncreaseGaugeCorou(amount));
-    }
-
-    #endregion
-
-    #region 코루틴
-    /// <summary>
-    /// 날짜 세기
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator DateCounting()
-    {
-        while (true)
-        {
-            yield return waitForSeconds;
-
-            Day++;
-        }
-    }
-
-    /// <summary>
-    /// 게이지 상승
-    /// </summary>
-    /// <param name="amount">획득할 게이지</param>
-    IEnumerator IncreaseGaugeCorou(float amount)
-    {
-        /// TODO : 효과음 실행
-        if (GameLoadManager.CurrentScene().name == "SantaVillage")
-        {
-            gaugeAnim.SetBool("isIncrease", true);      // 게이지 상승 애니메이션 실행
-        }
-
-            
-
-        float goalGuage = gauge + amount;
-
-        while (gauge < goalGuage)
-        {
-            Gauge += 0.1f;
-
-            yield return new WaitForSeconds(0.001f);
-        }
-
-        Gauge = goalGuage;
-
-        if (GameLoadManager.CurrentScene().name == "SantaVillage")
-        {
-            gaugeAnim.SetBool("isIncrease", false);
-        }
-        
-
-        if (gauge >= 100.0f)
-            LevelUp();
-    }
-
-    #endregion
-
-
-
-    #region 유니티 함수
-
-    #endregion
     private void Awake()
     {
         if (instance == null)
@@ -280,44 +21,155 @@ public class GameManager : MonoBehaviour
             if (instance != this)
                 Destroy(this.gameObject);
         }
-
-        Level = 10;
-        Gauge = 10;
-        CitizenCount = 0;
-        Day = 1;
-        MyGold = myGold;
-        MyCarrots = myCarrots;
-        MyDia = myDia;
-
-        waitForSeconds = new WaitForSeconds(dayCount);
-
-        gaugeAnim = gaugeBellImage.GetComponent<Animator>();
     }
 
+    public static GameManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                return null;
+            }
+            return instance;
+        }
+    }
+
+    #endregion
+
+    #region 변수
+    [Header("---------- 메인 오브젝트")]
+    public Slider gaugeSlider;        // 게이지를 나타내는 슬라이더
+    public Text lvText;               // 레벨을 나타내는 텍스트
+    public Text goldText;            // 돈을 나타내는 텍스트
+    public Text dateText;             // 날짜를 나타내는 텍스트
+    public Text timeText;             // 시간을 나타내는 텍스트
+
+    [Header("---------- 패널")]
+    public GameObject mainPanel;     // 상점 패널
+    public GameObject storePanel;     // 상점 패널
+    public GameObject santaPanel;     // 상점 패널
+
+    [Header("---------- 변수")]
+    public static float gauge;
+    public static int level = 1;
+    public static double myGold = 10000;
+    public static float second = 0;
+
+ 
+    #endregion
+
+    #region 함수
+
+
+
+    /// <summary>
+    /// 1000 단위 마다 콤마를 붙여주는 함수
+    /// </summary>
+    string GetCommaText(int i)
+    {
+        return string.Format("{0: #,###; -#,###;0}", i);
+    }
+
+    public void LevelUp()
+    {
+        level++;
+        lvText.text = level.ToString();
+    }
+
+    public void IncreaseGauge(float amount)
+    {
+        gauge += amount;
+        gaugeSlider.value = gauge;
+    }
+
+    public void IncreaseGold(int amount)
+    {
+        myGold += amount;
+        ShowMyGold();
+    }
+
+    public void DecreaseGold(int amount)
+    {
+        myGold -= amount;
+        ShowMyGold();
+    }
+
+
+    public void DoIncreaseGold(int second, int incrementGold)
+    {
+        //StartCoroutine(IncreaseGold(second, incrementGold));
+    }
+
+    public void ShowMyGold()
+    {
+        goldText.text = GoldManager.ExpressUnitOfGold(myGold);
+    }
+
+
+    public void ShowSantaPanel()
+    {
+        if(!santaPanel.activeSelf)
+        {
+            mainPanel.SetActive(false);
+            santaPanel.SetActive(true);
+        }
+    }
+
+    public void HideSantaPanel()
+    {
+        mainPanel.SetActive(true);
+        santaPanel.SetActive(false);
+    }
+
+    // Store Panel을 보여주기
+    public void ShowStorePanel()
+    {
+        storePanel.SetActive(true);                 
+
+        CameraMovement.Instance.SetCanMove(false);      // 카메라 움직일 수 없게
+    }
+
+    // Store Panel을 숨기기
+    public void HideStorePanel()
+    {
+        storePanel.SetActive(false);
+
+        CameraMovement.Instance.SetCanMove(true);       // 카메라 움직일 수 있게
+    }
+
+    #endregion
+
+
+    // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(DateCounting());
+        lvText.text = level.ToString();
 
-        StartCoroutine(IncreaseGaugeCorou(20f));
+        gaugeSlider.value = gauge;
 
-        SoundManager.Instance.PlayBGM(EBgmType.main);
+        ShowMyGold();
 
-        //BigInteger start = 100;
-        //string value = start.ToString();
-        //float sf = 1.7f;
+        storePanel.SetActive(false);
+        santaPanel.SetActive(false);
 
-        //Debug.Log(value);
-
-        //for (int i = 0; i < 100; i++)
-        //{
-        //    value = GoldManager.MultiplyUnit(value, sf);
-        //    sf += 0.5f;
-        //    text.text += value + "\n";
-        //}
-
-
-        //Debug.Log(BigIntegerManager.UnitToValue(BigInteger.Pow(1000, 702)));
+        StartCoroutine(CalcSecond());
 
     }
+
+    IEnumerator CalcSecond()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(1f);
+
+            second++;
+
+            timeText.text = string.Format("{0:D2} : {1:D2}", (int)second / 60, (int)second % 60);
+        }
+    }
+
+   
+    
 
 }
