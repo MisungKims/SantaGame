@@ -30,6 +30,7 @@ public class GiftShop : MonoBehaviour
     private Animator anim;
 
     // 캐싱
+    private GameManager gameManager;
     private GiftManager giftManager;
     private SoundManager soundManager;
     private QuestManager questManager;
@@ -43,6 +44,7 @@ public class GiftShop : MonoBehaviour
     #region 유니티 함수
     private void Awake()
     {
+        gameManager = GameManager.Instance;
         giftManager = GiftManager.Instance;
         soundManager = SoundManager.Instance;
         questManager = QuestManager.Instance;
@@ -105,7 +107,7 @@ public class GiftShop : MonoBehaviour
     /// </summary>
     public void ClickLever()
     {
-        /// TODO : 선물뽑기할때 골드? 당근?
+        gameManager.MyGold -= GoldManager.UnitToBigInteger("10.0A");              // 뽑기 비용 지불
 
         RandBall();
 

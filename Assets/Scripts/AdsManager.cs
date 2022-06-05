@@ -8,84 +8,54 @@ using System.Collections.Generic;
 
 public class AdsManager : MonoBehaviour
 {
-    private RewardedAd rewardedAd;
+    string adUnitId;
 
 //    public void Start()
 //    {
-//        // Initialize the Google Mobile Ads SDK.
+//        Quiz_Manager = GameObject.FindObjectOfType<Quiz_Manager>();
+//        PlayScene_Manager = GameObject.FindObjectOfType<PlayScene_Manager>();
+
+//        // 모바일 광고 SDK를 초기화함.
 //        MobileAds.Initialize(initStatus => { });
 
-//        string adUnitId;
-//#if UNITY_ANDROID
-//        adUnitId = "ca-app-pub-3940256099942544/5224354917";
-//#elif UNITY_IPHONE
-//            adUnitId = "ca-app-pub-3940256099942544/1712485313";
-//#else
-//            adUnitId = "unexpected_platform";
-//#endif
-
-//        this.rewardedAd = new RewardedAd(adUnitId);
-
-//        // Create an empty ad request.
+//        //광고 로드 : RewardedAd 객체의 loadAd메서드에 AdRequest 인스턴스를 넣음
 //        AdRequest request = new AdRequest.Builder().Build();
-//        // Load the rewarded ad with the request.
+//        this.rewardedAd = new RewardedAd(adUnitId);
 //        this.rewardedAd.LoadAd(request);
 
-//        // Called when an ad request has successfully loaded.
-//        this.rewardedAd.OnAdLoaded += HandleRewardedAdLoaded;
-//        // Called when an ad request failed to load.
-//        this.rewardedAd.OnAdFailedToLoad += HandleRewardedAdFailedToLoad;
-//        // Called when an ad is shown.
-//        this.rewardedAd.OnAdOpening += HandleRewardedAdOpening;
-//        // Called when an ad request failed to show.
-//        this.rewardedAd.OnAdFailedToShow += HandleRewardedAdFailedToShow;
-//        // Called when the user should be rewarded for interacting with the ad.
-//        this.rewardedAd.OnUserEarnedReward += HandleUserEarnedReward;
-//        // Called when the ad is closed.
-//        this.rewardedAd.OnAdClosed += HandleRewardedAdClosed;
-    
-    
+//        //adUnitId 설정
+//#if UNITY_ANDROID
+//        adUnitId = "ca-app-pub-3115045377477281/4539879882";
+//#endif
+
+//        this.rewardedAd.OnAdLoaded += HandleRewardedAdLoaded; // 광고 로드가 완료되면 호출
+//        this.rewardedAd.OnAdFailedToLoad += HandleRewardedAdFailedToLoad; // 광고 로드가 실패했을 때 호출
+//        this.rewardedAd.OnAdOpening += HandleRewardedAdOpening; // 광고가 표시될 때 호출(기기 화면을 덮음)
+//        this.rewardedAd.OnAdFailedToShow += HandleRewardedAdFailedToShow; // 광고 표시가 실패했을 때 호출
+//        this.rewardedAd.OnUserEarnedReward += HandleUserEarnedReward;// 광고를 시청한 후 보상을 받아야할 때 호출
+//        this.rewardedAd.OnAdClosed += HandleRewardedAdClosed; // 닫기 버튼을 누르거나 뒤로가기 버튼을 눌러 동영상 광고를 닫을 때 호출
 //    }
 
-//    public void HandleRewardedAdLoaded(object sender, EventArgs args)
+//    public void HandleRewardedAdLoaded(object sender, EventArgs args) { }
+
+//    public void HandleRewardedAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
 //    {
-//        MonoBehaviour.print("HandleRewardedAdLoaded event received");
+//        Quiz_Manager.StopADs();
 //    }
 
-//    public void HandleRewardedAdFailedToLoad(object sender, AdErrorEventArgs args)
-//    {
-//        MonoBehaviour.print(
-//            "HandleRewardedAdFailedToLoad event received with message: "
-//                             + args.Message);
-//    }
+//    public void HandleRewardedAdOpening(object sender, EventArgs args) { }
 
-//    public void HandleRewardedAdOpening(object sender, EventArgs args)
-//    {
-//        MonoBehaviour.print("HandleRewardedAdOpening event received");
-//    }
+//    public void HandleRewardedAdFailedToShow(object sender, EventArgs args) { }
 
-//    public void HandleRewardedAdFailedToShow(object sender, AdErrorEventArgs args)
-//    {
-//        MonoBehaviour.print(
-//            "HandleRewardedAdFailedToShow event received with message: "
-//                             + args.Message);
-//    }
-
-//    public void HandleRewardedAdClosed(object sender, EventArgs args)
-//    {
-//        MonoBehaviour.print("HandleRewardedAdClosed event received");
-//    }
+//    public void HandleRewardedAdClosed(object sender, EventArgs args) { }
 
 //    public void HandleUserEarnedReward(object sender, Reward args)
 //    {
-//        string type = args.Type;
-//        double amount = args.Amount;
-//        MonoBehaviour.print(
-//            "HandleRewardedAdRewarded event received for "
-//                        + amount.ToString() + " " + type);
+//        if (Quiz_Manager == null) Quiz_Manager = GameObject.FindObjectOfType<Quiz_Manager>();
+//        Quiz_Manager.PostADs();
 //    }
 
-//    private void UserChoseToWatchAd()
+//    public void ShowAds()
 //    {
 //        if (this.rewardedAd.IsLoaded())
 //        {
