@@ -24,6 +24,7 @@ public class UIManager : MonoBehaviour
     public bool isOpenPanel;        // 패널 혹은 창이 열려있는지
 
     [Header("---------- UI 변수")]
+    public Canvas mainCanvas;
     public GameObject mainPanel;
     public GameObject alwaysVisiblePanel;
     public GameObject cameraPanel;               // 카메라 패널
@@ -89,7 +90,10 @@ public class UIManager : MonoBehaviour
 
             if (storePanel.activeSelf) storePanel.SetActive(false);
             if (InviteRabbitWindow.activeSelf) InviteRabbitWindow.SetActive(false);
+            if (citizenPanel.gameObject.activeSelf) citizenPanel.gameObject.SetActive(false);
         }
+
+        clickObjWindow.GetComponent<ClickObjWindow>().SetSantaInfo();
     }
 
     /// <summary>
@@ -108,6 +112,7 @@ public class UIManager : MonoBehaviour
         mainPanel.SetActive(false);
         citizenPanel.rabbitCitizen = rabbitCitizen;
         citizenPanel.gameObject.SetActive(true);
+        citizenPanel.Open();
 
         if (InviteRabbitWindow.activeSelf) InviteRabbitWindow.SetActive(false);
     }
@@ -133,6 +138,10 @@ public class UIManager : MonoBehaviour
 
         if (InviteRabbitWindow.activeSelf) InviteRabbitWindow.SetActive(false);
         if (citizenPanel.gameObject.activeSelf) citizenPanel.gameObject.SetActive(false);
+        if (clickObjWindow.activeSelf)
+        {
+            clickObjWindow.SetActive(false);
+        }
     }
 
     /// <summary>
@@ -155,7 +164,11 @@ public class UIManager : MonoBehaviour
         storePanel.SetActive(true);
 
         if (InviteRabbitWindow.activeSelf) InviteRabbitWindow.SetActive(false);
-        if (clickObjWindow.activeSelf) clickObjWindow.SetActive(false);
+        if (clickObjWindow.activeSelf)
+        {
+            clickObjWindow.SetActive(false);
+            cameraMovement.chaseState = EChaseState.endChase;
+        }
     }
 
     /// <summary>
@@ -178,7 +191,15 @@ public class UIManager : MonoBehaviour
         clothesStorePanel.SetActive(true);
         mainPanel.SetActive(false);
 
-        if (InviteRabbitWindow.activeSelf) InviteRabbitWindow.SetActive(false);
+        if (InviteRabbitWindow.activeSelf)
+        {
+            InviteRabbitWindow.SetActive(false);
+        }
+        if (clickObjWindow.activeSelf)
+        {
+            clickObjWindow.SetActive(false);
+            cameraMovement.chaseState = EChaseState.endChase;
+        }
     }
 
     /// <summary>
@@ -203,6 +224,11 @@ public class UIManager : MonoBehaviour
 
         if (InviteRabbitWindow.activeSelf) InviteRabbitWindow.SetActive(false);
         if (citizenPanel.gameObject.activeSelf) citizenPanel.gameObject.SetActive(false);
+        if (clickObjWindow.activeSelf)
+        {
+            clickObjWindow.SetActive(false);
+            cameraMovement.chaseState = EChaseState.endChase;
+        }
     }
 
     /// <summary>
@@ -224,13 +250,25 @@ public class UIManager : MonoBehaviour
         inventoryPanel.SetActive(true);
 
         InventoryInstance().RefreshInventory();
+
+        if (clickObjWindow.activeSelf)
+        {
+            clickObjWindow.SetActive(false);
+            cameraMovement.chaseState = EChaseState.endChase;
+        }
     }
 
     public void StartDeliveryGame()
     {
         mainPanel.SetActive(false);
         alwaysVisiblePanel.SetActive(false);
-       SetisOpenPanel(true);
+        SetisOpenPanel(true);
+
+        if (clickObjWindow.activeSelf)
+        {
+            clickObjWindow.SetActive(false);
+            cameraMovement.chaseState = EChaseState.endChase;
+        }
     }
 
     public void EndDeliveryGame()

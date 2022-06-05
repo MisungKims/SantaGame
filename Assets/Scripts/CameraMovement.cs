@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+public enum EChaseState { noChase, chaseSanta, chaseBuilding, endChase };         // 카메라의 상태
 
 public class CameraMovement : MonoBehaviour
 {
@@ -44,8 +45,7 @@ public class CameraMovement : MonoBehaviour
 
     bool isSantaAngleStart = false;
 
-    enum EChaseState { noChase, chaseSanta, chaseBuilding, endChase };         // 카메라의 상태
-    EChaseState chaseState = EChaseState.noChase;
+    public EChaseState chaseState = EChaseState.noChase;
 
     [Header("---------- Move")]
     private float moveSpeed = 1.2f;
