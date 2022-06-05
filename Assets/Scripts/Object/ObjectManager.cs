@@ -86,7 +86,6 @@ public class ObjectManager : MonoBehaviour
             {
                 isPaused = false;
 
-                /* 앱이 활성화 되었을 때 처리 */
                 OfflineTime();
             }
         }
@@ -203,26 +202,13 @@ public class ObjectManager : MonoBehaviour
         GetOfflineGoldWindow getOfflineGoldWindow = uIManager.getOfflineGoldWindow;
 
         string sLastTime = gameManager.lastConnectionTime;
-
         if (sLastTime.Equals("")) return;
 
-        // 지난 앱 비활성화 시간을 가져와
-        DateTime lastConnectionTime = DateTime.ParseExact(sLastTime, "yyyy-MM-dd-HH-mm-ss", System.Globalization.CultureInfo.InvariantCulture);
-
-        // 오프라인 시간을 계산
-        TimeSpan timeDiff = DateTime.Now - lastConnectionTime; 
-        float diffTotalSeconds = (float)timeDiff.TotalSeconds;
-
-        if (diffTotalSeconds > 21600f)       // 최대 360분
-        {
-            diffTotalSeconds = 21600f;
-        }
-
         // 획득할 보상을 계산
-        BigInteger goldAmount = GetGold(diffTotalSeconds);
+        BigInteger goldAmount = GetGold(gameManager.diffTotalSeconds);
         string gold = GoldManager.ExpressUnitOfGold(goldAmount);
 
-        BigInteger carrotAmount = GetCarrot(diffTotalSeconds);
+        BigInteger carrotAmount = GetCarrot(gameManager.diffTotalSeconds);
         string carrot = GoldManager.ExpressUnitOfGold(carrotAmount);
 
         // 보상을 얻지 못했으면 return
@@ -242,7 +228,7 @@ public class ObjectManager : MonoBehaviour
 
 
         // 오프라인 시간을 Text에 보여줌
-        getOfflineGoldWindow.timeText.text = OfflinesString(diffTotalSeconds);
+        getOfflineGoldWindow.timeText.text = OfflinesString(gameManager.diffTotalSeconds);
 
 
         // 오프라인 보상 획득창 활성화

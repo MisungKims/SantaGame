@@ -1,7 +1,7 @@
 /**
  * @brief 선물 전달 게임의 산타(플레이어)
  * @author 김미성
- * @date 22-05-18
+ * @date 22-06-04
  */
 
 
@@ -14,6 +14,7 @@ public class DeliverySanta : MonoBehaviour
     #region 변수
     private Rigidbody rigid;
 
+    // 점프
     [SerializeField]
     private float jumpPower = 700f;
     [SerializeField]
@@ -23,7 +24,8 @@ public class DeliverySanta : MonoBehaviour
 
     private int jumpCnt = 0;
 
-    public static GameObject giftPos;      // 선물을 떨어뜨릴 위치
+    // 선물을 나타날 위치
+    public static GameObject giftPos;      
 
     // 캐싱
     private DeliveryGameManager deliveryGameManager;
@@ -56,26 +58,13 @@ public class DeliverySanta : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Obstacle"))    // 장애물에 부딪히면 생명 감소
+        if (other.gameObject.CompareTag("Obstacle"))        // 장애물에 부딪히면 생명 감소
         {
-            soundManager.PlaySoundEffect(ESoundEffectType.deliveryObstacle);     // 효과음 실행
-            deliveryGameManager.Life--;
+            DecreaseLife();
         }
-        else if (other.gameObject.CompareTag("Reward"))
+        else if (other.gameObject.CompareTag("Reward"))     // 보상에 부딪히면 보상을 획득
         {
-            soundManager.PlaySoundEffect(ESoundEffectType.deliveryGetGift);     // 효과음 실행
-
-            DeliveryReward reward = other.transform.GetComponent<DeliveryReward>();
-            ObjectPoolingManager.Instance.Set(reward.gameObject, EObjectFlag.reward);     // 오브젝트 풀에 반환
-
-            if (reward.rewardType.Equals(ERewardType.carrot))           // 보상이 당근일 때
-            {
-                deliveryGameManager.carrotCount++;
-            }
-            else if (reward.rewardType.Equals(ERewardType.puzzle))           // 보상이 퍼즐 조각일 때
-            {
-                deliveryGameManager.PuzzleCount++;
-            }
+            GetReward(other.transform.GetComponent<DeliveryReward>());
         }
     }
     #endregion
@@ -122,6 +111,34 @@ public class DeliverySanta : MonoBehaviour
 
             objectPoolingManager.Get(EObjectFlag.gift);
             deliveryGameManager.GiftCount--;
+        }
+    }
+
+    /// <summary>
+    /// 생명 감소
+    /// </summary>
+    void DecreaseLife()
+    {
+        soundManager.PlaySoundEffect(ESoundEffectType.deliveryObstacle);     // 효과음 실행
+        deliveryGameManager.Life--;
+    }
+
+    /// <summary>
+    /// 보상 획득
+    /// </summary>
+    void GetReward(DeliveryReward reward)
+    {
+        soundManager.PlaySoundEffect(ESoundEffectType.deliveryGetGift);     // 효과음 실행
+
+        objectPoolingManager.Set(reward.gameObject, EObjectFlag.reward);     // 오브젝트 풀에 반환
+
+        if (reward.rewardType.Equals(ERewardType.carrot))           // 보상이 당근일 때
+        {
+            deliveryGameManager.carrotCount++;
+        }
+        else if (reward.rewardType.Equals(ERewardType.puzzle))           // 보상이 퍼즐 조각일 때
+        {
+            deliveryGameManager.PuzzleCount++;
         }
     }
     #endregion

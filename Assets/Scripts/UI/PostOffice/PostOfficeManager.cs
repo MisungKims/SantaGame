@@ -94,6 +94,8 @@ public class PostOfficeManager : MonoBehaviour
 
     private void Start()
     {
+        OfflineTime();
+
         maximum = objectPoolingManager.poolingList[(int)EObjectFlag.post].initCount;
 
         StartCoroutine(SendPost());
@@ -113,6 +115,7 @@ public class PostOfficeManager : MonoBehaviour
             if (isPaused)
             {
                 isPaused = false;
+                OfflineTime();
             }
         }
     }
@@ -295,6 +298,18 @@ public class PostOfficeManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// 오프라인 시간동안 지나간 시간동안 받았을 편지를 받도록
+    /// </summary>
+    void OfflineTime()
+    {
+        int goneMonth = GameManager.Instance.goneMonth;
+        for (int i = 0; i < goneMonth; i++)
+        {
+            NewPost();
+        }
     }
 
     /// <summary>
