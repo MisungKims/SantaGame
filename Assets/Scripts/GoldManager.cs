@@ -1,374 +1,227 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
+using System.Collections.Generic;
+using System.Numerics;
+using System.Text.RegularExpressions;
+using UnityEngine;
+using System.Text;
 
 public class GoldManager : MonoBehaviour
 {
-   
-    public enum UnitOfGold
+
+    private static readonly BigInteger unitSize = 1000;
+    private static bool isInit = false;
+    private static int unitCapacity = 5;
+    private static readonly int aAscii = 65;
+    private static readonly int zAscii = 90;
+
+    private static readonly List<string> unitOfGold = new List<String>();
+    private static Dictionary<string, BigInteger> unitsMap = new Dictionary<string, BigInteger>();
+
+    private StringBuilder sb = new StringBuilder();
+
+    private static void InitUnit(int capacity)
     {
-        num_a = 4,
-        num_b,
-        num_c,
-        num_d,
-        num_e,
-        num_f,
-        num_g,
-        num_h,
-        num_i,
-        num_j,
-        num_k,
-        num_l,
-        num_m,
-        num_n,
-        num_o,
-        num_p,
-        num_q,
-        num_r,
-        num_s,
-        num_t,
-        num_u,
-        num_v,
-        num_w,
-        num_x,
-        num_y,
-        num_z,
-        num_aa,
-        num_ab,
-        num_ac,
-        num_ad,
-        num_ae,
-        num_af,
-        num_ag,
-        num_ah,
-        num_ai,
-        num_aj,
-        num_ak,
-        num_al,
-        num_am,
-        num_an,
-        num_ao,
-        num_ap,
-        num_aq,
-        num_ar,
-        num_as,
-        num_at,
-        num_au,
-        num_av,
-        num_aw,
-        num_ax,
-        num_ay,
-        num_az,
-        num_ba,
-        num_bb,
-        num_bc,
-        num_bd,
-        num_be,
-        num_bf,
-        num_bg,
-        num_bh,
-        num_bi,
-        num_bj,
-        num_bk,
-        num_bl,
-        num_bm,
-        num_bn,
-        num_bo,
-        num_bp,
-        num_bq,
-        num_br,
-        num_bs,
-        num_bt,
-        num_bu,
-        num_bv,
-        num_bw,
-        num_bx,
-        num_by,
-        num_bz,
-        num_ca,
-        num_cb,
-        num_cc,
-        num_cd,
-        num_ce,
-        num_cf,
-        num_cg,
-        num_ch,
-        num_ci,
-        num_cj,
-        num_ck,
-        num_cl,
-        num_cm,
-        num_cn,
-        num_co,
-        num_cp,
-        num_cq,
-        num_cr,
-        num_cs,
-        num_ct,
-        num_cu,
-        num_cv,
-        num_cw,
-        num_cx,
-        num_cy,
-        num_cz,
-        num_da,
-        num_db,
-        num_dc,
-        num_dd,
-        num_de,
-        num_df,
-        num_dg,
-        num_dh,
-        num_di,
-        num_dj,
-        num_dk,
-        num_dl,
-        num_dm,
-        num_dn,
-        num_do,
-        num_dp,
-        num_dq,
-        num_dr,
-        num_ds,
-        num_dt,
-        num_du,
-        num_dv,
-        num_dw,
-        num_dx,
-        num_dy,
-        num_dz,
-        num_ea,
-        num_eb,
-        num_ec,
-        num_ed,
-        num_ee,
-        num_ef,
-        num_eg,
-        num_eh,
-        num_ei,
-        num_ej,
-        num_ek,
-        num_el,
-        num_em,
-        num_en,
-        num_eo,
-        num_ep,
-        num_eq,
-        num_er,
-        num_es,
-        num_et,
-        num_eu,
-        num_ev,
-        num_ew,
-        num_ex,
-        num_ey,
-        num_ez,
-        num_fa,
-        num_fb,
-        num_fc,
-        num_fd,
-        num_fe,
-        num_ff,
-        num_fg,
-        num_fh,
-        num_fi,
-        num_fj,
-        num_fk,
-        num_fl,
-        num_fm,
-        num_fn,
-        num_fo,
-        num_fp,
-        num_fq,
-        num_fr,
-        num_fs,
-        num_ft,
-        num_fu,
-        num_fv,
-        num_fw,
-        num_fx,
-        num_fy,
-        num_fz,
-        num_ga,
-        num_gb,
-        num_gc,
-        num_gd,
-        num_ge,
-        num_gf,
-        num_gg,
-        num_gh,
-        num_gi,
-        num_gj,
-        num_gk,
-        num_gl,
-        num_gm,
-        num_gn,
-        num_go,
-        num_gp,
-        num_gq,
-        num_gr,
-        num_gs,
-        num_gt,
-        num_gu,
-        num_gv,
-        num_gw,
-        num_gx,
-        num_gy,
-        num_gz,
-        num_ha,
-        num_hb,
-        num_hc,
-        num_hd,
-        num_he,
-        num_hf,
-        num_hg,
-        num_hh,
-        num_hi,
-        num_hj,
-        num_hk,
-        num_hl,
-        num_hm,
-        num_hn,
-        num_ho,
-        num_hp,
-        num_hq,
-        num_hr,
-        num_hs,
-        num_ht,
-        num_hu,
-        num_hv,
-        num_hw,
-        num_hx,
-        num_hy,
-        num_hz,
-        num_ia,
-        num_ib,
-        num_ic,
-        num_id,
-        num_ie,
-        num_if,
-        num_ig,
-        num_ih,
-        num_ii,
-        num_ij,
-        num_ik,
-        num_il,
-        num_im,
-        num_in,
-        num_io,
-        num_ip,
-        num_iq,
-        num_ir,
-        num_is,
-        num_it,
-        num_iu,
-        num_iv,
-        num_iw,
-        num_ix,
-        num_iy,
-        num_iz,
-        num_ja,
-        num_jb,
-        num_jc,
-        num_jd,
-        num_je,
-        num_jf,
-        num_jg,
-        num_jh,
-        num_ji,
-        num_jj,
-        num_jk,
-        num_jl,
-        num_jm,
-        num_jn,
-        num_jo,
-        num_jp,
-        num_jq,
-        num_jr,
-        num_js,
-        num_jt,
-        num_ju,
-        num_jv,
-        num_jw,
-        num_jx,
-        num_jy,
-        num_jz,
-        num_ka,
-        num_kb,
-        num_kc,
-        num_kd,
-        num_ke,
-        num_kf,
-        num_kg,
-        num_kh,
-        num_ki,
-        num_kj,
-        num_kk,
-        num_kl,
-        num_km,
-        num_kn,
-        num_ko,
-        num_kp,
-        num_kq,
-        num_kr,
-        num_ks,
-        num_kt,
-        num_ku,
-        num_kv,
-        num_kw,
-        num_kx,
-        num_ky,
-        num_kz,
+        unitCapacity += capacity;
+
+        unitOfGold.Clear();
+        unitOfGold.Add("");
+
+        unitsMap.Clear();
+        unitsMap.Add("", 0);
+
+        string unit = "";
+        float iCnt;
+        int nextAscii;
+        char first;
+        char second;
+
+        for (int i = 0; i <= unitCapacity; i++)
+        {
+            for (int j = aAscii; j <= zAscii; j++)
+            {
+                if (i == 0)
+                    unit = ((char)j).ToString();
+                else
+                {
+                    iCnt = (float)i / 26;
+                    nextAscii = aAscii + i - 1;
+                    first = (char)nextAscii;
+                    second = (char)j;
+                    unit = string.Format("{0}{1}", first, second);
+                }
+                unitOfGold.Add(unit);
+                unitsMap.Add(unit, BigInteger.Pow(unitSize, unitOfGold.Count - 1));
+            }
+        }
+
+        isInit = true;
     }
 
+    public static int GetDecimal(int value)
+    {
+        return (value % 1000) / 100;
+    }
+
+    private static (int value, int index, int decimalPoint) GetSize(BigInteger value)
+    {
+        BigInteger currentVal = value;
+        int index = 0;
+        int lastVal = 0;
+
+        while (currentVal > unitSize - 1)
+        {
+            BigInteger predCurrentVal = currentVal / unitSize;
+            if (predCurrentVal <= unitSize - 1)
+            {
+                lastVal = (int)currentVal;
+            }
+            currentVal = predCurrentVal;
+            index += 1;
+        }
+
+        int point = GetDecimal(lastVal);
+
+        while (unitOfGold.Count <= index)
+        {
+            InitUnit(5);
+        }
+
+        return ((int)currentVal, index, point);
+    }
 
     /// <summary>
-    /// 골드의 단위를 나타내주는 함수
+    /// 숫자를 단위를 붙여 리턴
     /// </summary>
-    /// <param name="number">골드</param>
+    /// <param name="myGold"></param>
     /// <returns></returns>
-    public static string ExpressUnitOfGold(double dNumber)
+    public static string ExpressUnitOfGold(BigInteger myGold)
     {
-        string sResult = string.Empty;
-        string sNumber = string.Empty;
-        string sDigit = string.Empty;
-
-        string[] sNumberList = (dNumber.ToString()).Split('+');         // 승수를 기준으로 쪼갬
-
-        double dKeepNumber = 0;
-
-        if (sNumberList.Length < 2)             // 숫자가 15자리를 넘어가지 않으면
+        if (!isInit)
         {
-            double dRMV_Decimal = Math.Truncate(dNumber);
+            InitUnit(5);
+        }
 
-            if (dRMV_Decimal.ToString().Length < 4)
+        var sizeStruct = GetSize(myGold);
+
+        return string.Format("{0}.{1} {2}", sizeStruct.value, sizeStruct.decimalPoint, unitOfGold[sizeStruct.index]);
+    }
+
+    /// <summary>
+    /// 단위를 숫자로 변경
+    /// </summary>
+    /// <param name="unit">단위</param>
+    /// <returns></returns>
+    public static BigInteger UnitToBigInteger(string unit)
+    {
+        if (!isInit)
+        {
+            InitUnit(5);
+        }
+
+        string[] strArr = unit.Split('.');
+
+        // 소수점에 관한 연산
+        if (strArr.Length >= 2)
+        {
+            BigInteger value = BigInteger.Parse(strArr[0]);                                         // 소수점 앞의 정수값
+            BigInteger decimalPoint = BigInteger.Parse((Regex.Replace(strArr[1], "[^0-9]", "")));   // 소수점 한자리
+            string unitStr = Regex.Replace(strArr[1], "[^A-Z]", "");                                // 단위
+
+            if (unitStr == "")
             {
-                dKeepNumber = dRMV_Decimal;
+                return value;
+            }
+
+            if (decimalPoint == 0)
+            {
+                return (unitsMap[unitStr] * value);
             }
             else
             {
-                dKeepNumber = double.Parse(dRMV_Decimal.ToString().Substring(0, 4));
+                var unitValue = unitsMap[unitStr];
+                return (unitValue * value) + (unitValue / 10) * decimalPoint;
             }
-            sNumber = string.Format("{0:n1}", dKeepNumber / 10);
+        }
+        // 비소수에 관한 연산
+        else
+        {
+            BigInteger value = BigInteger.Parse((Regex.Replace(unit, "[^0-9]", "")));
+            string unitStr = Regex.Replace(unit, "[^A-Z]", "");
 
-            if (Enum.IsDefined(typeof(UnitOfGold), dRMV_Decimal.ToString().Length))
+            while (!unitsMap.ContainsKey(unitStr))
             {
-                sDigit = ((UnitOfGold)dRMV_Decimal.ToString().Length).ToString().Replace("num_", "");
+                InitUnit(5);
             }
-            else sDigit = "a";
+
+            BigInteger result = unitsMap[unitStr] * value;
+
+            if (result == 0)
+                return int.Parse((unit));
+            else
+                return result;
+        }
+    }
+
+    //public static string ToUnitString(BigInteger b)
+    //{
+    //    if (b < 1000) { return b.ToString(); }
+
+    //    var unitNumber = Mathf.FloorToInt((float)BigInteger.Log10(b)) / 3;
+    //    Debug.Log("Log10: " + (float)BigInteger.Log10(b));
+    //    Debug.Log("unitNumber: "+unitNumber);
+
+    //    var significand = Mathf.FloorToInt((float)BigInteger.Divide(b, BigInteger.Pow(10, unitNumber * 3 - 2))) / 100f;
+    //    Debug.Log("significand: " + significand);
+
+    //    var unit = (char)('A' + unitNumber - 1);
+
+    //    return $"{significand:N2}{unit}";
+    //}
+
+    /// <summary>
+    /// mine보다 작으면 True반환
+    /// </summary>
+    /// <param name="unitStr">비교할 단위</param>
+    /// <returns></returns>
+    public static bool CompareBigintAndUnit(BigInteger myInteger, string unitStr)
+    {
+        if (myInteger >= UnitToBigInteger(unitStr))
+        {
+            return true;
         }
         else
         {
-            dKeepNumber = double.Parse(sNumberList[0].ToString().Replace("E", "")) * 1000;          // E 뒤는 자름
-            sNumber = string.Format("{0:n1}", dKeepNumber / 10);
-            sDigit = ((UnitOfGold)int.Parse(sNumberList[1]) + 1).ToString().Replace("num_", "");
+            return false;
         }
-
-        sResult = String.Format("{0}{1}", sNumber, sDigit);
-
-        return sResult;
-
     }
 
+   /// <summary>
+   /// 단위에 float을 곱하여 반환
+   /// </summary>
+   /// <returns></returns>
+    public static string MultiplyUnit(string unitStr, float multiply)
+    {
+        if (Char.IsLetter(unitStr[unitStr.Length - 1]))     //단위가 있는 숫자일 때
+        {
+            BigInteger bigInteger = UnitToBigInteger(unitStr);
+
+            BigInteger resultInt = new BigInteger((double)bigInteger * multiply);
+
+            return ExpressUnitOfGold(resultInt);
+        }
+        else         // 단위가 없는 숫자일 때
+        {
+            float fUnit = float.Parse(unitStr);
+
+            if (fUnit * multiply >= 1000.0f)
+            {
+                return ExpressUnitOfGold((BigInteger)(fUnit * multiply));
+            }
+            else
+            {
+                return string.Format("{0:F1}", (fUnit * multiply));
+            }
+        }
+    }
 }
+
