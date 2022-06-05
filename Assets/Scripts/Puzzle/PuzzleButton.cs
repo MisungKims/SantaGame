@@ -32,12 +32,14 @@ public class PuzzleButton : MonoBehaviour
 
     // 캐싱
     private PuzzleUI puzzleUI;
+    private SoundManager soundManager;
     #endregion
 
     #region 유니티 함수
     private void Awake()
     {
         puzzleUI = PuzzleUI.Instance;
+        soundManager = SoundManager.Instance;
     }
     #endregion
 
@@ -62,6 +64,7 @@ public class PuzzleButton : MonoBehaviour
     public void SetPuzzleEnum()
     {
         PuzzleUIInsance().SetPuzzle(puzzleType);
+        soundManager.PlaySoundEffect(ESoundEffectType.uiButton);
     }
     #endregion
 }

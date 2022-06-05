@@ -42,6 +42,9 @@ public class ButtonRaycast : ClickScale
         StartCoroutine(ScaleDown());
     }
 
+    /// <summary>
+    /// 터치를 감지
+    /// </summary>
     void DetectTouch()
     {
         if (Input.GetMouseButtonDown(0) && !UIManagerInstance().isOpenPanel)
@@ -59,6 +62,10 @@ public class ButtonRaycast : ClickScale
         }
     }
 
+    /// <summary>
+    /// UIManager 인스턴스 반환
+    /// </summary>
+    /// <returns></returns>
     protected UIManager UIManagerInstance()
     {
         if (!uIManager)
@@ -67,6 +74,20 @@ public class ButtonRaycast : ClickScale
         }
 
         return uIManager;
+    }
+
+    /// <summary>
+    /// SoundManager 인스턴스 반환
+    /// </summary>
+    /// <returns></returns>
+    protected SoundManager SoundManagerInstance()
+    {
+        if (!soundManager)
+        {
+            soundManager = SoundManager.Instance;
+        }
+
+        return soundManager;
     }
     #endregion
 }
