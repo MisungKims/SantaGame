@@ -354,6 +354,8 @@ GameObject:
   - component: {fileID: 4361756542342498}
   - component: {fileID: -634662233933939075}
   - component: {fileID: 95773810507831620}
+  - component: {fileID: 2405777490162971042}
+  - component: {fileID: -9213126187579988634}
   m_Layer: 0
   m_Name: 12_IceRinkSanta
   m_TagString: Santa
@@ -428,6 +430,35 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!54 &2405777490162971042
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1544675230273928}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 0
+--- !u!65 &-9213126187579988634
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1544675230273928}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2531369, y: 0.56154454, z: 0.27025926}
+  m_Center: {x: 0.007403806, y: 0.27713385, z: 0.02509587}
 --- !u!1 &1629836995728970
 GameObject:
   m_ObjectHideFlags: 0
