@@ -76,6 +76,7 @@ public class QuestObject : MonoBehaviour
 
     // 캐싱
     QuestManager questManager;
+    GameManager gameManager;
     #endregion
 
 
@@ -83,6 +84,7 @@ public class QuestObject : MonoBehaviour
     void Awake()
     {
         questManager = QuestManager.Instance;
+        gameManager = GameManager.Instance;
 
         if (!quest.isSuccess)
             getRewardButton.interactable = false;
@@ -133,6 +135,8 @@ public class QuestObject : MonoBehaviour
             quest.isGetReward = true;
 
             RewardManager.GetReward(rewardType, questRewardAmount);
+
+            gameManager.IncreaseGauge(10);
 
             // 받을 보상이 있다는 걸 알려주는 notification Image를 숨김
             questManager.notificationImage.SetActive(false);

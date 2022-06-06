@@ -148,6 +148,8 @@ public class Santa : MonoBehaviour
 
         gameManager.MyCarrots -= GoldManager.UnitToBigInteger(SantaPrice);          // 비용 지불
 
+        gameManager.IncreaseGauge(3);       // 게이지 증가
+
         SantaPrice = GoldManager.MultiplyUnit(SantaPrice, MultiplySantaPrice);      // 비용을 배율만큼 증가
 
         // 산타의 효율만큼 건물의 골드 증가량을 증가

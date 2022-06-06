@@ -201,7 +201,7 @@ public class Building : MonoBehaviour
 
         SetCamTargetThis();                 // 카메라가 건물을 바라보도록
 
-        gameManager.IncreaseGauge(5);       // 게이지 증가
+        gameManager.IncreaseGauge(15);       // 게이지 증가
     }
 
     /// <summary>
@@ -215,6 +215,8 @@ public class Building : MonoBehaviour
         }
 
         QuestManagerInstance().Success(questID);        // 퀘스트 완료
+
+        gameManager.IncreaseGauge(3);       // 게이지 증가
 
         gameManager.MyGold -= GoldManager.UnitToBigInteger(BuildingPrice);              // 업그레이드 비용 지불
 

@@ -40,7 +40,7 @@ namespace PW
         
         public void DoFill(float amount)
         {
-            Debug.Log("Doing the filling");
+            //Debug.Log("Doing the filling");
             StartCoroutine(FillAnimation(amount));
         }
         
