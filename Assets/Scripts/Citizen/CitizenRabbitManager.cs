@@ -145,6 +145,8 @@ public class CitizenRabbitManager : MonoBehaviour
         FileInfo fileInfo = new FileInfo(Application.persistentDataPath + "/CitizenData.json");
         if (fileInfo.Exists)
         {
+            GameManager gameManager = GameManager.Instance;
+
             string jdata = File.ReadAllText(Application.persistentDataPath + "/CitizenData.json");
 
             citizenList = JsonUtility.FromJson<Serialization<Citizen>>(jdata).target;
@@ -158,6 +160,7 @@ public class CitizenRabbitManager : MonoBehaviour
                 if (citizenList[i].clothesIdx > -1)
                 {
                     rabbitCitizen.PutOn(ClothesManager.Instance.clothesList[citizenList[i].clothesIdx]);
+                    gameManager.goldEfficiency *= 1.5f;
                 }
                 rabbitCitizens.Add(rabbitCitizen);
             }

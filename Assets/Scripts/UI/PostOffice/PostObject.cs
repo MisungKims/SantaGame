@@ -113,7 +113,7 @@ public class PostObject : MonoBehaviour
 
             questManager.Success(questID);        // 퀘스트 성공
 
-            gameManager.IncreaseGauge(3);      // 게이지 증가
+            gameManager.IncreaseGauge(5);      // 게이지 증가
 
             postOfficeManager.havePostList[index].isRead = true;
 

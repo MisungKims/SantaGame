@@ -150,7 +150,7 @@ public class PuzzleUI : MonoBehaviour
     {
         giftManager.ReceiveGift(puzzleType);
 
-        gameManager.IncreaseGauge(5f);
+        gameManager.IncreaseGauge(20);
 
         puzzleManager.puzzleButtons[(int)puzzleType].Count = 0;
 

@@ -139,7 +139,7 @@ public class GameManager : MonoBehaviour
 
             if (citizenCount != 0 && citizenCount % 5 == 0)      // 주민의 수가 5의 배수일 때 게이지 증가
             {
-                IncreaseGauge(5);
+                IncreaseGauge(10);
             }
         }
     }
