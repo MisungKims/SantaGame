@@ -53,13 +53,13 @@ public class ScreenShot : MonoBehaviour
         yield return waitForEndOfFrame;
 
         string timestamp = System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-        string fileName = "SantaGame_" + timestamp + ".png";
+        string fileName = "SantaGift" + timestamp + ".png";
 
         Texture2D texture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
         texture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
         texture.Apply();
 
-        string albumName = "SantaGame";
+        string albumName = "SantaGift";
         NativeGallery.SaveImageToGallery(texture, albumName, fileName, (success, path) =>
         {
             QuestManager.Instance.Success(questID);        // 사진을 찍어 갤러리에 저장하면 퀘스트 완료
