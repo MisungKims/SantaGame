@@ -134,9 +134,9 @@ public class PostOfficeManager : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(GameManager.Instance.dayCount * (GameManager.Instance.lastDay - 1));        // 다음 달이 될 때마다 편지 전송
-
             NewPost();
+
+            yield return new WaitForSeconds(GameManager.Instance.dayCount * (GameManager.Instance.lastDay - 1));        // 다음 달이 될 때마다 편지 전송
         }
     }
     #endregion

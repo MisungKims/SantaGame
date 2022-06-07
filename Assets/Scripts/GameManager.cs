@@ -472,7 +472,7 @@ public class GameManager : MonoBehaviour
         // 지난 앱 비활성화 시간을 가져와
         DateTime lastConnection = DateTime.ParseExact(lastConnectionTime, "yyyy-MM-dd-HH-mm-ss", System.Globalization.CultureInfo.InvariantCulture);
 
-        // 오프라인 시간을 계산
+        // 오프라인 시간을 초로 계산
         TimeSpan timeDiff = DateTime.Now - lastConnection;
         diffTotalSeconds = (float)timeDiff.TotalSeconds;
 
