@@ -452,7 +452,7 @@ public class GameManager : MonoBehaviour
         CitizenCount = 0;
         Day = 1;
         MyGold = 1000;
-        MyCarrots = 1000;
+        MyCarrots = 100;
         MyDia = 0;
         year = 0;
         month = 1;

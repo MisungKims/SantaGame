@@ -304,7 +304,7 @@ public class ObjectManager : MonoBehaviour
         int citizenCount = CitizenRabbitManager.Instance.rabbitCitizens.Count;
         for (int i = 0; i < citizenCount; i++)                  // 생성된 토끼 주민 수 만큼
         {
-            int count = (int)(diffTotalSeconds / Random.Range(50.0f, 70.0f));      // 오프라인 시간동안 몇번 당근을 획득했는지 계산
+            int count = (int)(diffTotalSeconds / Random.Range(60.0f, 120.0f));      // 오프라인 시간동안 몇번 당근을 획득했는지 계산
             string multiple = GoldManager.MultiplyUnit("100.0A", count);
 
             amount += GoldManager.UnitToBigInteger(multiple);
