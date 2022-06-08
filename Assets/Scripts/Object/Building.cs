@@ -130,7 +130,12 @@ public class Building : MonoBehaviour
                 getGoldBtn.SetActive(false);
             }
 
-            gameManager.MyGold += GoldManager.UnitToBigInteger(IncrementGold);      // ∞ÒµÂ »πµÊ
+            string goldAmount = IncrementGold;
+            if (!gameManager.goldEfficiency.Equals(0f))
+            {
+                goldAmount = GoldManager.MultiplyUnit(IncrementGold, gameManager.goldEfficiency);        // »πµÊ«“ ∞ÒµÂ∑Æ (±‚¡∏ »πµÊ∑Æø° ∞ÒµÂ »πµÊ ¡ı∞°∑Æ¿ª ∞ˆ«‘)
+            }
+            gameManager.MyGold += GoldManager.UnitToBigInteger(goldAmount);      // ∞ÒµÂ »πµÊ
         }
     }
 
@@ -222,7 +227,9 @@ public class Building : MonoBehaviour
 
         BuildingPrice = GoldManager.MultiplyUnit(BuildingPrice, MultiplyBuildingPrice); // ∫ÒøÎ¿ª πË¿≤∏∏≈≠ ¡ı∞°
 
-        IncrementGold = GoldManager.MultiplyUnit(IncrementGold, 1.1f * gameManager.goldEfficiency);  // ∞ÒµÂ ¡ı∞°∑Æ¿ª πË¿≤∏∏≈≠ ¡ı∞°
+        IncrementGold = GoldManager.MultiplyUnit(IncrementGold, 1.1f);  // ∞ÒµÂ ¡ı∞°∑Æ¿ª πË¿≤∏∏≈≠ ¡ı∞°
+        //IncrementGold = GoldManager.MultiplyUnit(IncrementGold, 1.1f  * gameManager.goldEfficiency);  // ∞ÒµÂ ¡ı∞°∑Æ¿ª πË¿≤∏∏≈≠ ¡ı∞°
+
 
         Level++;
 
