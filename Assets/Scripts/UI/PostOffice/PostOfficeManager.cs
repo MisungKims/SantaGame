@@ -310,6 +310,7 @@ public class PostOfficeManager : MonoBehaviour
         {
             NewPost();
         }
+        goneMonth = 0;
     }
 
     /// <summary>
