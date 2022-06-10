@@ -90,6 +90,7 @@ public class ObjectManager : MonoBehaviour
                 // 광고를 보고 올때가 아니라면 오프라인 보상
                 if (!isWatchingAds)
                 {
+                    LoadData();
                     OfflineTime();
                 }
                 else

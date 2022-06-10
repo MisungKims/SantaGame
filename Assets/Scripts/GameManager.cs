@@ -275,6 +275,7 @@ public class GameManager : MonoBehaviour
             if (isPaused)
             {
                 isPaused = false;
+                LoadData();
                 OfflineTime();
             }
         }
