@@ -123,12 +123,14 @@ public class Santa : MonoBehaviour
         isInit = true;
 
         Level = 0;
+
         Upgrade();
 
         isInit = false;
 
         SetCamTargetThis();                 // 카메라가 산타를 따라다니도록
 
+        if (Level < 1) Level = 1; 
         ShowObjWindow();                    // 클릭 오브젝트창 보여줌
     }
 
@@ -147,6 +149,8 @@ public class Santa : MonoBehaviour
         }
 
         gameManager.MyCarrots -= GoldManager.UnitToBigInteger(SantaPrice);          // 비용 지불
+
+        gameManager.IncreaseGauge(3);       // 게이지 증가
 
         SantaPrice = GoldManager.MultiplyUnit(SantaPrice, MultiplySantaPrice);      // 비용을 배율만큼 증가
 

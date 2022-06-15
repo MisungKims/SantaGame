@@ -125,6 +125,7 @@ public class QuestManager : MonoBehaviour
                 }
 
                 gameManager.initQuestDate = DateTime.Now.ToString("yyyy.MM.dd");
+                if(notificationImage.activeSelf) notificationImage.SetActive(false);        // 알림 이미지를 끔
             }
 
             yield return null;

@@ -20,7 +20,7 @@ public class ClothesStoreButtonRay : ButtonRaycast
     {
         yield return new WaitForSeconds(0.13f);
 
-        soundManager.PlaySoundEffect(ESoundEffectType.uiButton);      // 효과음
         UIManagerInstance().ShowClothesStore();
+        SoundManagerInstance().PlaySoundEffect(ESoundEffectType.uiButton);      // 효과음
     }
 }

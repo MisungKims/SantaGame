@@ -45,21 +45,7 @@ public class CitizenPanel : MonoBehaviour
 
     private void OnEnable()
     {
-        // 옷가게가 잠금해제 되었으면 옷장 창을 보여줌
-        if (objectManager.objectList[7].buildingLevel > 0)
-        {
-            if (!clothesWindowButton.activeSelf)
-            {
-                clothesWindowButton.SetActive(true);
-            }
-
-            CloseCloset();
-            StartCoroutine(MoveCloset());
-        }
-        else if (clothesWindowButton.activeSelf && objectManager.objectList[7].buildingLevel <= 0)
-        {
-            clothesWindowButton.SetActive(false);
-        }
+        Open();
     }
     #endregion
 
@@ -107,6 +93,25 @@ public class CitizenPanel : MonoBehaviour
     #endregion
 
     #region 함수
+
+    public void Open()
+    {
+        // 옷가게가 잠금해제 되었으면 옷장 창을 보여줌
+        if (objectManager.objectList[7].buildingLevel > 0)
+        {
+            if (!clothesWindowButton.activeSelf)
+            {
+                clothesWindowButton.SetActive(true);
+            }
+
+            CloseCloset();
+            StartCoroutine(MoveCloset());
+        }
+        else if (clothesWindowButton.activeSelf && objectManager.objectList[7].buildingLevel <= 0)
+        {
+            clothesWindowButton.SetActive(false);
+        }
+    }
 
     /// <summary>
     /// 옷장 열거나 닫기 (인스펙터에서 호출)

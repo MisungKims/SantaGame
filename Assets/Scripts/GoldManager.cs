@@ -162,22 +162,6 @@ public class GoldManager : MonoBehaviour
         }
     }
 
-    //public static string ToUnitString(BigInteger b)
-    //{
-    //    if (b < 1000) { return b.ToString(); }
-
-    //    var unitNumber = Mathf.FloorToInt((float)BigInteger.Log10(b)) / 3;
-    //    Debug.Log("Log10: " + (float)BigInteger.Log10(b));
-    //    Debug.Log("unitNumber: "+unitNumber);
-
-    //    var significand = Mathf.FloorToInt((float)BigInteger.Divide(b, BigInteger.Pow(10, unitNumber * 3 - 2))) / 100f;
-    //    Debug.Log("significand: " + significand);
-
-    //    var unit = (char)('A' + unitNumber - 1);
-
-    //    return $"{significand:N2}{unit}";
-    //}
-
     /// <summary>
     /// mine보다 작으면 True반환
     /// </summary>

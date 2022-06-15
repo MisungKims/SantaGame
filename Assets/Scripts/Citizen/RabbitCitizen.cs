@@ -89,7 +89,7 @@ public class RabbitCitizen : MonoBehaviour
         uIManager = UIManager.Instance;
         cameraMovement = CameraMovement.Instance;
 
-        waitSecond = Random.Range(20.0f, 70.0f);            // 당근을 몇 초마다 얻을건지 랜덤한 시간을 정함
+        waitSecond = Random.Range(60.0f, 120.0f);            // 당근을 몇 초마다 얻을건지 랜덤한 시간을 정함
         randomWaitForSecond = new WaitForSeconds(waitSecond);
     }
 
@@ -195,8 +195,8 @@ public class RabbitCitizen : MonoBehaviour
         while (true)
         {
             // 랜덤 행동을 정함
-            int randBehavior = Random.Range(0, 4);
-            //int randBehavior = 3;    
+            //int randBehavior = Random.Range(0, 4);
+            int randBehavior = 3;    
             citizenBehavior = (ECitizenBehavior)randBehavior;
 
             isFindGoal = false;
@@ -362,6 +362,10 @@ public class RabbitCitizen : MonoBehaviour
             {
                 if (hit.collider.CompareTag("Santa") && hit.collider.name == this.name)
                 {
+                    if (uIManager.clickObjWindow.activeSelf)
+                    {
+                        uIManager.clickObjWindow.SetActive(false);
+                    }
                     SetCamTargetThis();
                 }
             }

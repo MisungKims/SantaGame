@@ -130,7 +130,12 @@ public class Building : MonoBehaviour
                 getGoldBtn.SetActive(false);
             }
 
-            gameManager.MyGold += GoldManager.UnitToBigInteger(IncrementGold);      // 골드 획득
+            string goldAmount = IncrementGold;
+            if (!gameManager.goldEfficiency.Equals(0f))
+            {
+                goldAmount = GoldManager.MultiplyUnit(IncrementGold, gameManager.goldEfficiency);        // 획득할 골드량 (기존 획득량에 골드 획득 증가량을 곱함)
+            }
+            gameManager.MyGold += GoldManager.UnitToBigInteger(goldAmount);      // 골드 획득
         }
     }
 
@@ -201,7 +206,7 @@ public class Building : MonoBehaviour
 
         SetCamTargetThis();                 // 카메라가 건물을 바라보도록
 
-        gameManager.IncreaseGauge(5);       // 게이지 증가
+        gameManager.IncreaseGauge(15);       // 게이지 증가
     }
 
     /// <summary>
@@ -216,11 +221,15 @@ public class Building : MonoBehaviour
 
         QuestManagerInstance().Success(questID);        // 퀘스트 완료
 
+        gameManager.IncreaseGauge(3);       // 게이지 증가
+
         gameManager.MyGold -= GoldManager.UnitToBigInteger(BuildingPrice);              // 업그레이드 비용 지불
 
         BuildingPrice = GoldManager.MultiplyUnit(BuildingPrice, MultiplyBuildingPrice); // 비용을 배율만큼 증가
 
-        IncrementGold = GoldManager.MultiplyUnit(IncrementGold, 1.1f * gameManager.goldEfficiency);  // 골드 증가량을 배율만큼 증가
+        IncrementGold = GoldManager.MultiplyUnit(IncrementGold, 1.1f);  // 골드 증가량을 배율만큼 증가
+        //IncrementGold = GoldManager.MultiplyUnit(IncrementGold, 1.1f  * gameManager.goldEfficiency);  // 골드 증가량을 배율만큼 증가
+
 
         Level++;
 

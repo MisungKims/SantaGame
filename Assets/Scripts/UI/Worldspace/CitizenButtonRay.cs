@@ -12,7 +12,7 @@ public class CitizenButtonRay : ButtonRaycast
     {
         base.Touched();
 
-        soundManager.PlaySoundEffect(ESoundEffectType.getGoldButton);      // 효과음
         citizen.isTouch = true;
+        SoundManagerInstance().PlaySoundEffect(ESoundEffectType.getGoldButton);      // 효과음
     }
 }

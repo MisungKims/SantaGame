@@ -41,7 +41,7 @@ public class Background : MonoBehaviour
 
     protected virtual void Update()
     {
-        // Material의 Offset의 y값을 조정하여 배경을 움직임
+        // Material의 Offset의 값을 조정하여 배경을 움직임
         switch (direction)
         {
             case EBackgroundDirection.leftToRight:
