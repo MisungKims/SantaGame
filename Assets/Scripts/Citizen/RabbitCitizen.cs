@@ -33,7 +33,7 @@ public class RabbitCitizen : MonoBehaviour
 
     // 당근 획득
     [SerializeField]
-    private string carrot = "100.0A";   // 얻을 당근
+    private string carrot = "50.0A";   // 얻을 당근
 
     private float waitSecond;           // 당근을 몇 초마다 얻을건지
     private CitizenButtonRay getCarrotButton;      // 당근 획득 UI
