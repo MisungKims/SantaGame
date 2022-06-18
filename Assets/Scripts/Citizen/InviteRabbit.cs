@@ -106,14 +106,14 @@ public class InviteRabbit : MonoBehaviour
         gameManager.MyCarrots -= GoldManager.UnitToBigInteger(Price);  
 
         // 토끼 주민 수 증가
-        Count = ++gameManager.CitizenCount + 1;         
+        Count = ++gameManager.CitizenCount + 1;
 
         // 효율 증가
-        gameManager.goldEfficiency *= 1.5f;             
+        gameManager.goldEfficiency += 1.5f;             
 
         // 토끼 초대 가격 증가
         Price = GoldManager.MultiplyUnit(Price, magnification);     
-        magnification += 0.5f;
+        magnification += 1.0f;
 
         // 토끼의 Material을 랜덤으로 설정
         int rand = Random.Range(0, 12);

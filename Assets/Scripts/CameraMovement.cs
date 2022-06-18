@@ -1,7 +1,7 @@
 /**
  * @details 카메라의 움직임을 제어
  * @author 김미성
- * @date 22-04-18
+ * @date 22-06-06
  */
 
 using System.Collections;
@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+public enum EChaseState { noChase, chaseSanta, chaseBuilding, endChase };         // 카메라의 상태
 
 public class CameraMovement : MonoBehaviour
 {
@@ -44,8 +45,8 @@ public class CameraMovement : MonoBehaviour
 
     bool isSantaAngleStart = false;
 
-    enum EChaseState { noChase, chaseSanta, chaseBuilding, endChase };         // 카메라의 상태
-    EChaseState chaseState = EChaseState.noChase;
+
+    public EChaseState chaseState = EChaseState.noChase;
 
     [Header("---------- Move")]
     private float moveSpeed = 1.2f;
@@ -129,6 +130,11 @@ public class CameraMovement : MonoBehaviour
     /// </summary>
     void CamMove()
     {
+        if (Input.touchCount == 2)          // 두 손가락 터치 중이면 return
+        {
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             previousPos = Input.mousePosition;      // 터치에 대한 이전 값 위치 저장
@@ -236,9 +242,16 @@ public class CameraMovement : MonoBehaviour
                 if (chaseState == EChaseState.noChase) CamMove();        // 추적 중이 아니면 카메라 이동                                              
             }
 
+
+
 #if UNITY_ANDROID && !UNITY_EDITOR
             if (Input.touchCount == 2) // 두 손가락으로 터치 시
             {
+                if (chaseState == EChaseState.endChase)
+                {
+                    chaseState = EChaseState.noChase;
+                }
+
                 Zoom();                 // 줌 인/아웃
             }
             else

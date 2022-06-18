@@ -111,6 +111,8 @@ public class ClickObjWindow : MonoBehaviour
         goldSb.Append(santa.SantaEfficiency.ToString());
         goldSb.Append("% 증가");
         ObjAmount = goldSb.ToString();
+
+        SetButtonInteractable();
     }
 
     /// <summary>
@@ -149,7 +151,7 @@ public class ClickObjWindow : MonoBehaviour
     /// </summary>
     void SetButtonInteractable()
     {
-        if (GoldManager.CompareBigintAndUnit(gameManager.MyGold, ObjPrice))        //가진 돈이 오브젝트의 가격보다 클 때
+        if (GoldManager.CompareBigintAndUnit(gameManager.MyCarrots, ObjPrice))        //가진 돈이 오브젝트의 가격보다 클 때
             UpgradeButton.interactable = true;
         else UpgradeButton.interactable = false;
     }

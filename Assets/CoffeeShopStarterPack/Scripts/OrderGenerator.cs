@@ -103,7 +103,7 @@ namespace PW
 
         public void GenerateOrder()
         {
-            Debug.Log("Generating order");
+            //Debug.Log("Generating order");
 
             //Get a random ID from sprites list
             //We could store the ID of the object to track last generated orders,

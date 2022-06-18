@@ -51,8 +51,7 @@ public class ClothesAdsManager : MonoBehaviour
 
     public void HandleUserEarnedReward(object sender, Reward args)
     {
-        // 다이아 10개 보상 받기
-        RewardManager.GetReward(ERewardType.dia, "10");
+       
     }
 
     public void ShowAds()

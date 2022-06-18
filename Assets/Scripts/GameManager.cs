@@ -139,7 +139,7 @@ public class GameManager : MonoBehaviour
 
             if (citizenCount != 0 && citizenCount % 5 == 0)      // 주민의 수가 5의 배수일 때 게이지 증가
             {
-                IncreaseGauge(5);
+                IncreaseGauge(10);
             }
         }
     }
@@ -275,6 +275,7 @@ public class GameManager : MonoBehaviour
             if (isPaused)
             {
                 isPaused = false;
+                LoadData();
                 OfflineTime();
             }
         }
@@ -452,7 +453,7 @@ public class GameManager : MonoBehaviour
         CitizenCount = 0;
         Day = 1;
         MyGold = 1000;
-        MyCarrots = 1000;
+        MyCarrots = 100;
         MyDia = 0;
         year = 0;
         month = 1;
@@ -472,7 +473,7 @@ public class GameManager : MonoBehaviour
         // 지난 앱 비활성화 시간을 가져와
         DateTime lastConnection = DateTime.ParseExact(lastConnectionTime, "yyyy-MM-dd-HH-mm-ss", System.Globalization.CultureInfo.InvariantCulture);
 
-        // 오프라인 시간을 계산
+        // 오프라인 시간을 초로 계산
         TimeSpan timeDiff = DateTime.Now - lastConnection;
         diffTotalSeconds = (float)timeDiff.TotalSeconds;
 
