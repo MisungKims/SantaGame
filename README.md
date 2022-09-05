@@ -3,7 +3,7 @@ UNITY 3D 산타 마을 시뮬레이션
 
 <br>
 
-![MainIcon](https://user-images.githubusercontent.com/90057774/188436193-75125ce8-c176-4a9b-ac96-60f20a80a8dd.png)
+<img src="https://user-images.githubusercontent.com/90057774/188436193-75125ce8-c176-4a9b-ac96-60f20a80a8dd.png"  width="400" height="400">
 
 <br>
 
