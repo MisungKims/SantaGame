@@ -5,8 +5,6 @@ UNITY 3D 산타 마을 시뮬레이션
 
 <img src="https://user-images.githubusercontent.com/90057774/188436193-75125ce8-c176-4a9b-ac96-60f20a80a8dd.png"  width="100" height="100">
 
-<br>
-
 ## 🖥 Desc
 * 스토리 : 산타의 마을을 가꾸어 아이들에게 선물을 주세요!
 * 장르 : 경영 시뮬레이션
