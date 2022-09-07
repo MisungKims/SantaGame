@@ -33,7 +33,7 @@ public class AdsManager : MonoBehaviour
     {
 #if UNITY_ANDROID
         //adUnitId 설정
-        adUnitId = "ca-app-pub-5319548993317383/6720159665";
+        adUnitId = "ca-app-pub-3940256099942544/5224354917";        // 테스트 아이디
 #else
             string adUnitId = "unexpected_platform";
 #endif
